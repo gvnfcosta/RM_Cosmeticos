@@ -18,6 +18,8 @@ dependencies:
   http: ^0.13.3
   dropdown_button2: ^1.9.2
   flutter_launcher_icons: ^0.12.0
+  shared_preferences: ^2.0.16
+  get: ^4.6.5
 
 flutter_icons:
   android: true

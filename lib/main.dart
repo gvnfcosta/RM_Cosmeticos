@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/auth.dart';
+import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'src/models/category_list.dart';
 import 'src/models/product_list.dart';
-import 'src/pages/auth/sign_in_screen.dart';
+import 'src/pages/auth/auth_home_page.dart';
 import 'src/pages/category/category_form_page.dart';
 import 'src/pages/category/category_page.dart';
+import 'src/pages/controllers/admin_controller.dart';
 import 'src/pages/home/catalog_tab.dart';
 import 'src/pages/base/base_screen.dart';
 import 'src/pages/product/product_page.dart';
@@ -22,8 +25,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ProductList()),
-        ChangeNotifierProvider(create: (_) => CategoryList()),
+        ChangeNotifierProvider(create: (_) => Auth()),
+        ChangeNotifierProvider(create: (_) => AdminController()),
+        ChangeNotifierProxyProvider<Auth, ProductList>(
+          create: (_) => ProductList('', []),
+          update: (ctx, auth, previous) {
+            return ProductList(
+              auth.token ?? '',
+              previous?.items ?? [],
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, CategoryList>(
+          create: (_) => CategoryList('', []),
+          update: (ctx, auth, previous) {
+            return CategoryList(
+              auth.token ?? '',
+              previous?.items ?? [],
+            );
+          },
+        ),
       ],
       child: MaterialApp(
         title: 'RM',
@@ -33,8 +54,8 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          //AppRoutes.home: (ctx) => const ProductPage(),
-          AppRoutes.home: (ctx) => const SignInScreen(),
+          AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
+          AppRoutes.signUpPage: (ctx) => SignUpScreen(),
           AppRoutes.baseScreen: (ctx) => const BaseScreen(),
           AppRoutes.productPage: (ctx) => const ProductPage(),
           AppRoutes.productForm: (ctx) => const ProductFormPage(),

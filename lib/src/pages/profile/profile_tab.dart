@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rm/src/components/add_drawer.dart';
+import '../../models/auth.dart';
+import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
 import '/src/config/app_data.dart' as app_data;
 
@@ -13,12 +16,23 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
+    bool isAdmin = auth.email == ('rmcosmeticos@gmail.com');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil do Usuário'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logout();
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.authOrHome,
+              );
+            },
             icon: const Icon(Icons.logout),
           )
         ],
@@ -68,7 +82,7 @@ class _ProfileTabState extends State<ProfileTab> {
           ),
         ],
       ),
-      drawer: const AppDrawer(),
+      drawer: isAdmin ? const AppDrawer() : null,
     );
   }
 
@@ -140,6 +154,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 child: IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    ;
                   },
                   icon: const Icon(Icons.close),
                 ),

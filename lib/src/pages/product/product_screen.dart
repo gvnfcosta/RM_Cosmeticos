@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../components/product_show.dart';
 import '../../utils/app_routes.dart';
+import '../controllers/admin_controller.dart';
 import '/src/config/custom_colors.dart';
 import '../../models/product_model.dart';
 import '/src/services/utils_services.dart';
@@ -16,6 +17,8 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   final UtilsServices utilsServices = UtilsServices();
+
+  bool isAdmin = AdminController().isAdmin;
 
   int cartItemQuantity = 1;
   final bool editProduct = false;
@@ -105,7 +108,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Nome: ${productUnit.name}',
+                            'Nome: ${productUnit.name} - Admin: $isAdmin',
                             //maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

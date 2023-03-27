@@ -7,17 +7,21 @@ import '../config/app_data.dart';
 import 'category_model.dart';
 
 class CategoryList with ChangeNotifier {
-  final List<Category> _items = [];
+  final String _token;
+  List<Category> _items = [];
+
   List<Category> get items => [..._items];
   List<Category> get categorias => _items.toList();
+
+  CategoryList(this._token, this._items);
 
   int get itemsCount => _items.length;
 
   Future<void> loadCategories() async {
     _items.clear();
 
-    final response =
-        await http.get(Uri.parse('${Constants.baseUrl}/categorias.json'));
+    final response = await http
+        .get(Uri.parse('${Constants.baseUrl}/categorias.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -52,7 +56,7 @@ class CategoryList with ChangeNotifier {
 
   Future<void> addCategories(Category category) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/categorias.json'),
+      Uri.parse('${Constants.baseUrl}/categorias.json?auth=$_token'),
       body: jsonEncode({
         'id': category.id,
         'nome': category.nome,
@@ -76,7 +80,8 @@ class CategoryList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/categorias/${category.id}.json'),
+        Uri.parse(
+            '${Constants.baseUrl}/categorias/${category.id}.json?auth=$_token'),
         body: jsonEncode({
           'nome': category.nome,
           'imageUrl': category.imageUrl,
@@ -97,7 +102,8 @@ class CategoryList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/categorias/${category.id}.json'),
+        Uri.parse(
+            '${Constants.baseUrl}/categorias/${category.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

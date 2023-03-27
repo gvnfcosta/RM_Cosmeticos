@@ -83,7 +83,7 @@ class _CategoryTabState extends State<CategoryTab> {
               )
             : const Center(child: CircularProgressIndicator()),
       ),
-      drawer: const AppDrawer(),
+      // drawer: const AppDrawer(),
     );
   }
 }

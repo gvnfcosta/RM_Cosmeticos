@@ -1,6 +1,7 @@
 class AppRoutes {
-  static const home = '/';
-  static const signIn = '/sign-in';
+  static const authOrHome = '/';
+  static const signInPage = '/sign-in';
+  static const signUpPage = '/sign-up';
   static const homeTab = '/home-tab';
   static const baseScreen = '/base-screen';
   static const productForm = '/product-form';
