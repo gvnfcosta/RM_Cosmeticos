@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rm/src/models/category_model.dart';
+import '../../components/category_item.dart';
+import '../../models/category_list.dart';
+import '../../utils/app_routes.dart';
+
+class CategoryPage extends StatefulWidget {
+  const CategoryPage({Key? key}) : super(key: key);
+
+  @override
+  State<CategoryPage> createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<CategoryList>(context);
+
+    final List<Category> categories = provider.items.toList()
+      ..sort(((a, b) => a.nome.compareTo(b.nome)));
+
+    return !_isLoading
+        ? GestureDetector(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                  title: const Text('Categorias',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15)),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.categoryForm);
+                        },
+                        icon: const Icon(Icons.add)),
+                  ]),
+              //drawer: const AppDrawer(),
+              body: RefreshIndicator(
+                onRefresh: () => _refreshCategory(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: categories.length,
+                    itemBuilder: (ctx, i) => Column(
+                      children: [CategoryItem(categories[i]), const Divider()],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            onTap: () {})
+        : const Center(child: CircularProgressIndicator());
+  }
+}
+
+Future<void> _refreshCategory(BuildContext context) {
+  return Provider.of<CategoryList>(context, listen: false).loadCategories();
+}
