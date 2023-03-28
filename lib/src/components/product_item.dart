@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rm/src/models/product_model.dart';
+import '../models/product_list.dart';
 import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
@@ -41,8 +43,8 @@ class ProductItem extends StatelessWidget {
                         TextButton(
                           child: const Text('SIM'),
                           onPressed: () {
-                            //  Provider.of<ProductList>(context, listen: false)
-                            //      .removeCategories(categoria);
+                             Provider.of<ProductList>(context, listen: false)
+                                 .removeProduct(product);
                             Navigator.of(ctx).pop();
                           },
                         ),

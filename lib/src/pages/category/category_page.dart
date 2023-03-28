@@ -56,6 +56,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
+                    
                     itemCount: categories.length,
                     itemBuilder: (ctx, i) => Column(
                       children: [CategoryItem(categories[i]), const Divider()],

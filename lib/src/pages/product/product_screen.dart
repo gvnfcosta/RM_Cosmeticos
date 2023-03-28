@@ -32,6 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     final productUnit = widget.product;
     return Scaffold(
+      //backgroundColor: Colors.white,
       backgroundColor: Colors.white.withAlpha(230),
       body: Stack(
         children: [
@@ -63,8 +64,9 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(32),
+                padding: const EdgeInsets.symmetric(vertical: 52, horizontal: 32),
                 decoration: BoxDecoration(
+                  //color: Colors.white.withAlpha(210),
                   color: Colors.white,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(50),
@@ -108,8 +110,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Nome: ${productUnit.name} - Admin: $isAdmin',
-                            //maxLines: 2,
+                            'Nome: ${productUnit.name}',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 18,

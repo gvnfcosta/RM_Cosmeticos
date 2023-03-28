@@ -79,7 +79,12 @@ class _CatalogTabState extends State<CatalogTab> {
               pinned: true,
               expandedHeight: 130,
               flexibleSpace: FlexibleSpaceBar(
-                title: const Text.rich(
+                title: 
+                    Container(
+                        transform: Matrix4.rotationZ(-10 * pi / 120)
+                          ..translate(-40.0, 5),
+                        child: 
+                const Text.rich(
                   TextSpan(
                     children: [
                       TextSpan(
@@ -94,19 +99,12 @@ class _CatalogTabState extends State<CatalogTab> {
                               color: Colors.pink,
                               fontSize: 18,
                               fontWeight: FontWeight.w300)),
-                    ],
+            ],  )),
                   ),
-                ),
+                
                 background: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Container(
-                    //     transform: Matrix4.rotationZ(-10 * pi / 120)
-                    //       ..translate(-60.0, 0),
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(8),
-                    //       child: Image.asset('assets/images/LogoRM.png'),
-                    //     )),
                     Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Image.asset(
@@ -170,11 +168,10 @@ class _CatalogTabState extends State<CatalogTab> {
                               : const SizedBox(),
                           productsFiltered.isNotEmpty
                               ? GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: quantidadeItemsTela,
+                            //      scrollDirection: Axis.horizontal,
+                                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 150,
                                     mainAxisSpacing: 2,
                                     crossAxisSpacing: 2,
                                     childAspectRatio: 10 / 16,

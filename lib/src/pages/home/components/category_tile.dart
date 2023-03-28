@@ -24,17 +24,24 @@ class CategoryTile extends StatelessWidget {
               ),
             );
           },
-          child: Column(
-            children: [
-              SizedBox(height: 120, child: Image.network(category.imageUrl)),
-              Text(
-                category.nome,
-                style: TextStyle(
-                  color: CustomColors.customContrastColor,
-                  fontSize: 16,
+          child: Card(
+            elevation: 2,
+               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            child: Column(
+              children: [
+                SizedBox(height: 120, child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(category.imageUrl),
+                )),
+                Text(
+                  category.nome,
+                  style: TextStyle(
+                    color: CustomColors.customContrastColor,
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 
@@ -53,23 +60,12 @@ class CategoryTile extends StatelessWidget {
                         Navigator.of(context).pushNamed(AppRoutes.categoryForm,
                             arguments: category);
                       },
-                      child: Ink(
-                        height: 30,
-                        width: 25,
-                        decoration: const BoxDecoration(
-                          color: Colors.pink,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
+                    
                     ),
                   ),
                 ),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ],
     );
   }
