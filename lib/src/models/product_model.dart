@@ -4,6 +4,8 @@ class Product {
   String name;
   String description;
   String category;
+  String subCategory;
+  String offer;
   double price;
   String unit;
   bool show;
@@ -15,6 +17,8 @@ class Product {
     required this.name,
     required this.description,
     required this.category,
+    required this.subCategory,
+    required this.offer,
     required this.price,
     required this.unit,
     required this.show,

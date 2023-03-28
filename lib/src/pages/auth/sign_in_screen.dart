@@ -29,17 +29,19 @@ class SignInScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(18.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
-                        height: (deviceSize.height / 2.2),
+                        height: (deviceSize.height / 2.5),
                         child: Image.asset('assets/images/TelaInicial.png'),
                       ),
                     ),
                     SizedBox(
-                      height: 35,
+                      height: 30,
                       child: DefaultTextStyle(
-                        style:
-                            const TextStyle(fontSize: 25, color: Colors.pink),
+                        style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.pink),
                         child: AnimatedTextKit(
                           pause: Duration.zero,
                           repeatForever: true,

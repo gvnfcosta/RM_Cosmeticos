@@ -88,7 +88,7 @@ class _CatalogTabState extends State<CatalogTab> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(18.0),
                         child: Image.asset(
                           "assets/images/KitMaquiagem.png",
                         )),

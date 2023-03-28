@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/auth.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
+import '../home/sub_category_tab.dart';
 import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
 
@@ -31,6 +32,7 @@ class _BaseScreenState extends State<BaseScreen> {
               children: [
                 CatalogTab(selectedCategory: 'Todos'),
                 const CategoryTab(),
+                const SubCategoryTab(),
                 const ProductPage(),
                 const ProfileTab(),
               ],
@@ -65,6 +67,10 @@ class _BaseScreenState extends State<BaseScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.category),
                   label: 'Categorias',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.interests),
+                  label: 'SubCategorias',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.list),

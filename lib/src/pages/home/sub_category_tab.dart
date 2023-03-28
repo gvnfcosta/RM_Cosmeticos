@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/category_list.dart';
-import '../../models/category_model.dart';
+import '../../models/sub_category_list.dart';
+import '../../models/sub_category_model.dart';
 import '../../utils/app_routes.dart';
-import 'components/category_tile.dart';
+import 'components/sub_category_tile.dart';
 
-class CategoryTab extends StatefulWidget {
-  const CategoryTab({super.key});
+class SubCategoryTab extends StatefulWidget {
+  const SubCategoryTab({super.key});
 
   @override
-  State<CategoryTab> createState() => _CategoryTabState();
+  State<SubCategoryTab> createState() => _SubCategoryTabState();
 }
 
-class _CategoryTabState extends State<CategoryTab> {
+class _SubCategoryTabState extends State<SubCategoryTab> {
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
 
-    Provider.of<CategoryList>(
+    Provider.of<SubCategoryList>(
       context,
       listen: false,
-    ).loadCategories().then((value) {
+    ).loadSubCategories().then((value) {
       setState(() {
         _isLoading = false;
       });
@@ -31,9 +31,9 @@ class _CategoryTabState extends State<CategoryTab> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CategoryList>(context);
+    final provider = Provider.of<SubCategoryList>(context);
 
-    final List<Category> categories = provider.categorias.toList()
+    final List<SubCategory> subCategories = provider.subCategorias.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     double tamanhoTela = MediaQuery.of(context).size.width;
@@ -42,6 +42,7 @@ class _CategoryTabState extends State<CategoryTab> {
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(220),
       //App bar
+
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
@@ -50,7 +51,7 @@ class _CategoryTabState extends State<CategoryTab> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.categoryForm);
+                Navigator.of(context).pushNamed(AppRoutes.subCategoryForm);
               },
               icon: const Icon(Icons.add)),
         ],
@@ -69,11 +70,12 @@ class _CategoryTabState extends State<CategoryTab> {
                         maxCrossAxisExtent: 150,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 14,
+                        childAspectRatio: 10 / 5,
                       ),
-                      itemCount: categories.length,
+                      itemCount: subCategories.length,
                       itemBuilder: (_, index) {
-                        return CategoryTile(category: categories[index]);
+                        return SubCategoryTile(
+                            subCategory: subCategories[index]);
                       },
                     ),
                   )
@@ -81,7 +83,6 @@ class _CategoryTabState extends State<CategoryTab> {
               )
             : const Center(child: CircularProgressIndicator()),
       ),
-      // drawer: const AppDrawer(),
     );
   }
 }

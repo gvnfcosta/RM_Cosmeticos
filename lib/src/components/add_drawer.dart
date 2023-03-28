@@ -22,6 +22,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.interests),
+            title: const Text('Subcategories'),
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                AppRoutes.subCategoryPage,
+              );
+            },
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.list),

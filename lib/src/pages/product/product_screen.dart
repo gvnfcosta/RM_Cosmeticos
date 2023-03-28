@@ -52,9 +52,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     child: Hero(
                       tag: productUnit.imageUrl,
                       child: InteractiveViewer(
-                        child: Image.network(
-                          productUnit.imageUrl,
-                        ),
+                        child: Image.network(productUnit.imageUrl),
                       ),
                     ),
                   ),
@@ -119,22 +117,59 @@ class _ProductScreenState extends State<ProductScreen> {
                       ],
                     ),
 
-                    //Descrição
-                    SingleChildScrollView(
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: SingleChildScrollView(
-                            child: Text(
-                              'Descrição: ${widget.product.description}',
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  height: 1.2,
-                                  color: Colors.blueGrey),
-                              textAlign: TextAlign.justify,
+                    //Categoria
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Subcategoria: ${productUnit.category}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
                             ),
                           ),
                         ),
+                      ],
+                    ),
+
+                    //SubCategoria
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Subcategoria: ${productUnit.subCategory}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    //Tipo
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Tipo: ${productUnit.offer}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    //Descrição
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        'Descrição: ${widget.product.description}',
+                        style: const TextStyle(
+                            fontSize: 15, height: 1.2, color: Colors.blueGrey),
+                        textAlign: TextAlign.justify,
                       ),
                     ),
                   ],

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:rm/src/models/category_list.dart';
+import '../../models/sub_category_list.dart';
+import '/src/models/category_list.dart';
 import '../../models/product_list.dart';
 import '/src/models/product_model.dart';
 import '../../config/custom_colors.dart';
@@ -24,6 +25,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _nameFocus = FocusNode();
   final _descriptionFocus = FocusNode();
   final _categoryFocus = FocusNode();
+  final _offerFocus = FocusNode();
+  final _subCategoryFocus = FocusNode();
   final _priceFocus = FocusNode();
   final _unitFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
@@ -33,8 +36,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _formData = <String, Object>{};
 
   List unidades = ['Un', 'Kit', 'Cx'];
+  List ofertas = ['De Linha', 'Promoção', 'Queima'];
+
   String? selectedUnidade;
+  String? selectedOffer;
   String? selectedCategoria;
+  String? selectedSubCategoria;
 
   @override
   void initState() {
@@ -47,6 +54,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _imageUrlFocus.addListener(updateImage);
       });
     });
+    Provider.of<SubCategoryList>(context, listen: false).loadSubCategories();
   }
 
   @override
@@ -58,6 +66,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
       _formData['show'] = true;
       _formData['unit'] = 'Un';
+      _formData['offer'] = 'De Linha';
 
       if (arg != null) {
         final product = arg as Product;
@@ -66,6 +75,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['name'] = product.name;
         _formData['description'] = product.description;
         _formData['category'] = product.category;
+        _formData['subCategory'] = product.subCategory;
+        _formData['offer'] = product.offer;
         _formData['price'] = product.price;
         _formData['unit'] = product.unit;
         _formData['show'] = product.show;
@@ -82,6 +93,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _nameFocus.dispose();
     _descriptionFocus.dispose();
     _categoryFocus.dispose();
+    _offerFocus.dispose();
+    _subCategoryFocus.dispose();
     _priceFocus.dispose();
     _unitFocus.dispose();
     _imageUrlFocus.dispose();
@@ -135,13 +148,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
     final Size deviceSize = MediaQuery.of(context).size;
 
     final CategoryList categoria = Provider.of(context);
+    final SubCategoryList subCategoria = Provider.of(context);
+
     selectedUnidade = _formData['unit']?.toString();
+    selectedOffer = _formData['offer']?.toString();
     selectedCategoria = _formData['category']?.toString();
+    selectedSubCategoria = _formData['subCategory']?.toString();
 
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
       appBar: AppBar(
-          title: const Text('Editare Produtos'),
+          title: const Text('Editar Produtos'),
           elevation: 0,
           actions: [
             IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
@@ -182,7 +199,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     ? Form(
                         key: _formKey,
                         child: Container(
-                          height: 350,
+                          height: 430,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -195,7 +212,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       padding: const EdgeInsets.only(
                                           bottom: 5.0, right: 5.0),
                                       child: SizedBox(
-                                        //    height: 40,
+                                        height: 40,
                                         child: TextFormField(
                                             style:
                                                 const TextStyle(fontSize: 14),
@@ -235,7 +252,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       padding: const EdgeInsets.only(
                                           bottom: 5.0, right: 5.0),
                                       child: SizedBox(
-                                        //      height: 40,
+                                        height: 40,
                                         child: TextFormField(
                                             style:
                                                 const TextStyle(fontSize: 14),
@@ -285,10 +302,66 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 8.0, right: 8.0),
+                                      child: Container(
+                                        height: 40,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.black38,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: SizedBox(
+                                            width: 80,
+                                            child: DropdownButton2(
+                                              focusNode: _unitFocus,
+                                              dropdownElevation: 12,
+                                              hint: Text('Unidade',
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Theme.of(context)
+                                                          .hintColor)),
+                                              items: unidades
+                                                  .map((item) =>
+                                                      DropdownMenuItem<String>(
+                                                          value: item,
+                                                          child: Text(item,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14))))
+                                                  .toList(),
+                                              value: selectedUnidade,
+                                              onChanged: (value) {
+                                                setState(
+                                                  () {
+                                                    selectedUnidade =
+                                                        value as String;
+                                                    _formData['unit'] = value;
+                                                  },
+                                                );
+                                              },
+                                              buttonHeight: 30,
+                                              buttonWidth: 10,
+                                              itemHeight: 30,
+                                              autofocus: true,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         bottom: 8.0, right: 8.0),
                                     child: Container(
+                                      height: 40,
                                       width: 100,
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -301,14 +374,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         child: SizedBox(
                                           width: 80,
                                           child: DropdownButton2(
-                                            focusNode: _unitFocus,
+                                            focusNode: _offerFocus,
                                             dropdownElevation: 12,
-                                            hint: Text('Unidade',
+                                            hint: Text('Oferta',
                                                 style: TextStyle(
                                                     fontSize: 13,
                                                     color: Theme.of(context)
                                                         .hintColor)),
-                                            items: unidades
+                                            items: ofertas
                                                 .map((item) =>
                                                     DropdownMenuItem<String>(
                                                         value: item,
@@ -318,13 +391,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                                     fontSize:
                                                                         14))))
                                                 .toList(),
-                                            value: selectedUnidade,
+                                            value: selectedOffer,
                                             onChanged: (value) {
                                               setState(
                                                 () {
-                                                  selectedUnidade =
+                                                  selectedOffer =
                                                       value as String;
-                                                  _formData['unit'] = value;
+                                                  _formData['offer'] = value;
                                                 },
                                               );
                                             },
@@ -332,62 +405,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             buttonWidth: 10,
                                             itemHeight: 30,
                                             autofocus: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 8.0),
-                                      child: SizedBox(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                width: 1,
-                                                color: Colors.black38,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: DropdownButtonHideUnderline(
-                                            child: SizedBox(
-                                              //width: 120,
-                                              child: DropdownButton2(
-                                                focusNode: _unitFocus,
-                                                dropdownElevation: 12,
-                                                hint: Text(' Categoria',
-                                                    style: TextStyle(
-                                                        fontSize: 13,
-                                                        color: Theme.of(context)
-                                                            .hintColor)),
-                                                items: categoria.items
-                                                    .map((item) => DropdownMenuItem<
-                                                            String>(
-                                                        value: item.nome,
-                                                        child: Text(item.nome,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        14))))
-                                                    .toList(),
-                                                value: selectedCategoria,
-                                                onChanged: (value) {
-                                                  setState(
-                                                    () {
-                                                      selectedCategoria =
-                                                          value as String;
-                                                      _formData['category'] =
-                                                          value;
-                                                    },
-                                                  );
-                                                },
-                                                buttonHeight: 30,
-                                                buttonWidth: 10,
-                                                itemHeight: 30,
-                                                autofocus: true,
-                                              ),
-                                            ),
                                           ),
                                         ),
                                       ),
@@ -414,6 +431,125 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   ),
                                 ],
                               ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 8.0, right: 8.0),
+                                    child: SizedBox(
+                                      child: Container(
+                                        height: 40,
+                                        width: 200,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.black38,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: SizedBox(
+                                            width: 120,
+                                            child: DropdownButton2(
+                                              focusNode: _unitFocus,
+                                              dropdownElevation: 12,
+                                              hint: Text('Categoria',
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Theme.of(context)
+                                                          .hintColor)),
+                                              items: categoria.items
+                                                  .map((item) =>
+                                                      DropdownMenuItem<String>(
+                                                          value: item.nome,
+                                                          child: Text(item.nome,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14))))
+                                                  .toList(),
+                                              value: selectedCategoria,
+                                              onChanged: (value) {
+                                                setState(
+                                                  () {
+                                                    selectedCategoria =
+                                                        value as String;
+                                                    _formData['category'] =
+                                                        value;
+                                                  },
+                                                );
+                                              },
+                                              buttonHeight: 30,
+                                              buttonWidth: 10,
+                                              itemHeight: 30,
+                                              autofocus: true,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: SizedBox(
+                                        child: Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: Colors.black38,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: DropdownButtonHideUnderline(
+                                            child: SizedBox(
+                                              //width: 120,
+                                              child: DropdownButton2(
+                                                focusNode: _subCategoryFocus,
+                                                dropdownElevation: 12,
+                                                hint: Text('SubCategoria',
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: Theme.of(context)
+                                                            .hintColor)),
+                                                items: subCategoria.items
+                                                    .map((item) => DropdownMenuItem<
+                                                            String>(
+                                                        value: item.nome,
+                                                        child: Text(item.nome,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        14))))
+                                                    .toList(),
+                                                value: selectedSubCategoria,
+                                                onChanged: (value) {
+                                                  setState(
+                                                    () {
+                                                      selectedSubCategoria =
+                                                          value as String;
+                                                      _formData['subCategory'] =
+                                                          value;
+                                                    },
+                                                  );
+                                                },
+                                                buttonHeight: 30,
+                                                buttonWidth: 10,
+                                                itemHeight: 30,
+                                                autofocus: true,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: SizedBox(
@@ -433,7 +569,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       focusNode: _nameFocus,
                                       onFieldSubmitted: (_) {
                                         FocusScope.of(context)
-                                            .requestFocus(_imageUrlFocus);
+                                            .requestFocus(_offerFocus);
                                       },
                                       onSaved: (name) =>
                                           _formData['name'] = name ?? '',

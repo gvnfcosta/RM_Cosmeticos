@@ -17,7 +17,7 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.email == ('rm@gmail.com');
+    bool isAdmin = auth.isAdmin;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class _ProfileTabState extends State<ProfileTab> {
           //Email
           CustomTextField(
               readOnly: true,
-              initialValue: auth.email,
+              initialValue: auth.userId,
               icon: Icons.nature_people,
               label: 'Usuário'),
 
@@ -53,13 +53,13 @@ class _ProfileTabState extends State<ProfileTab> {
             readOnly: true,
             initialValue: auth.token,
             icon: Icons.person,
-            label: 'Nomse',
+            label: 'Nome',
           ),
 
           // Nome
           CustomTextField(
             readOnly: true,
-            initialValue: auth.userId,
+            initialValue: auth.email,
             icon: Icons.person,
             label: 'Email',
           ),

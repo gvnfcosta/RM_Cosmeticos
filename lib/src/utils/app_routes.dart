@@ -7,6 +7,8 @@ class AppRoutes {
   static const productForm = '/product-form';
   static const productPage = '/product-page';
   static const categoryForm = '/category-form';
+  static const subCategoryForm = '/sub-category-form';
   static const categoryPage = '/category-page';
+  static const subCategoryPage = '/sub-category-page';
   static const catalogTab = '/catalogos-tab';
 }

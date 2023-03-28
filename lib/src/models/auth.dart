@@ -30,7 +30,7 @@ class Auth with ChangeNotifier {
   }
 
   bool get isAdmin {
-    return email == ('rm@gmail.com');
+    return email == ('rm@gmail.com') || email == ('gvnfcosta@gmail.com');
   }
 
   Future<void> _authenticate(String email, String password, String url) async {

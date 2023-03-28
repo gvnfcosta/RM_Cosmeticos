@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/category_model.dart';
 import '../../../models/auth.dart';
+import '../../../models/sub_category_model.dart';
 import '../../../utils/app_routes.dart';
 import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
-class CategoryTile extends StatelessWidget {
-  const CategoryTile({super.key, required this.category});
+class SubCategoryTile extends StatelessWidget {
+  const SubCategoryTile({super.key, required this.subCategory});
 
-  final Category category;
+  final SubCategory subCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class CategoryTile extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (c) {
-                  return ProductsTab(category.nome);
+                  return ProductsTab(subCategory.nome);
                 },
               ),
             );
@@ -32,24 +32,19 @@ class CategoryTile extends StatelessWidget {
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: Column(
-              children: [
-                SizedBox(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    category.imageUrl,
-                    fit: BoxFit.contain,
+            child: Container(
+              width: 100,
+              child: Column(
+                children: [
+                  Text(
+                    subCategory.nome,
+                    style: TextStyle(
+                      color: CustomColors.customContrastColor,
+                      fontSize: 16,
+                    ),
                   ),
-                )),
-                Text(
-                  category.nome,
-                  style: TextStyle(
-                    color: CustomColors.customContrastColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -67,7 +62,7 @@ class CategoryTile extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).pushNamed(AppRoutes.categoryForm,
-                            arguments: category);
+                            arguments: subCategory);
                       },
                       child: Ink(
                         height: 30,
