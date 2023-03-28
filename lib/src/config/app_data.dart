@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import '../models/auth.dart';
 import '/src/models/user_model.dart';
 
 final products = [];

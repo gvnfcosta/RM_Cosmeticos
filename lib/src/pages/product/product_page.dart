@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/category_model.dart';
+import '../../components/add_drawer.dart';
 import '../../components/product_item.dart';
+import '../../models/auth.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
 import '../../utils/app_routes.dart';
@@ -44,6 +46,9 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
+    bool isAdmin = auth.isAdmin;
+
     final List<Product> products = Provider.of<ProductList>(context)
         .product
         .where((element) => element.show == !_isSecret)
@@ -151,6 +156,7 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               ],
             ),
+      //  drawer: isAdmin ? const AppDrawer() : null,
     );
   }
 }

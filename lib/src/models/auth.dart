@@ -29,6 +29,10 @@ class Auth with ChangeNotifier {
     return isAuth ? _userId : null;
   }
 
+  bool get isAdmin {
+    return email == ('rm@gmail.com');
+  }
+
   Future<void> _authenticate(String email, String password, String url) async {
     final response = await http.post(
       Uri.parse(url),

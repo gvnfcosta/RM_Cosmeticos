@@ -75,33 +75,15 @@ class _CatalogTabState extends State<CatalogTab> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.pink.shade200,
+              backgroundColor: Colors.pink.shade300,
               pinned: true,
               expandedHeight: 130,
               flexibleSpace: FlexibleSpaceBar(
-                title: 
-                    Container(
-                        transform: Matrix4.rotationZ(-10 * pi / 120)
-                          ..translate(-40.0, 5),
-                        child: 
-                const Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                          text: 'RM',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 35,
-                              fontWeight: FontWeight.w300)),
-                      TextSpan(
-                          text: 'Cosméticos',
-                          style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300)),
-            ],  )),
-                  ),
-                
+                title: Container(
+                    width: 120,
+                    transform: Matrix4.rotationZ(-10 * pi / 150)
+                      ..translate(-40.0, 5),
+                    child: Image.asset("assets/images/LogoRM.png")),
                 background: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -169,8 +151,9 @@ class _CatalogTabState extends State<CatalogTab> {
                           productsFiltered.isNotEmpty
                               ? GridView.builder(
                                   shrinkWrap: true,
-                            //      scrollDirection: Axis.horizontal,
-                                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  //      scrollDirection: Axis.horizontal,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 150,
                                     mainAxisSpacing: 2,
                                     crossAxisSpacing: 2,

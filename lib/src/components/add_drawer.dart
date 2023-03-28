@@ -13,17 +13,6 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Bem vindo!'),
             automaticallyImplyLeading: false,
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.book),
-            title: const Text('Catálogo'),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed(
-                AppRoutes.baseScreen,
-              );
-            },
-          ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.category),
             title: const Text('Categories'),
@@ -35,7 +24,7 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.card_giftcard),
+            leading: const Icon(Icons.list),
             title: const Text('Produtos'),
             onTap: () {
               Navigator.of(context).pushNamed(

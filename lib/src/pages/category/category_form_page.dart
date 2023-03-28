@@ -113,7 +113,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
             style: TextStyle(fontSize: 13),
           ),
           actions: [
-            IconButton(onPressed: _submitForm, icon: const Icon(Icons.save))
+            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
           ]),
       body: SingleChildScrollView(
         child: SizedBox(

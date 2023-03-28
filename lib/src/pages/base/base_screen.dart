@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/pages/product/product_page.dart';
 import '../../models/auth.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
+import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -20,17 +20,30 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
+    bool isAdmin = auth.isAdmin;
+
     return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController, //indica qual a tela aberta
-        children: [
-          CatalogTab(selectedCategory: 'Todos'),
-          const CategoryTab(),
-          // const ProductPage(),
-          const ProfileTab(),
-        ],
-      ),
+      body: isAdmin
+          ? PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageController, //indica qual a tela aberta
+              children: [
+                CatalogTab(selectedCategory: 'Todos'),
+                const CategoryTab(),
+                const ProductPage(),
+                const ProfileTab(),
+              ],
+            )
+          : PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageController, //indica qual a tela aberta
+              children: [
+                CatalogTab(selectedCategory: 'Todos'),
+                const CategoryTab(),
+                const ProfileTab(),
+              ],
+            ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (indice) {
@@ -43,24 +56,39 @@ class _BaseScreenState extends State<BaseScreen> {
         backgroundColor: Colors.pink.shade600,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white.withAlpha(100),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Catálogo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Categorias',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.interests),
-          //   label: 'Produtos',
-          // ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
+        items: isAdmin
+            ? const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.menu_book),
+                  label: 'Catálogo',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.category),
+                  label: 'Categorias',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list),
+                  label: 'Produtos',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline),
+                  label: 'Perfil',
+                ),
+              ]
+            : const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.menu_book),
+                  label: 'Catálogo',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.category),
+                  label: 'Categorias',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline),
+                  label: 'Perfil',
+                ),
+              ],
       ),
     );
   }

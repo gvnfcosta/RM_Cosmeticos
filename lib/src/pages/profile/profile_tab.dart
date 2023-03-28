@@ -17,7 +17,7 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.email == ('rmcosmeticos@gmail.com');
+    bool isAdmin = auth.email == ('rm@gmail.com');
 
     return Scaffold(
       appBar: AppBar(
@@ -44,25 +44,33 @@ class _ProfileTabState extends State<ProfileTab> {
           //Email
           CustomTextField(
               readOnly: true,
-              initialValue: app_data.user.nick,
+              initialValue: auth.email,
               icon: Icons.nature_people,
               label: 'Usuário'),
 
           // Nome
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.name,
+            initialValue: auth.token,
             icon: Icons.person,
-            label: 'Nome',
+            label: 'Nomse',
           ),
 
-          // Celular
+          // Nome
           CustomTextField(
             readOnly: true,
-            initialValue: app_data.user.discount.toString(),
-            icon: Icons.money,
-            label: 'Desconto',
+            initialValue: auth.userId,
+            icon: Icons.person,
+            label: 'Email',
           ),
+
+          // Desconto
+          // CustomTextField(
+          //   readOnly: true,
+          //   initialValue: app_data.user.discount.toString(),
+          //   icon: Icons.money,
+          //   label: 'Desconto',
+          // ),
 
           //Botão para atualizar a senha
           SizedBox(

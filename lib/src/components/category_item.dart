@@ -12,8 +12,15 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.star),
-        title: Text(category.nome, style: const TextStyle(fontSize: 13)),
+        leading: Container(
+            width: 66,
+            child: Image.network(
+              category.imageUrl,
+              fit: BoxFit.contain,
+            )),
+        title: Container(
+            alignment: Alignment.center,
+            child: Text(category.nome, style: const TextStyle(fontSize: 13))),
         trailing: SizedBox(
           width: 96,
           child: Row(

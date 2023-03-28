@@ -63,13 +63,14 @@ class _CategoryTabState extends State<CategoryTab> {
                   Expanded(
                     child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 150,
-                      //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 150,
+                        //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         //crossAxisCount: quantidadeItemsTela,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 15,
+                        childAspectRatio: 10 / 14,
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {
