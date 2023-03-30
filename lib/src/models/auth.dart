@@ -52,9 +52,7 @@ class Auth with ChangeNotifier {
       _userId = body['localId'];
 
       _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(body['expiresIn']),
-        ),
+        Duration(seconds: int.parse(body['expiresIn'] * 4)),
       );
 
       Store.saveMap('userData', {

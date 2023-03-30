@@ -32,9 +32,10 @@ class SubCategoryTile extends StatelessWidget {
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: Container(
-              width: 100,
+            child: SizedBox(
+              width: 180,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     subCategory.nome,

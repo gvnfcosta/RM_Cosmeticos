@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/category_list.dart';
@@ -24,8 +23,9 @@ Future<void> _refreshProducts(BuildContext context) {
 }
 
 class _CatalogTabState extends State<CatalogTab> {
-  //String selectedCategory = 'Kits';
   bool _isLoading = true;
+  List tipo = ['De Linha', 'Promoção', 'Queima'];
+  String selectedTipo = 'De Linha';
 
   @override
   void initState() {
@@ -56,6 +56,8 @@ class _CatalogTabState extends State<CatalogTab> {
         .toList()
         .where((element) => element.show)
         .toList()
+        .where((element) => element.offer == selectedTipo)
+        .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     final List<Category> category = Provider.of<CategoryList>(context)
@@ -71,31 +73,66 @@ class _CatalogTabState extends State<CatalogTab> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        title: Row(
+          children: [
+            Container(
+                width: 100,
+                transform: Matrix4.rotationZ(-10 * pi / 150)..translate(0.0, 5),
+                child: Image.asset("assets/images/LogoRM.png")),
+            Text(
+              '   Produtos $selectedTipo',
+              style: const TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (_) => List.generate(
+              tipo.length,
+              (i) => PopupMenuItem(
+                value: tipo[i],
+                height: 30,
+                child: Text(tipo[i]),
+              ),
+            ),
+            onSelected: (valor) => setState(
+              () {
+                setState(() {
+                  selectedTipo = valor.toString();
+                });
+              },
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.pink.shade300,
-              pinned: true,
-              expandedHeight: 130,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Container(
-                    width: 120,
-                    transform: Matrix4.rotationZ(-10 * pi / 150)
-                      ..translate(-40.0, 5),
-                    child: Image.asset("assets/images/LogoRM.png")),
-                background: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Image.asset(
-                          "assets/images/KitMaquiagem.png",
-                        )),
-                  ],
-                ),
-              ),
-            ),
+            // SliverAppBar(
+            //   backgroundColor: Colors.pink.shade300,
+            //   pinned: true,
+            //   expandedHeight: 130,
+            //   flexibleSpace: FlexibleSpaceBar(
+            //     title: Container(
+            //         width: 120,
+            //         transform: Matrix4.rotationZ(-10 * pi / 150)
+            //           ..translate(-40.0, 5),
+            //         child: Image.asset("assets/images/LogoRM.png")),
+            //     background: Row(
+            //       mainAxisAlignment: MainAxisAlignment.end,
+            //       children: [
+            //         Padding(
+            //             padding: const EdgeInsets.all(18.0),
+            //             child: Image.asset(
+            //               "assets/images/KitMaquiagem.png",
+            //             )),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -117,16 +154,13 @@ class _CatalogTabState extends State<CatalogTab> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        height: 32,
-                                        width: 250,
+                                        height: 30,
+                                        width: 280,
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
+                                            stops: const [0.1, 0.5, 1],
                                             colors: [
-                                              Colors.pink.shade700,
-                                              Colors.pink.shade500,
-                                              Colors.pink.shade400,
+                                              Colors.pink.shade800,
                                               Colors.pink.shade100,
                                               Colors.white,
                                             ],
@@ -138,7 +172,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                               ' ${category[index].nome}',
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w200,
-                                                  fontSize: 25,
+                                                  fontSize: 23,
                                                   color: Colors.white),
                                             ),
                                           ],
@@ -150,8 +184,8 @@ class _CatalogTabState extends State<CatalogTab> {
                               : const SizedBox(),
                           productsFiltered.isNotEmpty
                               ? GridView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  //      scrollDirection: Axis.horizontal,
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 150,
