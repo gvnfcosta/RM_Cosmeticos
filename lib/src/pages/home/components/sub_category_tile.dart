@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../models/auth.dart';
 import '../../../models/sub_category_model.dart';
 import '../../../utils/app_routes.dart';
 import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
 class SubCategoryTile extends StatelessWidget {
-  const SubCategoryTile({super.key, required this.subCategory});
+  const SubCategoryTile(
+      {super.key, required this.subCategory, required this.isAdmin});
 
   final SubCategory subCategory;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
-
     return Stack(
       children: [
         GestureDetector(

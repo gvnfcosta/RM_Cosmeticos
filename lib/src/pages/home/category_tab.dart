@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/auth.dart';
 import '../../models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../utils/app_routes.dart';
@@ -32,6 +33,8 @@ class _CategoryTabState extends State<CategoryTab> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<CategoryList>(context);
+    Auth auth = Provider.of(context);
+    bool isAdmin = auth.isAdmin;
 
     final List<Category> categories = provider.categorias.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
@@ -52,7 +55,7 @@ class _CategoryTabState extends State<CategoryTab> {
               onPressed: () {
                 Navigator.of(context).pushNamed(AppRoutes.categoryForm);
               },
-              icon: const Icon(Icons.add)),
+              icon: isAdmin ? const Icon(Icons.add) : const SizedBox()),
         ],
       ),
       body: Padding(
@@ -73,7 +76,10 @@ class _CategoryTabState extends State<CategoryTab> {
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {
-                        return CategoryTile(category: categories[index]);
+                        return CategoryTile(
+                          category: categories[index],
+                          isAdmin: isAdmin,
+                        );
                       },
                     ),
                   )

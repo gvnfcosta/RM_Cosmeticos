@@ -81,9 +81,16 @@ class _CatalogTabState extends State<CatalogTab> {
                 width: 100,
                 transform: Matrix4.rotationZ(-10 * pi / 150)..translate(0.0, 5),
                 child: Image.asset("assets/images/LogoRM.png")),
-            Text(
-              '   Produtos $selectedTipo',
-              style: const TextStyle(fontSize: 18),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '   Produtos $selectedTipo',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

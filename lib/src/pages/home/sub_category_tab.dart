@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../models/auth.dart';
 import '../../models/sub_category_list.dart';
 import '../../models/sub_category_model.dart';
 import '../../utils/app_routes.dart';
@@ -32,6 +33,8 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SubCategoryList>(context);
+    Auth auth = Provider.of(context);
+    bool isAdmin = auth.isAdmin;
 
     final List<SubCategory> subCategories = provider.subCategorias.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
@@ -44,18 +47,18 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
       //App bar
 
       appBar: AppBar(
-        backgroundColor: Colors.pink.shade200,
-        centerTitle: true,
-        elevation: 0,
-        title: Image.asset('assets/images/LogoRM.png'),
-        actions: [
-          IconButton(
+          backgroundColor: Colors.pink.shade200,
+          centerTitle: true,
+          elevation: 0,
+          title: Image.asset('assets/images/LogoRM.png'),
+          actions: [
+            IconButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(AppRoutes.subCategoryForm);
               },
-              icon: const Icon(Icons.add)),
-        ],
-      ),
+              icon: isAdmin ? const Icon(Icons.add) : const SizedBox(),
+            ),
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
         child: !_isLoading
@@ -67,15 +70,16 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 150,
+                        maxCrossAxisExtent: 180,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 5,
-                        childAspectRatio: 12 / 3,
+                        childAspectRatio: 15 / 5,
                       ),
                       itemCount: subCategories.length,
                       itemBuilder: (_, index) {
                         return SubCategoryTile(
-                            subCategory: subCategories[index]);
+                            subCategory: subCategories[index],
+                            isAdmin: isAdmin);
                       },
                     ),
                   )
