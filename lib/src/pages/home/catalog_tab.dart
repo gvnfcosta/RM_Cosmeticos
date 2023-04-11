@@ -5,6 +5,7 @@ import 'package:rm/src/models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
+import '../pdfexport/pdfpreview.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
@@ -51,7 +52,7 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products = Provider.of<ProductList>(context)
+    final products = Provider.of<ProductList>(context)
         .product
         .toList()
         .where((element) => element.show)
@@ -95,6 +96,15 @@ class _CatalogTabState extends State<CatalogTab> {
           ],
         ),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PdfPreviewPage(products: products[0]),
+                  ),
+                );
+              },
+              icon: Icon(Icons.picture_as_pdf)),
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => List.generate(
