@@ -13,9 +13,10 @@ class ProductItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Image.network(product.imageUrl),
-        title: Text(product.name, style: const TextStyle(fontSize: 16)),
+        title: Text('RM ${product.code}', style: const TextStyle(fontSize: 12)),
+        subtitle: Text(product.name, style: const TextStyle(fontSize: 12)),
         trailing: SizedBox(
-          width: 96,
+          width: 86,
           child: Row(
             children: [
               IconButton(
@@ -43,8 +44,8 @@ class ProductItem extends StatelessWidget {
                         TextButton(
                           child: const Text('SIM'),
                           onPressed: () {
-                             Provider.of<ProductList>(context, listen: false)
-                                 .removeProduct(product);
+                            Provider.of<ProductList>(context, listen: false)
+                                .removeProduct(product);
                             Navigator.of(ctx).pop();
                           },
                         ),

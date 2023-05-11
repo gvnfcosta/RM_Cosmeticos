@@ -1,5 +1,3 @@
-import 'package:pdf/src/widgets/table.dart';
-
 class Product {
   String id;
   String code;
@@ -26,6 +24,4 @@ class Product {
     required this.show,
     required this.imageUrl,
   });
-
-  map(TableRow Function(dynamic e) param0) {}
 }

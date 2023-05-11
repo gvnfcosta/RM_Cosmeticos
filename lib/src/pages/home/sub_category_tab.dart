@@ -34,7 +34,7 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
   Widget build(BuildContext context) {
     final provider = Provider.of<SubCategoryList>(context);
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
+    bool isAdmin = true; //auth.isAdmin;
 
     final List<SubCategory> subCategories = provider.subCategorias.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));

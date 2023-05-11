@@ -5,7 +5,7 @@ import 'package:rm/src/models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
-import '../pdfexport/pdfpreview.dart';
+import '../pdf/pdf_page.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
@@ -52,6 +52,8 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
+    final productsPdf = Provider.of<ProductList>(context).product;
+
     final products = Provider.of<ProductList>(context)
         .product
         .toList()
@@ -100,11 +102,11 @@ class _CatalogTabState extends State<CatalogTab> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PdfPreviewPage(products: products[0]),
+                    builder: (context) => PdfPage(),
                   ),
                 );
               },
-              icon: Icon(Icons.picture_as_pdf)),
+              icon: const Icon(Icons.picture_as_pdf)),
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => List.generate(
@@ -128,28 +130,6 @@ class _CatalogTabState extends State<CatalogTab> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            // SliverAppBar(
-            //   backgroundColor: Colors.pink.shade300,
-            //   pinned: true,
-            //   expandedHeight: 130,
-            //   flexibleSpace: FlexibleSpaceBar(
-            //     title: Container(
-            //         width: 120,
-            //         transform: Matrix4.rotationZ(-10 * pi / 150)
-            //           ..translate(-40.0, 5),
-            //         child: Image.asset("assets/images/LogoRM.png")),
-            //     background: Row(
-            //       mainAxisAlignment: MainAxisAlignment.end,
-            //       children: [
-            //         Padding(
-            //             padding: const EdgeInsets.all(18.0),
-            //             child: Image.asset(
-            //               "assets/images/KitMaquiagem.png",
-            //             )),
-            //       ],
-            //     ),
-            //   ),
-            // ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [

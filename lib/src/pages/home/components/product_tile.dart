@@ -44,8 +44,8 @@ class ProductTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: Text(
-                    product.name,
-                    style: const TextStyle(fontSize: 14),
+                    'RM ${product.code}\n${product.name}',
+                    style: const TextStyle(fontSize: 9),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -58,7 +58,7 @@ class ProductTile extends StatelessWidget {
                       utilsServices.priceToCurrency(product.price),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 18,
+                        fontSize: 12,
                         color: CustomColors.customSwatchColor,
                       ),
                     ),

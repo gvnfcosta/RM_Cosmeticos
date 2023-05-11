@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/category_model.dart';
-import '../../components/add_drawer.dart';
 import '../../components/product_item.dart';
 import '../../models/auth.dart';
 import '../../models/product_list.dart';
@@ -47,7 +46,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
+    bool isAdmin = true; // auth.isAdmin;
 
     final List<Product> products = Provider.of<ProductList>(context)
         .product

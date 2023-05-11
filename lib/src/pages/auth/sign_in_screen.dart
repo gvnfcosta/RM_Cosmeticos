@@ -5,9 +5,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  //final authController = Get.find<AuthController>();
-  final _formKey = GlobalKey<FormState>();
-
   //Controladores de campos de texto
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -34,6 +31,28 @@ class SignInScreen extends StatelessWidget {
                         height: (deviceSize.height / 2.5),
                         child: Image.asset('assets/images/TelaInicial.png'),
                       ),
+                    ),
+                    Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Text(
+                              'Catálogo\nde Produtos',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 1, top: 1),
+                              child: Text(
+                                'Catálogo\nde Produtos',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 30,

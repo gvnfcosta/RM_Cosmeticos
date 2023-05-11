@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/pages/controllers/admin_controller.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
@@ -18,8 +17,6 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.login;
-
-  AdminController adminController = AdminController();
 
   final Map<String, String> _authData = {
     'email': '',
@@ -95,13 +92,6 @@ class _AuthFormState extends State<AuthForm> {
     }
 
     setState(() => _isLoading = false);
-
-    print(adminController.isAdmin);
-
-    if (_authData['email']!.contains('gvnfcosta')) {
-      adminController.toggleAdmin();
-    }
-    print(adminController.isAdmin);
   }
 
   @override

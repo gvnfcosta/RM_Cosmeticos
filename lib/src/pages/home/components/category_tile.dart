@@ -30,17 +30,16 @@ class CategoryTile extends StatelessWidget {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    category.imageUrl,
-                    fit: BoxFit.contain,
-                  ),
+                    child: Image.network(
+                  category.imageUrl,
+                  fit: BoxFit.contain,
                 )),
                 Text(
                   category.nome,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: CustomColors.customContrastColor,
                     fontSize: 16,

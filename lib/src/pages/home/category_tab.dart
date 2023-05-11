@@ -34,7 +34,9 @@ class _CategoryTabState extends State<CategoryTab> {
   Widget build(BuildContext context) {
     final provider = Provider.of<CategoryList>(context);
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
+    String? isEmail = auth.email;
+    bool isAdmin = true;
+    //bool isAdmin = auth.isAdmin;
 
     final List<Category> categories = provider.categorias.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));

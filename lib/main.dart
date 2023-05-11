@@ -10,10 +10,8 @@ import 'src/pages/category/category_form_page.dart';
 import 'src/pages/category/category_page.dart';
 import 'src/pages/category/sub_category_form_page.dart';
 import 'src/pages/category/sub_category_page.dart';
-import 'src/pages/controllers/admin_controller.dart';
 import 'src/pages/home/catalog_tab.dart';
 import 'src/pages/base/base_screen.dart';
-import 'src/pages/pdfexport/pdfpreview.dart';
 import 'src/pages/product/product_page.dart';
 import 'src/pages/product/products_form_page.dart';
 import 'src/utils/app_routes.dart';
@@ -30,7 +28,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProvider(create: (_) => AdminController()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {
@@ -63,6 +60,8 @@ class MyApp extends StatelessWidget {
         title: 'RM',
         theme: ThemeData(
           primarySwatch: Colors.pink,
+          textTheme:
+              TextTheme(headlineMedium: TextStyle(color: Colors.pink.shade600)),
           scaffoldBackgroundColor: Colors.white.withAlpha(190),
         ),
         debugShowCheckedModeBanner: false,

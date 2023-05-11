@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/components/add_drawer.dart';
+import 'package:rm/src/components/app_drawer.dart';
 import '../../models/auth.dart';
 import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
@@ -17,7 +17,7 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
+    bool isAdmin = true; // auth.isAdmin;
 
     return Scaffold(
       appBar: AppBar(

@@ -50,7 +50,6 @@ class _CategoryPageState extends State<CategoryPage> {
                         },
                         icon: const Icon(Icons.add)),
                   ]),
-              //drawer: const AppDrawer(),
               body: RefreshIndicator(
                 onRefresh: () => _refreshCategory(context),
                 child: Padding(

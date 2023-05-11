@@ -22,30 +22,14 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = auth.isAdmin;
+    bool isAdmin = true; // auth.isAdmin;
 
     return Scaffold(
-      body: isAdmin
-          ? PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController, //indica qual a tela aberta
-              children: [
-                CatalogTab(selectedCategory: 'Todos'),
-                const CategoryTab(),
-                const SubCategoryTab(),
-                const ProductPage(),
-                const ProfileTab(),
-              ],
-            )
-          : PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController, //indica qual a tela aberta
-              children: [
-                CatalogTab(selectedCategory: 'Todos'),
-                const CategoryTab(),
-                const ProfileTab(),
-              ],
-            ),
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController, //indica qual a tela aberta
+        children: isAdmin ? adminPageViews : userPageViews,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (indice) {
@@ -58,44 +42,60 @@ class _BaseScreenState extends State<BaseScreen> {
         backgroundColor: Colors.pink.shade600,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white.withAlpha(100),
-        items: isAdmin
-            ? const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.menu_book),
-                  label: 'Catálogo',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.category),
-                  label: 'Categorias',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.interests),
-                  label: 'SubCategorias',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list),
-                  label: 'Produtos',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline),
-                  label: 'Perfil',
-                ),
-              ]
-            : const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.menu_book),
-                  label: 'Catálogo',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.category),
-                  label: 'Categorias',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline),
-                  label: 'Perfil',
-                ),
-              ],
+        items: isAdmin ? adminNavigationItens : userNavigationItens,
       ),
     );
   }
+
+  final List<Widget> adminPageViews = [
+    CatalogTab(selectedCategory: 'Todos'),
+    const CategoryTab(),
+    const SubCategoryTab(),
+    const ProductPage(),
+    const ProfileTab(),
+  ];
+
+  final List<Widget> userPageViews = [
+    CatalogTab(selectedCategory: 'Todos'),
+    const CategoryTab(),
+    const ProfileTab(),
+  ];
+
+  final List<BottomNavigationBarItem> adminNavigationItens = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.menu_book),
+      label: 'Catálogo',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.category),
+      label: 'Categorias',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.interests),
+      label: 'SubCategorias',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.list),
+      label: 'Produtos',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person_outline),
+      label: 'Perfil',
+    ),
+  ];
+
+  final List<BottomNavigationBarItem> userNavigationItens = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.menu_book),
+      label: 'Catálogo',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.category),
+      label: 'Categorias',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person_outline),
+      label: 'Perfil',
+    ),
+  ];
 }
