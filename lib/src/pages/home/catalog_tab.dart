@@ -25,8 +25,8 @@ Future<void> _refreshProducts(BuildContext context) {
 
 class _CatalogTabState extends State<CatalogTab> {
   bool _isLoading = true;
-  List tipo = ['De Linha', 'Promoção', 'Queima'];
-  String selectedTipo = 'De Linha';
+  List tipo = ['de Linha', 'em Promoção', 'na Queima'];
+  String selectedTipo = 'de Linha';
 
   @override
   void initState() {
@@ -52,8 +52,6 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final productsPdf = Provider.of<ProductList>(context).product;
-
     final products = Provider.of<ProductList>(context)
         .product
         .toList()
@@ -68,9 +66,6 @@ class _CatalogTabState extends State<CatalogTab> {
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    List<Product> productsFiltered =
-        products.where((element) => element.category == "Kits").toList();
-
     double tamanhoTela = MediaQuery.of(context).size.width;
     int quantidadeItemsTela = tamanhoTela ~/ 110; // divisão por inteiro
 
@@ -81,16 +76,16 @@ class _CatalogTabState extends State<CatalogTab> {
         title: Row(
           children: [
             Container(
-                width: 100,
-                transform: Matrix4.rotationZ(-10 * pi / 150)..translate(0.0, 5),
+                width: 80,
+                transform: Matrix4.rotationZ(-8 * pi / 150)..translate(0.0, 6),
                 child: Image.asset("assets/images/LogoRM.png")),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '   Produtos $selectedTipo',
-                    style: const TextStyle(fontSize: 18),
+                    '  Produtos\n  $selectedTipo',
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
@@ -102,7 +97,7 @@ class _CatalogTabState extends State<CatalogTab> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PdfPage(),
+                    builder: (context) => const PdfPage(),
                   ),
                 );
               },
