@@ -115,9 +115,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     _formKey.currentState?.save();
 
@@ -128,15 +126,18 @@ class _ProductFormPageState extends State<ProductFormPage> {
           .saveProduct(_formData);
     } catch (error) {
       await showDialog<void>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                  title: const Text('ERRO!'),
-                  content: const Text('Erro na gravação dos dados'),
-                  actions: [
-                    TextButton(
-                        child: const Text('Ok'),
-                        onPressed: () => Navigator.of(context).pop())
-                  ]));
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('ERRO!'),
+          content: const Text('Erro na gravação dos dados'),
+          actions: [
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
     } finally {
       setState(() => _isLoading = false);
       Navigator.of(context).pop();

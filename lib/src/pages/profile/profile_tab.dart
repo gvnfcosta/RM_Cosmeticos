@@ -4,7 +4,6 @@ import 'package:rm/src/components/app_drawer.dart';
 import '../../models/auth.dart';
 import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
-import '/src/config/app_data.dart' as app_data;
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -53,7 +52,7 @@ class _ProfileTabState extends State<ProfileTab> {
             readOnly: true,
             initialValue: auth.token,
             icon: Icons.person,
-            label: 'Nome',
+            label: 'Nome Token',
           ),
 
           // Nome

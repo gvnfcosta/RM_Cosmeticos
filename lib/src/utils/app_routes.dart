@@ -4,6 +4,7 @@ class AppRoutes {
   static const signUpPage = '/sign-up';
   static const homeTab = '/home-tab';
   static const baseScreen = '/base-screen';
+  static const userForm = '/user-form';
   static const productForm = '/product-form';
   static const productPage = '/product-page';
   static const categoryForm = '/category-form';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/auth.dart';
 import '../utils/app_routes.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -6,11 +8,13 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
+
     return Drawer(
       child: Column(
         children: [
           AppBar(
-            title: const Text('Bem vindo!'),
+            title: Text('Bem vindo! ${auth.email}'),
             automaticallyImplyLeading: false,
           ),
           ListTile(

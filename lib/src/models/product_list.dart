@@ -150,7 +150,7 @@ class ProductList with ChangeNotifier {
         _items.insert(index, product);
         notifyListeners();
 
-        throw const HttpException('Não foi possível excluir o produto.');
+        throw HttpException('Não foi possível excluir ${product.name}.');
       }
     }
   }
