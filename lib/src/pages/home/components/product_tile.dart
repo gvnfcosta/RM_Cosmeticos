@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../utils/app_routes.dart';
 import '../../product/product_screen.dart';
-import '../../product/products_form_page.dart';
 import '/src/config/custom_colors.dart';
 import '../../../models/product_model.dart';
 import '/src/services/utils_services.dart';
@@ -11,7 +11,7 @@ class ProductTile extends StatelessWidget {
   final Product product;
   final UtilsServices utilsServices = UtilsServices();
 
-  final bool editProduct = false;
+  final bool editProduct = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,14 @@ class ProductTile extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (c) {
-                  return ProductScreen(
-                    product: product,
-                  );
+                  return ProductScreen(product: product);
                 },
               ),
             );
           },
           //Conteúdo
           child: Card(
+            color: Colors.white.withAlpha(180),
             elevation: 0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,7 +44,7 @@ class ProductTile extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: Text(
                     'RM ${product.code}\n${product.name}',
-                    style: const TextStyle(fontSize: 9),
+                    style: const TextStyle(fontSize: 11),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -76,10 +75,8 @@ class ProductTile extends StatelessWidget {
                 right: 4,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const ProductFormPage();
-                    }));
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.productForm, arguments: product);
                   },
                   child: const Icon(
                     Icons.edit,

@@ -12,7 +12,9 @@ import 'src/pages/category/category_page.dart';
 import 'src/pages/category/sub_category_form_page.dart';
 import 'src/pages/category/sub_category_page.dart';
 import 'src/pages/home/catalog_tab.dart';
-import 'src/pages/base/base_screen.dart';
+import 'src/pages/initial/base_screen.dart';
+import 'src/pages/home/components/controllers/admin_controller.dart';
+import 'src/pages/initial/initial_screen.dart';
 import 'src/pages/product/product_page.dart';
 import 'src/pages/product/products_form_page.dart';
 import 'src/pages/user/user_form_page.dart';
@@ -30,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
+        ChangeNotifierProvider(create: (_) => AdminController()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {
@@ -49,10 +52,12 @@ class MyApp extends StatelessWidget {
           },
         ),
         ChangeNotifierProxyProvider<Auth, UserList>(
-          create: (_) => UserList('', []),
+          create: (_) => UserList('', '', '', []),
           update: (ctx, auth, previous) {
             return UserList(
               auth.token ?? '',
+              auth.email ?? '',
+              auth.userId ?? '',
               previous?.items ?? [],
             );
           },
@@ -79,7 +84,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
+          AppRoutes.authOrHome: (ctx) => AuthOrHomePage(),
           AppRoutes.signUpPage: (ctx) => SignUpScreen(),
           AppRoutes.baseScreen: (ctx) => const BaseScreen(),
           AppRoutes.userForm: (ctx) => const UserFormPage(),

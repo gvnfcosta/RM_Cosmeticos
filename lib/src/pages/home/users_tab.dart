@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_model.dart';
 import 'package:rm/src/pages/user/user_form_page.dart';
-import '../../models/auth.dart';
 import '../../models/user_list.dart';
-import '../../utils/app_routes.dart';
 import 'components/user_tile.dart';
 
 class UsersTab extends StatefulWidget {
@@ -39,11 +37,10 @@ class _UsersTabState extends State<UsersTab> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      //App bar
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        title: const Text('Usuários e  Vendedores',
+        title: const Text('Usuários e Vendedores',
             style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
@@ -58,7 +55,7 @@ class _UsersTabState extends State<UsersTab> {
       ),
 
       // Campo Pesquisa
-      body: !_isLoading
+      body: users.isNotEmpty
           ? Column(
               children: [
                 //const SizedBox(height: 12),
@@ -66,8 +63,8 @@ class _UsersTabState extends State<UsersTab> {
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: users.length,
-                    itemBuilder: (_, index) {
-                      return UserTile(user: users[index]);
+                    itemBuilder: (_, i) {
+                      return UserTile(user: users[i]);
                     },
                   ),
                 ),
@@ -76,11 +73,4 @@ class _UsersTabState extends State<UsersTab> {
           : const Center(child: CircularProgressIndicator()),
     );
   }
-}
-
-Future<void> _refreshData(BuildContext context) {
-  return Provider.of<UserList>(
-    context,
-    listen: false,
-  ).loadData();
 }

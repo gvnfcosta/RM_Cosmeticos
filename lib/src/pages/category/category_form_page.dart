@@ -67,7 +67,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
     bool endsWithFile = url.toLowerCase().endsWith('.png') ||
         url.toLowerCase().endsWith('.jpg') ||
         url.toLowerCase().endsWith('.jpeg');
-    return isValidUrl; //&& endsWithFile;
+    return isValidUrl;
   }
 
   Future<void> _submitForm() async {
@@ -123,7 +123,6 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
             children: [
               Expanded(
                 child: SizedBox(
-                  //       height: deviceSize.height / 2,
                   child: _imageUrlController.text.isEmpty
                       ? const Center(
                           child: Text(

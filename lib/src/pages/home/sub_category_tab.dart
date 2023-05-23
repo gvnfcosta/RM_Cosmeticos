@@ -36,7 +36,7 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
     Auth auth = Provider.of(context);
     bool isAdmin = true; //auth.isAdmin;
 
-    final List<SubCategory> subCategories = provider.subCategorias.toList()
+    final List<SubCategory> subCategories = provider.subCategories.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     double tamanhoTela = MediaQuery.of(context).size.width;

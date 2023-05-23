@@ -84,78 +84,42 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
     final Size deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: CustomColors.customSwatchColor,
-      appBar: AppBar(
-          title: const Text(
-            'Editar SubCategorias',
-            style: TextStyle(fontSize: 13),
-          ),
-          actions: [
-            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
-          ]),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: deviceSize.height,
-          width: deviceSize.width,
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(30)),
-                  ),
-                  child: !_isLoading
-                      ? Container(
-                          height: 100,
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: SizedBox(
-                                    child: TextFormField(
-                                        style: const TextStyle(fontSize: 14),
-                                        initialValue:
-                                            _formData['nome']?.toString(),
-                                        decoration: InputDecoration(
-                                            labelText: 'Nome',
-                                            labelStyle:
-                                                const TextStyle(fontSize: 12),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8))),
-                                        textInputAction: TextInputAction.next,
-                                        focusNode: _nomeFocus,
-                                        onFieldSubmitted: (_) {
-                                          _submitForm;
-                                        },
-                                        onSaved: (name) =>
-                                            _formData['nome'] = name ?? '',
-                                        validator: (nam) {
-                                          final name = nam ?? '';
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text('Editar SubCategorias'), actions: [
+        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
+      ]),
+      body: Center(
+        child: !_isLoading
+            ? Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: TextFormField(
+                      style: const TextStyle(fontSize: 14),
+                      initialValue: _formData['nome']?.toString(),
+                      decoration: InputDecoration(
+                          labelText: 'Nome',
+                          labelStyle: const TextStyle(fontSize: 12),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      textInputAction: TextInputAction.next,
+                      focusNode: _nomeFocus,
+                      onFieldSubmitted: (_) {
+                        _submitForm;
+                      },
+                      onSaved: (name) => _formData['nome'] = name ?? '',
+                      validator: (nam) {
+                        final name = nam ?? '';
 
-                                          if (name.trim().isEmpty) {
-                                            return 'Nome é obrigatório';
-                                          }
+                        if (name.trim().isEmpty) {
+                          return 'Nome é obrigatório';
+                        }
 
-                                          return null;
-                                        }),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : const Center(child: CircularProgressIndicator()),
+                        return null;
+                      }),
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }

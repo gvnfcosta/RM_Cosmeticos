@@ -11,7 +11,7 @@ class SubCategoryList with ChangeNotifier {
   List<SubCategory> _items = [];
 
   List<SubCategory> get items => [..._items];
-  List<SubCategory> get subCategorias => _items.toList();
+  List<SubCategory> get subCategories => _items.toList();
 
   SubCategoryList(this._token, this._items);
 
@@ -21,7 +21,7 @@ class SubCategoryList with ChangeNotifier {
     _items.clear();
 
     final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/subcategorias.json?auth=$_token'));
+        .get(Uri.parse('${Constants.baseUrl}/subcategories.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -52,12 +52,12 @@ class SubCategoryList with ChangeNotifier {
     }
   }
 
-  Future<void> _addDados(SubCategory subCategory) async {
+  Future<void> _addDados(SubCategory subCategories) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/subcategorias.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/subcategories.json?auth=$_token'),
       body: jsonEncode({
-        'id': subCategory.id,
-        'nome': subCategory.nome,
+        'id': subCategories.id,
+        'nome': subCategories.nome,
       }),
     );
 
@@ -65,7 +65,7 @@ class SubCategoryList with ChangeNotifier {
     _items.add(
       SubCategory(
         id: id,
-        nome: subCategory.nome,
+        nome: subCategories.nome,
       ),
     );
     notifyListeners();
@@ -77,8 +77,9 @@ class SubCategoryList with ChangeNotifier {
     if (index >= 0) {
       await http.patch(
         Uri.parse(
-            '${Constants.baseUrl}/subcategorias/${subCategories.id}.json?auth=$_token'),
+            '${Constants.baseUrl}/subcategories/${subCategories.id}.json?auth=$_token'),
         body: jsonEncode({
+          'id': subCategories.id,
           'nome': subCategories.nome,
         }),
       );
@@ -97,8 +98,7 @@ class SubCategoryList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse(
-            '${Constants.baseUrl}/subcategorias/${subCategories.id}.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/subcategories.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

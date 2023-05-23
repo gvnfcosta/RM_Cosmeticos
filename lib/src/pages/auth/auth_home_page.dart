@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/pages/initial/initial_screen.dart';
 import '../../models/auth.dart';
-import '../base/base_screen.dart';
+import '../initial/base_screen.dart';
 import 'sign_in_screen.dart';
 
 class AuthOrHomePage extends StatelessWidget {
-  const AuthOrHomePage({Key? key}) : super(key: key);
+  AuthOrHomePage({Key? key}) : super(key: key);
+
+  bool isAdmin = true;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,11 @@ class AuthOrHomePage extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth ? const BaseScreen() : SignInScreen();
+          return auth.isAuth
+              ? isAdmin
+                  ? InitialScreen()
+                  : const BaseScreen()
+              : SignInScreen();
         }
       },
     );

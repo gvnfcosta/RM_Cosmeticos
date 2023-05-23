@@ -29,19 +29,13 @@ class SubCategoryTile extends StatelessWidget {
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: SizedBox(
-              width: 180,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    subCategory.nome,
-                    style: TextStyle(
-                      color: CustomColors.customContrastColor,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+            child: Center(
+              child: Text(
+                subCategory.nome,
+                style: TextStyle(
+                  color: CustomColors.customContrastColor,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
@@ -59,7 +53,8 @@ class SubCategoryTile extends StatelessWidget {
                   child: Material(
                     child: InkWell(
                       onTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.categoryForm,
+                        Navigator.of(context).pushNamed(
+                            AppRoutes.subCategoryForm,
                             arguments: subCategory);
                       },
                       child: Ink(

@@ -7,6 +7,7 @@ import '../../models/product_list.dart';
 import '/src/models/product_model.dart';
 import '../../config/custom_colors.dart';
 import '/src/services/utils_services.dart';
+import '../../config/app_data.dart' as appData;
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -34,9 +35,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-
-  List unidades = ['Un', 'Kit', 'Cx'];
-  List ofertas = ['De Linha', 'Promoção', 'Queima'];
 
   String? selectedUnidade;
   String? selectedOffer;
@@ -66,7 +64,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
       _formData['show'] = true;
       _formData['unit'] = 'Un';
-      _formData['offer'] = 'De Linha';
+      _formData['offer'] = appData.ofertas;
 
       if (arg != null) {
         final product = arg as Product;
@@ -303,23 +301,25 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 8.0, right: 8.0),
-                                      child: Container(
-                                        height: 40,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 1,
-                                              color: Colors.black38,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: SizedBox(
-                                            width: 80,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 8.0, right: 8.0),
+                                    child: Container(
+                                      height: 40,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color: Colors.black38,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: DropdownButtonHideUnderline(
+                                        child: SizedBox(
+                                          width: 100,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 8),
                                             child: DropdownButton2(
                                               focusNode: _unitFocus,
                                               dropdownElevation: 12,
@@ -328,7 +328,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                       fontSize: 13,
                                                       color: Theme.of(context)
                                                           .hintColor)),
-                                              items: unidades
+                                              items: appData.unidades
                                                   .map((item) =>
                                                       DropdownMenuItem<String>(
                                                           value: item,
@@ -358,54 +358,56 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8.0, right: 8.0),
-                                    child: Container(
-                                      height: 40,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.black38,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: DropdownButtonHideUnderline(
-                                        child: SizedBox(
-                                          width: 80,
-                                          child: DropdownButton2(
-                                            focusNode: _offerFocus,
-                                            dropdownElevation: 12,
-                                            hint: Text('Oferta',
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Theme.of(context)
-                                                        .hintColor)),
-                                            items: ofertas
-                                                .map((item) =>
-                                                    DropdownMenuItem<String>(
-                                                        value: item,
-                                                        child: Text(item,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        14))))
-                                                .toList(),
-                                            value: selectedOffer,
-                                            onChanged: (value) {
-                                              setState(
-                                                () {
-                                                  selectedOffer =
-                                                      value as String;
-                                                  _formData['offer'] = value;
-                                                },
-                                              );
-                                            },
-                                            buttonHeight: 30,
-                                            buttonWidth: 10,
-                                            itemHeight: 30,
-                                            autofocus: true,
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 8.0, right: 8.0),
+                                      child: Container(
+                                        height: 40,
+                                        //width: 100,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.black38,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: SizedBox(
+                                            // width: 80,
+                                            child: DropdownButton2(
+                                              focusNode: _offerFocus,
+                                              dropdownElevation: 12,
+                                              hint: Text('Oferta',
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: Theme.of(context)
+                                                          .hintColor)),
+                                              items: appData.ofertas
+                                                  .map((item) =>
+                                                      DropdownMenuItem<String>(
+                                                          value: item,
+                                                          child: Text(item,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14))))
+                                                  .toList(),
+                                              value: selectedOffer,
+                                              onChanged: (value) {
+                                                setState(
+                                                  () {
+                                                    selectedOffer =
+                                                        value as String;
+                                                    _formData['offer'] = value;
+                                                  },
+                                                );
+                                              },
+                                              buttonHeight: 30,
+                                              buttonWidth: 10,
+                                              itemHeight: 30,
+                                              autofocus: true,
+                                            ),
                                           ),
                                         ),
                                       ),

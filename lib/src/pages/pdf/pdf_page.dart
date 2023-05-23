@@ -6,7 +6,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/config/app_data.dart';
 import '../../models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../models/product_list.dart';
@@ -20,7 +19,7 @@ class PdfPage extends StatelessWidget {
     final products = Provider.of<ProductList>(context).product;
 
     final List<Category> categories = Provider.of<CategoryList>(context)
-        .categorias
+        .categories
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 

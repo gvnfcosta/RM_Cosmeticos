@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/pages/initial/initial_screen.dart';
 import '../../models/auth.dart';
+import '../../models/user_list.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
 import '../home/sub_category_tab.dart';
@@ -18,12 +20,15 @@ class BaseScreen extends StatefulWidget {
 class _BaseScreenState extends State<BaseScreen> {
   //Controle da tela aberta
   int currentIndex = 0;
+
+  bool isAdmin = true;
+
   final pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
-    bool isAdmin = true; // auth.isAdmin;
+    // final String nomeUsuario =
+    //     Provider.of<UserList>(context).usuario.first.name;
 
     return Scaffold(
       body: PageView(

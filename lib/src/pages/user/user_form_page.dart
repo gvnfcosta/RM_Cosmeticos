@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/config/custom_colors.dart';
@@ -15,9 +16,14 @@ class UserFormPage extends StatefulWidget {
 class _UserFormPageState extends State<UserFormPage> {
   bool _isLoading = false;
 
+  static const Map<int, String> levels = {
+    0: 'Administrador',
+    1: 'Vendedor',
+  };
+
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
-  final _passwordFocus = FocusNode();
+  final _levelFocus = FocusNode();
   final _discountFocus = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
@@ -30,6 +36,7 @@ class _UserFormPageState extends State<UserFormPage> {
     if (_data.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
+      _data['level'] = 0;
       _data['discount'] = 0.0;
 
       if (arg != null) {
@@ -37,7 +44,7 @@ class _UserFormPageState extends State<UserFormPage> {
         _data['id'] = user.id;
         _data['name'] = user.name;
         _data['email'] = user.email;
-        _data['password'] = user.password;
+        _data['level'] = user.level;
         _data['discount'] = user.discount;
       }
     }
@@ -47,7 +54,7 @@ class _UserFormPageState extends State<UserFormPage> {
   void dispose() {
     _nameFocus.dispose();
     _emailFocus.dispose();
-    _passwordFocus.dispose();
+    _levelFocus.dispose();
     _discountFocus.dispose();
   }
 
@@ -99,10 +106,11 @@ class _UserFormPageState extends State<UserFormPage> {
         children: [
           Container(
             alignment: Alignment.center,
-            height: 100,
+            height: 200,
             child: Text(
-              'Dados do Usuário',
+              'Dados do\nUsuário',
               style: Theme.of(context).textTheme.displaySmall,
+              textAlign: TextAlign.center,
             ),
           ),
           Expanded(
@@ -127,6 +135,7 @@ class _UserFormPageState extends State<UserFormPage> {
                         children: [
                           // NOME
                           TextFormField(
+                              maxLines: 2,
                               initialValue: _data['name']?.toString(),
                               decoration: InputDecoration(
                                 labelText: 'Nome',
@@ -153,6 +162,7 @@ class _UserFormPageState extends State<UserFormPage> {
 
                           //EMAIL
                           TextFormField(
+                              maxLines: 2,
                               initialValue: _data['email']?.toString(),
                               decoration: InputDecoration(
                                 labelText: 'Email',
@@ -164,7 +174,7 @@ class _UserFormPageState extends State<UserFormPage> {
                               focusNode: _emailFocus,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
-                                    .requestFocus(_passwordFocus);
+                                    .requestFocus(_levelFocus);
                               },
                               onSaved: (email) => _data['email'] = email ?? '',
                               validator: (e) {
@@ -177,54 +187,87 @@ class _UserFormPageState extends State<UserFormPage> {
                                 return null;
                               }),
 
-                          // PASSWORD
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                  style: BorderStyle.solid,
+                                  width: 1,
+                                  color: Colors.grey),
+                            ),
+                            child: Row(children: [
+                              const SizedBox(width: 60, child: Text('Função')),
+                              DropdownButtonHideUnderline(
+                                child: Expanded(
+                                  child: DropdownButton2(
+                                    focusNode: _levelFocus,
+                                    dropdownElevation: 12,
+                                    hint: Text('Selecione',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).hintColor)),
+                                    items: levels
+                                        .map(
+                                          (value, description) {
+                                            return MapEntry(
+                                              description,
+                                              DropdownMenuItem<String>(
+                                                value: value.toString(),
+                                                child: Text(description),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                        .values
+                                        .toList(),
+                                    value: _data['level'].toString(),
+                                    onChanged: (String? newValue) {
+                                      if (newValue != null) {
+                                        setState(
+                                          () {
+                                            final valueString =
+                                                newValue.toString() ?? '';
+                                            _data['level'] =
+                                                int.parse(valueString);
+                                          },
+                                        );
+                                      }
+                                    },
+                                    buttonHeight: 30,
+                                    buttonWidth: 10,
+                                    itemHeight: 30,
+                                    autofocus: true,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          ),
+
+                          // DISCOUNT
                           TextFormField(
-                            initialValue: _data['password']?.toString(),
+                            initialValue: _data['discount']?.toString(),
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: 'Desconto',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   gapPadding: 20),
                             ),
                             textInputAction: TextInputAction.next,
-                            focusNode: _passwordFocus,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context)
-                                  .requestFocus(_discountFocus);
+                            focusNode: _discountFocus,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                              signed: true,
+                            ),
+                            onFieldSubmitted: (_) => _submitForm(),
+                            onSaved: (discount) => _data['discount'] =
+                                double.parse(discount ?? '0'),
+                            validator: (e) {
+                              final eString = e ?? '0';
+                              final discount = double.tryParse(eString) ?? 0.0;
+                              return null;
                             },
-                            onSaved: (password) =>
-                                _data['password'] = password ?? '',
-                            // validator: (e) {
-                            //   final password = e ?? '';
-                            //   return null;
-                            // },
                           ),
-
-                          // DISCOUNT
-                          TextFormField(
-                              initialValue: _data['discount']?.toString(),
-                              decoration: InputDecoration(
-                                labelText: 'Desconto',
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    gapPadding: 20),
-                              ),
-                              textInputAction: TextInputAction.next,
-                              focusNode: _discountFocus,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                                signed: true,
-                              ),
-                              onFieldSubmitted: (_) => _submitForm(),
-                              onSaved: (discount) => _data['discount'] =
-                                  double.parse(discount ?? '0'),
-                              validator: (e) {
-                                final eString = e ?? '0';
-                                final discount =
-                                    double.tryParse(eString) ?? 0.0;
-                                return null;
-                              }),
                         ],
                       ),
                     ),

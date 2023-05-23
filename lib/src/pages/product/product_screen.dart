@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../components/product_show.dart';
-import '../../utils/app_routes.dart';
 import '/src/config/custom_colors.dart';
 import '../../models/product_model.dart';
 import '/src/services/utils_services.dart';
@@ -190,23 +189,23 @@ class _ProductScreenState extends State<ProductScreen> {
                   )),
             ),
           ),
-          editProduct
-              ? Positioned(
-                  right: 10,
-                  top: 10,
-                  child: SafeArea(
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.productForm,
-                              arguments: widget.product);
-                        },
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.deepOrange,
-                        )),
-                  ),
-                )
-              : const SizedBox(),
+          // editProduct
+          //     ? Positioned(
+          //         right: 10,
+          //         top: 10,
+          //         child: SafeArea(
+          //           child: IconButton(
+          //               onPressed: () {
+          //                 Navigator.of(context).pushNamed(AppRoutes.productForm,
+          //                     arguments: widget.product);
+          //               },
+          //               icon: const Icon(
+          //                 Icons.edit,
+          //                 color: Colors.deepOrange,
+          //               )),
+          //         ),
+          //       )
+          //     : const SizedBox(),
         ],
       ),
     );

@@ -12,7 +12,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Container(
+        leading: SizedBox(
             width: 66,
             child: Image.network(
               category.imageUrl,

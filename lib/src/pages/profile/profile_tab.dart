@@ -63,14 +63,6 @@ class _ProfileTabState extends State<ProfileTab> {
             label: 'Email',
           ),
 
-          // Desconto
-          // CustomTextField(
-          //   readOnly: true,
-          //   initialValue: app_data.user.discount.toString(),
-          //   icon: Icons.money,
-          //   label: 'Desconto',
-          // ),
-
           //Botão para atualizar a senha
           SizedBox(
             height: 50,

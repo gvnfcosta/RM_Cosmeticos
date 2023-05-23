@@ -36,9 +36,8 @@ class _CategoryTabState extends State<CategoryTab> {
     Auth auth = Provider.of(context);
     String? isEmail = auth.email;
     bool isAdmin = true;
-    //bool isAdmin = auth.isAdmin;
 
-    final List<Category> categories = provider.categorias.toList()
+    final List<Category> categories = provider.categories.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     double tamanhoTela = MediaQuery.of(context).size.width;
@@ -89,7 +88,6 @@ class _CategoryTabState extends State<CategoryTab> {
               )
             : const Center(child: CircularProgressIndicator()),
       ),
-      // drawer: const AppDrawer(),
     );
   }
 }

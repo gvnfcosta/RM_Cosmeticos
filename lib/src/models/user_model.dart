@@ -3,13 +3,13 @@ class UserModel {
   String name;
   String email;
   double discount;
-  String password;
+  int level;
 
   UserModel({
     required this.id,
     required this.name,
     required this.email,
     required this.discount,
-    required this.password,
+    required this.level,
   });
 }

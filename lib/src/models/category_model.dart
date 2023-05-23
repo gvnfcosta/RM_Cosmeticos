@@ -3,5 +3,9 @@ class Category {
   String nome;
   String imageUrl;
 
-  Category({required this.id, required this.nome, required this.imageUrl});
+  Category({
+    required this.id,
+    required this.nome,
+    required this.imageUrl,
+  });
 }

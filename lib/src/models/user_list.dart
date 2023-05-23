@@ -8,14 +8,22 @@ import 'user_model.dart';
 
 class UserList with ChangeNotifier {
   final String _token;
+  final String _email;
+  final String _userId;
+
   List<UserModel> _items = [];
 
   List<UserModel> get items => [..._items];
   List<UserModel> get user => _items.toList();
 
-  UserList(this._token, this._items);
+  UserList(this._token, this._email, this._userId, this._items);
 
   int get itemsCount => _items.length;
+
+  // List<UserModel> get usuario =>
+  //     items.where((element) => element.id == _userId).toList();
+
+  Iterable<UserModel> get usuario => items.where((p) => p.id == _userId);
 
   Future<void> loadData() async {
     _items.clear();
@@ -33,7 +41,7 @@ class UserList with ChangeNotifier {
           name: dataDados['name'],
           email: dataDados['email'],
           discount: dataDados['discount'],
-          password: dataDados['password'],
+          level: dataDados['level'],
         ),
       );
     });
@@ -48,7 +56,7 @@ class UserList with ChangeNotifier {
       name: dataDados['name'] as String,
       email: dataDados['email'] as String,
       discount: dataDados['discount'] as double,
-      password: dataDados['password'] as String,
+      level: dataDados['level'] as int,
     );
 
     if (hasId) {
@@ -66,7 +74,7 @@ class UserList with ChangeNotifier {
         'name': user.name,
         'email': user.email,
         'discount': user.discount,
-        'password': user.password,
+        'level': user.level,
       }),
     );
 
@@ -77,7 +85,7 @@ class UserList with ChangeNotifier {
         name: user.name,
         email: user.email,
         discount: user.discount,
-        password: user.password,
+        level: user.level,
       ),
     );
     notifyListeners();
@@ -94,7 +102,7 @@ class UserList with ChangeNotifier {
           'name': user.name,
           'email': user.email,
           'discount': user.discount,
-          'password': user.password,
+          'level': user.level,
         }),
       );
 

@@ -11,10 +11,11 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white.withAlpha(245),
       child: ListTile(
         leading: Image.network(product.imageUrl),
         title: Text('RM ${product.code}', style: const TextStyle(fontSize: 12)),
-        subtitle: Text(product.name, style: const TextStyle(fontSize: 12)),
+        subtitle: Text(product.name, style: const TextStyle(fontSize: 14)),
         trailing: SizedBox(
           width: 86,
           child: Row(
