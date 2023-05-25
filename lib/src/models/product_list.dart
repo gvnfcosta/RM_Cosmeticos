@@ -20,8 +20,8 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
 
-    final response = await http.get(Uri.parse(
-        '${Constants.baseUrl}/Maurício/Principal/products.json?auth=$_token'));
+    final response = await http
+        .get(Uri.parse('${Constants.baseUrl}/ /products.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);

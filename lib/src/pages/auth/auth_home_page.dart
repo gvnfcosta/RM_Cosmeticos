@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/pages/initial/initial_screen.dart';
 import '../../models/auth.dart';
 import '../initial/base_screen.dart';
+import '../initial/users_screen.dart';
 import 'sign_in_screen.dart';
 
 class AuthOrHomePage extends StatelessWidget {
@@ -25,7 +25,7 @@ class AuthOrHomePage extends StatelessWidget {
         } else {
           return auth.isAuth
               ? isAdmin
-                  ? InitialScreen()
+                  ? const UsersScreen()
                   : const BaseScreen()
               : SignInScreen();
         }

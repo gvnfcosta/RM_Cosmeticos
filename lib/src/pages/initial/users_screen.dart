@@ -3,16 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_model.dart';
 import 'package:rm/src/pages/user/user_form_page.dart';
 import '../../models/user_list.dart';
-import 'components/user_tile.dart';
+import '../home/components/user_tile.dart';
 
-class UsersTab extends StatefulWidget {
-  const UsersTab({super.key});
+class UsersScreen extends StatefulWidget {
+  const UsersScreen({super.key});
 
   @override
-  State<UsersTab> createState() => _UsersTabState();
+  State<UsersScreen> createState() => _UsersScreenState();
 }
 
-class _UsersTabState extends State<UsersTab> {
+class _UsersScreenState extends State<UsersScreen> {
   bool _isLoading = true;
 
   @override
@@ -40,8 +40,7 @@ class _UsersTabState extends State<UsersTab> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        title: const Text('Usuários e Vendedores',
-            style: TextStyle(color: Colors.white)),
+        title: const Text('Usuários', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             onPressed: () {
@@ -59,13 +58,24 @@ class _UsersTabState extends State<UsersTab> {
           ? Column(
               children: [
                 //const SizedBox(height: 12),
-                Expanded(
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: users.length,
-                    itemBuilder: (_, i) {
-                      return UserTile(user: users[i]);
-                    },
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Expanded(
+                    child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (_, i) {
+                        return UserTile(user: users[i]);
+                      },
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 300,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 10 / 10,
+                      ),
+                    ),
                   ),
                 ),
               ],

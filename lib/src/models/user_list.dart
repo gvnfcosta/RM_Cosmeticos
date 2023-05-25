@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../config/app_data.dart';
+import 'auth.dart';
 import 'user_model.dart';
 
 class UserList with ChangeNotifier {
@@ -20,16 +22,20 @@ class UserList with ChangeNotifier {
 
   int get itemsCount => _items.length;
 
-  // List<UserModel> get usuario =>
-  //     items.where((element) => element.id == _userId).toList();
+  List<UserModel> get usuario =>
+      items.where((element) => element.email == _email).toList();
 
-  Iterable<UserModel> get usuario => items.where((p) => p.id == _userId);
+  // Iterable<UserModel> get usuario => items.where((p) => p.id == _userId);
 
   Future<void> loadData() async {
     _items.clear();
 
-    final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
+    String vendedor = usuario.first.name;
+    // final response = await http
+    //     .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
+
+    final response = await http.get(Uri.parse(
+        '${Constants.baseUrl}/${usuario.first.name}.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -68,7 +74,7 @@ class UserList with ChangeNotifier {
 
   Future<void> addData(UserModel user) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/${usuario.first.name}.json?auth=$_token'),
       body: jsonEncode({
         'id': user.id,
         'name': user.name,
@@ -96,7 +102,8 @@ class UserList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/${usuario.first.name}/${user.id}.json?auth=$_token'),
         body: jsonEncode({
           'id': user.id,
           'name': user.name,
@@ -115,19 +122,19 @@ class UserList with ChangeNotifier {
     int index = _items.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
-      final user = _items[index];
       _items.remove(user);
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/${usuario.first.name}/${user.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
         _items.insert(index, user);
         notifyListeners();
 
-        throw HttpException('Não foi possível excluir ${user.name}.');
+        throw HttpException('Não foi possível excluir ${usuario.first.name}}.');
       }
     }
   }

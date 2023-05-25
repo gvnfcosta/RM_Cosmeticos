@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rm/src/pages/initial/initial_screen.dart';
-import '../../models/auth.dart';
-import '../../models/user_list.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
 import '../home/sub_category_tab.dart';
-import '../home/users_tab.dart';
 import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
 
@@ -27,9 +22,6 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final String nomeUsuario =
-    //     Provider.of<UserList>(context).usuario.first.name;
-
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
@@ -58,7 +50,6 @@ class _BaseScreenState extends State<BaseScreen> {
     const CategoryTab(),
     const SubCategoryTab(),
     const ProductPage(),
-    const UsersTab(),
     const ProfileTab(),
   ];
 
@@ -84,10 +75,6 @@ class _BaseScreenState extends State<BaseScreen> {
     const BottomNavigationBarItem(
       icon: Icon(Icons.list),
       label: 'Produtos',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.people),
-      label: 'Usuários',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_outline),

@@ -14,7 +14,7 @@ import 'src/pages/category/sub_category_page.dart';
 import 'src/pages/home/catalog_tab.dart';
 import 'src/pages/initial/base_screen.dart';
 import 'src/pages/home/components/controllers/admin_controller.dart';
-import 'src/pages/initial/initial_screen.dart';
+import 'src/pages/initial/users_screen.dart';
 import 'src/pages/product/product_page.dart';
 import 'src/pages/product/products_form_page.dart';
 import 'src/pages/user/user_form_page.dart';
@@ -31,8 +31,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProvider(create: (_) => AdminController()),
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AdminController(),
+        ),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {

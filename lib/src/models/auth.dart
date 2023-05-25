@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../data/store.dart';
 import '../exceptions/auth_exception.dart';
+import 'user_model.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -49,7 +50,9 @@ class Auth with ChangeNotifier {
       _userId = body['localId'];
 
       _expiryDate = DateTime.now().add(
-        Duration(seconds: int.parse(body['expiresIn'])),
+        Duration(
+            seconds:
+                (int.parse(body['expiresIn']) + 3600)), // TEMPO DE ACESSO ???
       );
 
       Store.saveMap('userData', {
