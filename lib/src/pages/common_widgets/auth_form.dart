@@ -99,10 +99,11 @@ class _AuthFormState extends State<AuthForm> {
     final deviceSize = MediaQuery.of(context).size;
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       decoration: BoxDecoration(
-          color: Colors.pinkAccent.withAlpha(50),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30))),
+          color: Colors.pink.withAlpha(30),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(10))),
       // height: _isLogin() ? 250 : 400,
       child: Form(
         key: _formKey,
@@ -166,7 +167,7 @@ class _AuthFormState extends State<AuthForm> {
                 return null;
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             if (_isLoading)
               const LinearProgressIndicator()
             else
@@ -182,10 +183,7 @@ class _AuthFormState extends State<AuthForm> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                       child: const Text(
                         'ENTRAR',

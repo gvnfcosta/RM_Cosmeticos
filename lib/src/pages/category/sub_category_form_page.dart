@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../config/custom_colors.dart';
 import '../../models/sub_category_list.dart';
 import '../../models/sub_category_model.dart';
 

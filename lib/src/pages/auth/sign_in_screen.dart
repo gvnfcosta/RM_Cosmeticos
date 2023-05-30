@@ -25,31 +25,29 @@ class SignInScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: SizedBox(
-                        child: Image.asset('assets/images/TelaInicial.png'),
-                      ),
+                    SizedBox(
+                      height: 300,
+                      child: Image.asset('assets/images/TelaInicial.png'),
                     ),
                     Column(
                       children: [
                         Stack(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 2, top: 2),
+                              padding: const EdgeInsets.only(left: 2, top: 1),
                               child: Text(
-                                'Catálogo\nde Produtos',
+                                'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.pink.shade200, fontSize: 42),
+                                    color: Colors.pink.shade200, fontSize: 32),
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 0, top: 0),
                               child: Text(
-                                'Catálogo\nde Produtos',
+                                'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.pink.shade400, fontSize: 42),
+                                    color: Colors.pink.shade400, fontSize: 32),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -58,12 +56,12 @@ class SignInScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 45,
+                      height: 38,
                       child: DefaultTextStyle(
-                        style: const TextStyle(
-                            fontSize: 36,
+                        style: TextStyle(
+                            fontSize: 28,
                             fontWeight: FontWeight.w200,
-                            color: Colors.pink),
+                            color: Colors.pink.shade700),
                         child: AnimatedTextKit(
                           pause: Duration.zero,
                           repeatForever: true,

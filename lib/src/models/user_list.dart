@@ -3,22 +3,19 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import '../config/app_data.dart';
-import 'auth.dart';
 import 'user_model.dart';
 
 class UserList with ChangeNotifier {
   final String _token;
   final String _email;
-  final String _userId;
 
   List<UserModel> _items = [];
 
   List<UserModel> get items => [..._items];
   List<UserModel> get user => _items.toList();
 
-  UserList(this._token, this._email, this._userId, this._items);
+  UserList(this._token, this._email, this._items);
 
   int get itemsCount => _items.length;
 
@@ -30,12 +27,8 @@ class UserList with ChangeNotifier {
   Future<void> loadData() async {
     _items.clear();
 
-    String vendedor = usuario.first.name;
-    // final response = await http
-    //     .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
-
-    final response = await http.get(Uri.parse(
-        '${Constants.baseUrl}/${usuario.first.name}.json?auth=$_token'));
+    final response = await http
+        .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -74,7 +67,7 @@ class UserList with ChangeNotifier {
 
   Future<void> addData(UserModel user) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/${usuario.first.name}.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'),
       body: jsonEncode({
         'id': user.id,
         'name': user.name,
@@ -102,8 +95,7 @@ class UserList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse(
-            '${Constants.baseUrl}/${usuario.first.name}/${user.id}.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
         body: jsonEncode({
           'id': user.id,
           'name': user.name,
@@ -126,8 +118,7 @@ class UserList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse(
-            '${Constants.baseUrl}/${usuario.first.name}/${user.id}.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

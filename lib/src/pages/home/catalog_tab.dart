@@ -10,16 +10,15 @@ import 'components/product_tile.dart';
 import '../../config/app_data.dart' as appData;
 
 class CatalogTab extends StatefulWidget {
-  CatalogTab({super.key, required this.selectedCategory});
+  const CatalogTab({super.key, required this.selectedCategory});
 
-  String selectedCategory;
+  final String selectedCategory;
   @override
   State<CatalogTab> createState() => _CatalogTabState();
 }
 
 class _CatalogTabState extends State<CatalogTab> {
   bool _isLoading = true;
-
   String selectedTipo = appData.ofertas[0];
 
   @override
@@ -59,9 +58,6 @@ class _CatalogTabState extends State<CatalogTab> {
         .categories
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
-
-    double tamanhoTela = MediaQuery.of(context).size.width;
-    int quantidadeItemsTela = tamanhoTela ~/ 110; // divisão por inteiro
 
     return _isLoading
         ? const Center(child: CircularProgressIndicator())

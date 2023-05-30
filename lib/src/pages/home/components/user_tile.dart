@@ -57,12 +57,10 @@ class UserTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const [
                           Text('Catálogos '),
-                          Icon(Icons.card_membership, color: Colors.white),
+                          Icon(Icons.list, color: Colors.white),
                         ],
                       ))
-                  : const SizedBox(
-                      height: 45,
-                    ),
+                  : const SizedBox(height: 45),
             ],
           ),
         ),

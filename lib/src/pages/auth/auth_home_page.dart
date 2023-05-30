@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/auth.dart';
 import '../initial/base_screen.dart';
-import '../initial/users_screen.dart';
 import 'sign_in_screen.dart';
 
 class AuthOrHomePage extends StatelessWidget {
-  AuthOrHomePage({Key? key}) : super(key: key);
-
-  bool isAdmin = true;
+  const AuthOrHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
+
     return FutureBuilder(
       future: auth.tryAutoLogin(),
       builder: (ctx, snapshot) {
@@ -23,11 +21,7 @@ class AuthOrHomePage extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth
-              ? isAdmin
-                  ? const UsersScreen()
-                  : const BaseScreen()
-              : SignInScreen();
+          return auth.isAuth ? const BaseScreen() : SignInScreen();
         }
       },
     );

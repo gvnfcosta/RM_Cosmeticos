@@ -1,7 +1,10 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/components/app_drawer.dart';
+import '/src/components/app_drawer.dart';
 import '../../models/auth.dart';
+import '../../models/user_list.dart';
+import '../../models/user_model.dart';
 import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
 
@@ -12,11 +15,29 @@ class ProfileTab extends StatefulWidget {
   State<ProfileTab> createState() => _ProfileTabState();
 }
 
+bool _isLoading = true;
+bool isAdmin = false;
+
 class _ProfileTabState extends State<ProfileTab> {
+  @override
+  void initState() {
+    super.initState();
+
+    Provider.of<UserList>(context, listen: false).loadData().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    bool isAdmin = true; // auth.isAdmin;
+
+    List<UserModel> user = Provider.of<UserList>(context).usuario;
+    if (user.isNotEmpty) {
+      isAdmin = user.first.level == 5;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -36,51 +57,75 @@ class _ProfileTabState extends State<ProfileTab> {
           )
         ],
       ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
-        children: [
-          //Email
-          CustomTextField(
-              readOnly: true,
-              initialValue: auth.userId,
-              icon: Icons.nature_people,
-              label: 'Usuário'),
-
-          // Nome
-          CustomTextField(
-            readOnly: true,
-            initialValue: auth.token,
-            icon: Icons.person,
-            label: 'Nome Token',
-          ),
-
-          // Nome
-          CustomTextField(
-            readOnly: true,
-            initialValue: auth.email,
-            icon: Icons.person,
-            label: 'Email',
-          ),
-
-          //Botão para atualizar a senha
-          SizedBox(
-            height: 50,
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.green),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+      body: _isLoading
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DefaultTextStyle(
+                  style: const TextStyle(fontSize: 28, color: Colors.red),
+                  child: AnimatedTextKit(
+                    pause: Duration.zero,
+                    repeatForever: true,
+                    animatedTexts: [
+                      FadeAnimatedText('AGUARDE'),
+                      FadeAnimatedText('AGUARDE'),
+                    ],
+                  ),
                 ),
-              ),
-              onPressed: () {
-                updatePassword();
-              },
-              child: const Text('Atualizar Senha'),
+                const Center(
+                  child: SizedBox(
+                    height: 5,
+                    width: 200,
+                    child: LinearProgressIndicator(),
+                  ),
+                ),
+              ],
+            )
+          : ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+              children: [
+                //Email
+                CustomTextField(
+                    readOnly: true,
+                    initialValue: user.first.name,
+                    icon: Icons.nature_people,
+                    label: 'Usuário'),
+
+                // Nome
+                CustomTextField(
+                  readOnly: true,
+                  initialValue: user.first.level.toString(),
+                  icon: Icons.person,
+                  label: 'Nível',
+                ),
+
+                // Nome
+                CustomTextField(
+                  readOnly: true,
+                  initialValue: auth.email,
+                  icon: Icons.person,
+                  label: 'Email',
+                ),
+
+                //Botão para atualizar a senha
+                SizedBox(
+                  height: 50,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.green),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: () {
+                      updatePassword();
+                    },
+                    child: const Text('Atualizar Senha'),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       drawer: isAdmin ? const AppDrawer() : null,
     );
   }
