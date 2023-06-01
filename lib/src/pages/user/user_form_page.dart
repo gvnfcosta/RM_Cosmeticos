@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/config/custom_colors.dart';
 
+import '../../config/app_data.dart';
 import '../../models/auth.dart';
 import '../../models/user_list.dart';
 import '../../models/user_model.dart';
@@ -23,12 +24,6 @@ class UserFormPage extends StatefulWidget {
 class _UserFormPageState extends State<UserFormPage> {
   bool _isLoading = false;
   bool _novoUsuario = true;
-
-  static const Map<int, String> levels = {
-    0: 'Administrador',
-    1: 'Vendedor',
-    2: 'Cliente',
-  };
 
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
@@ -236,7 +231,7 @@ class _UserFormPageState extends State<UserFormPage> {
                                             style: TextStyle(
                                                 color: Theme.of(context)
                                                     .hintColor)),
-                                        items: levels
+                                        items: Constants.levels
                                             .map(
                                               (value, description) {
                                                 return MapEntry(

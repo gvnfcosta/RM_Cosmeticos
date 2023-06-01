@@ -36,6 +36,7 @@ class _UsersScreenState extends State<UsersScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.deepOrange,
         centerTitle: true,
         elevation: 0,
         title: const Text('Usuários', style: TextStyle(color: Colors.white)),
