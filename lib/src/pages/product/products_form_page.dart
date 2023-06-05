@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../../models/sub_category_list.dart';
+import '../category/category_form_page.dart';
+import '../category/sub_category_form_page.dart';
 import '/src/models/category_list.dart';
 import '../../models/product_list.dart';
 import '/src/models/product_model.dart';
@@ -26,12 +28,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _nameFocus = FocusNode();
   final _descriptionFocus = FocusNode();
   final _categoryFocus = FocusNode();
-  final _offerFocus = FocusNode();
   final _subCategoryFocus = FocusNode();
-  final _priceFocus = FocusNode();
   final _unitFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
   final _imageUrlController = TextEditingController();
+  // final _offerFocus = FocusNode();
+  // final _priceFocus = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
@@ -62,9 +64,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
     if (_formData.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      _formData['show'] = true;
       _formData['unit'] = 'Un';
-      _formData['offer'] = appData.ofertas;
+      // _formData['show'] = true;
+      // _formData['offer'] = appData.ofertas;
 
       if (arg != null) {
         final product = arg as Product;
@@ -74,12 +76,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['description'] = product.description;
         _formData['category'] = product.category;
         _formData['subCategory'] = product.subCategory;
-        _formData['offer'] = product.offer;
-        _formData['price'] = product.price;
         _formData['unit'] = product.unit;
-        _formData['show'] = product.show;
         _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
+        // _formData['offer'] = product.offer;
+        // _formData['price'] = product.price;
+        // _formData['show'] = product.show;
       }
     }
   }
@@ -91,11 +93,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _nameFocus.dispose();
     _descriptionFocus.dispose();
     _categoryFocus.dispose();
-    _offerFocus.dispose();
     _subCategoryFocus.dispose();
-    _priceFocus.dispose();
     _unitFocus.dispose();
     _imageUrlFocus.dispose();
+    // _offerFocus.dispose();
+    // _priceFocus.dispose();
   }
 
   void updateImage() {
@@ -149,8 +151,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
     final CategoryList categoria = Provider.of(context);
     final SubCategoryList subCategoria = Provider.of(context);
 
+    // selectedOffer = _formData['offer']?.toString();
     selectedUnidade = _formData['unit']?.toString();
-    selectedOffer = _formData['offer']?.toString();
     selectedCategoria = _formData['category']?.toString();
     selectedSubCategoria = _formData['subCategory']?.toString();
 
@@ -166,205 +168,91 @@ class _ProductFormPageState extends State<ProductFormPage> {
         child: SizedBox(
           height: deviceSize.height,
           width: deviceSize.width,
-          child: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: _imageUrlController.text.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'Informe os dados',
-                            style: TextStyle(fontSize: 25),
-                          ),
-                        )
-                      : Image.network(_imageUrlController.text),
-                ),
+          child: Column(children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: _imageUrlController.text.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Informe os dados',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      )
+                    : Image.network(_imageUrlController.text),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(50),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        offset: const Offset(0, 2)),
-                  ],
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(50),
                 ),
-                child: !_isLoading
-                    ? Form(
-                        key: _formKey,
-                        child: Container(
-                          height: 430,
-                          child: Column(
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.shade600, offset: const Offset(0, 2)),
+                ],
+              ),
+              child: !_isLoading
+                  ? Form(
+                      key: _formKey,
+                      child: Container(
+                        height: 380,
+                        child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 5.0, right: 5.0),
-                                      child: SizedBox(
-                                        height: 40,
-                                        child: TextFormField(
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                            initialValue:
-                                                _formData['code']?.toString(),
-                                            decoration: InputDecoration(
-                                                labelText: 'Código RM',
-                                                labelStyle: const TextStyle(
-                                                    fontSize: 12),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8))),
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            focusNode: _codeFocus,
-                                            onFieldSubmitted: (_) {
-                                              FocusScope.of(context)
-                                                  .requestFocus(_nameFocus);
-                                            },
-                                            onSaved: (code) =>
-                                                _formData['code'] = code ?? '',
-                                            validator: (cod) {
-                                              final code = cod ?? '';
-
-                                              if (code.trim().isEmpty) {
-                                                return 'Código é obrigatório';
-                                              }
-
-                                              return null;
-                                            }),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 5.0, right: 5.0),
-                                      child: SizedBox(
-                                        height: 40,
-                                        child: TextFormField(
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                            initialValue:
-                                                _formData['price']?.toString(),
-                                            decoration: InputDecoration(
-                                                labelText: 'Preço',
-                                                labelStyle: const TextStyle(
-                                                    fontSize: 12),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8))),
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            focusNode: _priceFocus,
-                                            keyboardType: const TextInputType
-                                                .numberWithOptions(
-                                              decimal: true,
-                                              signed: true,
-                                            ),
-                                            onFieldSubmitted: (_) {
-                                              FocusScope.of(context)
-                                                  .requestFocus(_unitFocus);
-                                            },
-                                            onSaved: (price) =>
-                                                _formData['price'] =
-                                                    double.parse(price ?? '0'),
-                                            validator: (pric) {
-                                              final priceString = pric ?? '';
-                                              final price = double.tryParse(
-                                                      priceString) ??
-                                                  -1;
-
-                                              if (price <= 0) {
-                                                return 'Informe um preço válido';
-                                              }
-
-                                              return null;
-                                            }),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8.0, right: 8.0),
-                                    child: Container(
-                                      height: 40,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.black38,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: DropdownButtonHideUnderline(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 5.0, right: 5.0),
                                         child: SizedBox(
-                                          width: 100,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 8),
-                                            child: DropdownButton2(
-                                              focusNode: _unitFocus,
-                                              dropdownElevation: 12,
-                                              hint: Text('Unidade',
-                                                  style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Theme.of(context)
-                                                          .hintColor)),
-                                              items: appData.unidades
-                                                  .map((item) =>
-                                                      DropdownMenuItem<String>(
-                                                          value: item,
-                                                          child: Text(item,
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          14))))
-                                                  .toList(),
-                                              value: selectedUnidade,
-                                              onChanged: (value) {
-                                                setState(
-                                                  () {
-                                                    selectedUnidade =
-                                                        value as String;
-                                                    _formData['unit'] = value;
-                                                  },
-                                                );
+                                          height: 40,
+                                          child: TextFormField(
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                              initialValue:
+                                                  _formData['code']?.toString(),
+                                              decoration: InputDecoration(
+                                                  labelText: 'Código RM',
+                                                  labelStyle: const TextStyle(
+                                                      fontSize: 12),
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8))),
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              focusNode: _codeFocus,
+                                              onFieldSubmitted: (_) {
+                                                FocusScope.of(context)
+                                                    .requestFocus(_nameFocus);
                                               },
-                                              buttonHeight: 30,
-                                              buttonWidth: 10,
-                                              itemHeight: 30,
-                                              autofocus: true,
-                                            ),
-                                          ),
+                                              onSaved: (code) =>
+                                                  _formData['code'] =
+                                                      code ?? '',
+                                              validator: (cod) {
+                                                final code = cod ?? '';
+
+                                                if (code.trim().isEmpty) {
+                                                  return 'Código é obrigatório';
+                                                }
+
+                                                return null;
+                                              }),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 8.0, right: 8.0),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
                                       child: Container(
                                         height: 40,
-                                        //width: 100,
+                                        width: 120,
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               width: 1,
@@ -374,77 +262,71 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                 BorderRadius.circular(8)),
                                         child: DropdownButtonHideUnderline(
                                           child: SizedBox(
-                                            // width: 80,
-                                            child: DropdownButton2(
-                                              focusNode: _offerFocus,
-                                              dropdownElevation: 12,
-                                              hint: Text('Oferta',
-                                                  style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Theme.of(context)
-                                                          .hintColor)),
-                                              items: appData.ofertas
-                                                  .map((item) =>
-                                                      DropdownMenuItem<String>(
-                                                          value: item,
-                                                          child: Text(item,
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          14))))
-                                                  .toList(),
-                                              value: selectedOffer,
-                                              onChanged: (value) {
-                                                setState(
-                                                  () {
-                                                    selectedOffer =
-                                                        value as String;
-                                                    _formData['offer'] = value;
-                                                  },
-                                                );
-                                              },
-                                              buttonHeight: 30,
-                                              buttonWidth: 10,
-                                              itemHeight: 30,
-                                              autofocus: true,
+                                            width: 100,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: DropdownButton2(
+                                                focusNode: _unitFocus,
+                                                dropdownElevation: 12,
+                                                hint: Text('Unidade',
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: Theme.of(context)
+                                                            .hintColor)),
+                                                items: appData.unidades
+                                                    .map((item) => DropdownMenuItem<
+                                                            String>(
+                                                        value: item,
+                                                        child: Text(item,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        14))))
+                                                    .toList(),
+                                                value: selectedUnidade,
+                                                onChanged: (value) {
+                                                  setState(
+                                                    () {
+                                                      selectedUnidade =
+                                                          value as String;
+                                                      _formData['unit'] = value;
+                                                    },
+                                                  );
+                                                },
+                                                buttonHeight: 30,
+                                                buttonWidth: 10,
+                                                itemHeight: 30,
+                                                autofocus: true,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.visibility,
-                                          color: Colors.indigo,
-                                        ),
-                                        Switch(
-                                            value: _formData['show'] as bool,
-                                            activeColor: Colors.blue,
-                                            onChanged: (bool value) {
-                                              setState(() {
-                                                _formData['show'] = value;
-                                              });
-                                            }),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                  ]),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CategoryFormPage(),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.add,
+                                          color: Colors.orange)),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         bottom: 8.0, right: 8.0),
                                     child: SizedBox(
                                       child: Container(
                                         height: 40,
-                                        width: 200,
+                                        width: 180,
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               width: 1,
@@ -494,6 +376,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       ),
                                     ),
                                   ),
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SubCategoryFormPage(),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.add,
+                                          color: Colors.orange)),
                                   Expanded(
                                     child: Padding(
                                       padding:
@@ -572,7 +465,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       focusNode: _nameFocus,
                                       onFieldSubmitted: (_) {
                                         FocusScope.of(context)
-                                            .requestFocus(_offerFocus);
+                                            .requestFocus(_imageUrlFocus);
                                       },
                                       onSaved: (name) =>
                                           _formData['name'] = name ?? '',
@@ -652,14 +545,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       return null;
                                     }),
                               ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ],
-          ),
+                            ]),
+                      ),
+                    )
+                  : const Center(child: CircularProgressIndicator()),
+            ),
+          ]),
         ),
       ),
     );

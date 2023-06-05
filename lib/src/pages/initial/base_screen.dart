@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/config/app_data.dart';
-import 'package:rm/src/pages/user/users_screen.dart';
 import '../../models/user_list.dart';
 import '../../models/user_model.dart';
-import '../home/components/admin_tab.dart';
+import '../home/components/controllers/admin_tab.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
 import '../home/sub_category_tab.dart';
 import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
-import '../../tempo/admin_screen.dart';
+
+bool _isLoading = true;
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({super.key});
@@ -18,8 +17,6 @@ class BaseScreen extends StatefulWidget {
   @override
   State<BaseScreen> createState() => _BaseScreenState();
 }
-
-bool _isLoading = true;
 
 class _BaseScreenState extends State<BaseScreen> {
   int currentIndex = 0;
@@ -44,7 +41,7 @@ class _BaseScreenState extends State<BaseScreen> {
     final provider = Provider.of<UserList>(context);
     final List<UserModel> users = provider.user.toList();
 
-    if (users.isNotEmpty) isAdmin = users.first.level == Constants.levels[key, "Administrador"];
+    if (users.isNotEmpty) isAdmin = users.first.level == 0;
 
     return Scaffold(
       body: PageView(
@@ -74,7 +71,7 @@ class _BaseScreenState extends State<BaseScreen> {
     const CategoryTab(),
     const SubCategoryTab(),
     const ProductPage(),
-    const UsersScreen(),
+    const AdminScreen(),
   ];
 
   final List<Widget> userPageViews = [
@@ -101,8 +98,8 @@ class _BaseScreenState extends State<BaseScreen> {
       label: 'Produtos',
     ),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.people_outline),
-      label: 'Usuários',
+      icon: Icon(Icons.admin_panel_settings),
+      label: 'Painel',
     ),
   ];
 

@@ -48,10 +48,9 @@ class _ProductPageState extends State<ProductPage> {
     Auth auth = Provider.of(context);
     bool isAdmin = true; // auth.isAdmin;
 
-    final List<Product> products = Provider.of<ProductList>(context)
-        .product
-        .where((element) => element.show == !_isSecret)
-        .toList()
+    final List<Product> products = Provider.of<ProductList>(context).product
+      // .where((element) => element.show == !_isSecret)
+      // .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     List<Product> productsFiltered = products

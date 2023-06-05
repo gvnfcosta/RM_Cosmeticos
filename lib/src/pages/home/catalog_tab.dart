@@ -45,13 +45,11 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context)
-        .product
-        .toList()
-        .where((element) => element.show)
-        .toList()
-        .where((element) => element.offer == selectedTipo)
-        .toList()
+    final products = Provider.of<ProductList>(context).product.toList()
+      // .where((element) => element.show)
+      // .toList()
+      // .where((element) => element.offer == selectedTipo)
+      // .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     final List<Category> category = Provider.of<CategoryList>(context)

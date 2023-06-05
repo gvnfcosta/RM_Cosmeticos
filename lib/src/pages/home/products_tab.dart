@@ -48,15 +48,14 @@ class _ProductsTabState extends State<ProductsTab> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductList>(context);
 
-    final List<Product> products = provider.product
-        .toList()
-        .where((element) => element.show)
-        .toList()
+    final List<Product> products = provider.product.toList()
+      // .where((element) => element.show)
+      // .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     List<Product> productsFiltered = products
-        .where((element) =>
-            element.category == widget.selectedCategory && element.show)
+        // .where((element) =>
+        //     element.category == widget.selectedCategory && element.show)
         .toList();
 
     final CategoryList category = Provider.of(context);

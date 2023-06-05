@@ -29,7 +29,6 @@ class _ProductScreenState extends State<ProductScreen> {
     final productUnit = widget.product;
     return Scaffold(
       backgroundColor: Colors.white,
-//      backgroundColor: Colors.white.withAlpha(230),
       body: Stack(
         children: [
           // Conteúdo
@@ -91,12 +90,12 @@ class _ProductScreenState extends State<ProductScreen> {
 
                           // Preço
                         ),
-                        Text(
-                          utilsServices.priceToCurrency(productUnit.price),
-                          style: customPreco,
-                        ),
-                        Text(' / ${productUnit.unit}',
-                            style: const TextStyle(fontSize: 14)),
+                        // Text(
+                        //   utilsServices.priceToCurrency(productUnit.price),
+                        //   style: customPreco,
+                        // ),
+                        // Text(' / ${productUnit.unit}',
+                        //     style: const TextStyle(fontSize: 14)),
                       ],
                     ),
 
@@ -147,19 +146,19 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
 
                     //Tipo
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Tipo: ${productUnit.offer}',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: Text(
+                    //         'Tipo: ${productUnit.offer}',
+                    //         overflow: TextOverflow.ellipsis,
+                    //         style: const TextStyle(
+                    //           fontSize: 18,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
 
                     //Descrição
                     Padding(

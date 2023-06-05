@@ -15,12 +15,6 @@ class UserFormPage extends StatefulWidget {
   State<UserFormPage> createState() => _UserFormPageState();
 }
 
-// final FirebaseAuth auth = FirebaseAuth.instance;
-
-//         final String userID = auth.tenantId.
-//     //final uid = user.uid;
-//     // here you write the codes to input the data into firestore
-
 class _UserFormPageState extends State<UserFormPage> {
   bool _isLoading = false;
   bool _novoUsuario = true;
@@ -41,8 +35,9 @@ class _UserFormPageState extends State<UserFormPage> {
     if (_data.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      _data['level'] = 0;
+      _data['level'] = 1;
       _data['email'] = '';
+      _data['discount'] = '0.0';
       _data['password'] = '';
 
       if (arg != null) {
@@ -75,9 +70,9 @@ class _UserFormPageState extends State<UserFormPage> {
   }
 
   Future<void> _submitForm() async {
-    final _isValid = _formKey.currentState?.validate() ?? false;
+    final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!_isValid) return;
+    if (!isValid) return;
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
@@ -124,7 +119,7 @@ class _UserFormPageState extends State<UserFormPage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: deviceSize.height * 0.8,
           child: Column(
             children: [
@@ -270,7 +265,8 @@ class _UserFormPageState extends State<UserFormPage> {
 
                               // DISCOUNT
                               TextFormField(
-                                initialValue: _data['discount']?.toString(),
+                                initialValue:
+                                    _data['discount']?.toString() ?? '0.0',
                                 decoration: InputDecoration(
                                   labelText: 'Desconto',
                                   border: OutlineInputBorder(
@@ -295,52 +291,52 @@ class _UserFormPageState extends State<UserFormPage> {
                               ),
 
                               //SENHA
-                              if (_novoUsuario)
-                                TextFormField(
-                                  initialValue: _data['password']?.toString(),
-                                  decoration: InputDecoration(
-                                    labelText: 'Senha',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        gapPadding: 20),
-                                  ),
-                                  textInputAction: TextInputAction.next,
-                                  focusNode: _passwordFocus,
-                                  onFieldSubmitted: (_) {
-                                    FocusScope.of(context)
-                                        .requestFocus(_levelFocus);
-                                  },
-                                  onSaved: (password) =>
-                                      _data['password'] = password ?? '',
-                                  validator: (e) {
-                                    final password = e ?? '';
+                              // if (_novoUsuario)
+                              //   TextFormField(
+                              //     initialValue: _data['password']?.toString(),
+                              //     decoration: InputDecoration(
+                              //       labelText: 'Senha',
+                              //       border: OutlineInputBorder(
+                              //           borderRadius: BorderRadius.circular(8),
+                              //           gapPadding: 20),
+                              //     ),
+                              //     textInputAction: TextInputAction.next,
+                              //     focusNode: _passwordFocus,
+                              //     onFieldSubmitted: (_) {
+                              //       FocusScope.of(context)
+                              //           .requestFocus(_levelFocus);
+                              //     },
+                              //     onSaved: (password) =>
+                              //         _data['password'] = password ?? '',
+                              //     validator: (e) {
+                              //       final password = e ?? '';
 
-                                    if (password.length < 6) {
-                                      return 'Senha precisa ter no mínimo 6 caracteres';
-                                    }
+                              //       if (password.length < 6) {
+                              //         return 'Senha precisa ter no mínimo 6 caracteres';
+                              //       }
 
-                                    return null;
-                                  },
-                                ),
+                              //       return null;
+                              //     },
+                              //   ),
 
-                              if (_novoUsuario)
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Confirmar Senha',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        gapPadding: 20),
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                  //  obscureText: true,
-                                  validator: (password_) {
-                                    final password = password_ ?? '';
-                                    // if (password != _passwordController.text) {
-                                    //   return 'Senhas informadas não conferem.';
-                                    // }
-                                    return null;
-                                  },
-                                ),
+                              // if (_novoUsuario)
+                              //   TextFormField(
+                              //     decoration: InputDecoration(
+                              //       labelText: 'Confirmar Senha',
+                              //       border: OutlineInputBorder(
+                              //           borderRadius: BorderRadius.circular(8),
+                              //           gapPadding: 20),
+                              //     ),
+                              //     keyboardType: TextInputType.emailAddress,
+                              //     //  obscureText: true,
+                              //     validator: (password_) {
+                              //       final password = password_ ?? '';
+                              //       // if (password != _passwordController.text) {
+                              //       //   return 'Senhas informadas não conferem.';
+                              //       // }
+                              //       return null;
+                              //     },
+                              // ),
                             ],
                           ),
                         ),

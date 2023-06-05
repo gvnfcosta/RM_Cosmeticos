@@ -3,31 +3,36 @@ import '../../../utils/app_routes.dart';
 import '/src/services/utils_services.dart';
 import '../../../models/user_model.dart';
 
-class UserTile extends StatelessWidget {
-  UserTile({super.key, required this.user});
+const Map<int, String> levels = {
+  0: 'Administrador',
+  1: 'Vendedor',
+  2: 'Cliente',
+};
 
-  static const Map<int, String> levels = {
-    0: 'Administrador',
-    1: 'Vendedor',
-    2: 'Cliente',
-  };
+Color corCartao = Colors.blueGrey.shade50;
+final UtilsServices utilsServices = UtilsServices();
+
+class UserTile extends StatelessWidget {
+  const UserTile({super.key, required this.user});
 
   final UserModel user;
-  final UtilsServices utilsServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
+    if (user.level == 0) corCartao = Colors.red.shade50;
+    if (user.level == 1) corCartao = Colors.green.shade50;
+
     return Card(
-      color: Colors.blueGrey.shade50,
+      color: corCartao,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text(levels[user.level].toString()),
                   IconButton(
                     onPressed: () {
                       Navigator.of(context)
@@ -39,14 +44,17 @@ class UserTile extends StatelessWidget {
               ),
               Text(
                 user.name,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w600),
               ),
               Text(
                 user.email,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.blue),
+                    fontWeight: FontWeight.w300, color: Colors.blue),
               ),
-              Text(levels[user.level].toString()),
+              const SizedBox(height: 10),
               user.level == 1
                   ? ElevatedButton(
                       onPressed: () {
@@ -60,7 +68,7 @@ class UserTile extends StatelessWidget {
                           Icon(Icons.list, color: Colors.white),
                         ],
                       ))
-                  : const SizedBox(height: 45),
+                  : const SizedBox(height: 30),
             ],
           ),
         ),

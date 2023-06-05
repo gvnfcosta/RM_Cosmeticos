@@ -21,7 +21,7 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/ /products.json?auth=$_token'));
+        .get(Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -35,11 +35,11 @@ class ProductList with ChangeNotifier {
           description: dataDados['description'],
           category: dataDados['category'],
           subCategory: dataDados['subCategory'],
-          offer: dataDados['offer'],
-          price: dataDados['price'],
           unit: dataDados['unit'],
-          show: dataDados['show'],
           imageUrl: dataDados['imageUrl'],
+          // offer: dataDados['offer'],
+          // price: dataDados['price'],
+          // show: dataDados['show'],
         ),
       );
     });
@@ -56,11 +56,11 @@ class ProductList with ChangeNotifier {
       description: dataDados['description'] as String,
       category: dataDados['category'] as String,
       subCategory: dataDados['subCategory'] as String,
-      offer: dataDados['offer'] as String,
-      price: dataDados['price'] as double,
       unit: dataDados['unit'] as String,
-      show: dataDados['show'] as bool,
       imageUrl: dataDados['imageUrl'] as String,
+      // offer: dataDados['offer'] as String,
+      // price: dataDados['price'] as double,
+      // show: dataDados['show'] as bool,
     );
 
     if (hasId) {
@@ -72,8 +72,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse(
-          '${Constants.baseUrl}/Maurício/Principal/products.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
       body: jsonEncode({
         'id': product.id,
         'code': product.code,
@@ -81,11 +80,11 @@ class ProductList with ChangeNotifier {
         'description': product.description,
         'category': product.category,
         'subCategory': product.subCategory,
-        'offer': product.offer,
-        'price': product.price,
         'unit': product.unit,
-        'show': product.show,
         'imageUrl': product.imageUrl,
+        // 'offer': product.offer,
+        // 'price': product.price,
+        // 'show': product.show,
       }),
     );
 
@@ -98,11 +97,11 @@ class ProductList with ChangeNotifier {
         description: product.description,
         category: product.category,
         subCategory: product.subCategory,
-        offer: product.offer,
-        price: product.price,
         unit: product.unit,
-        show: product.show,
         imageUrl: product.imageUrl,
+        // offer: product.offer,
+        // price: product.price,
+        // show: product.show,
       ),
     );
     notifyListeners();
@@ -113,19 +112,18 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse(
-            '${Constants.baseUrl}/Maurício/Principal/products.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
         body: jsonEncode({
           'code': product.code,
           'name': product.name,
           'description': product.description,
           'category': product.category,
           'subCategory': product.subCategory,
-          'offer': product.offer,
-          'price': product.price,
           'unit': product.unit,
-          'show': product.show,
           'imageUrl': product.imageUrl,
+          // 'offer': product.offer,
+          // 'price': product.price,
+          // 'show': product.show,
         }),
       );
 
@@ -143,8 +141,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse(
-            '${Constants.baseUrl}/Maurício/Principal/products.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

@@ -186,15 +186,15 @@ Future<void> page(List<Product> products, List<Category> categories) async {
                                 ),
 
                                 //Preço
-                                pw.Text(
-                                  ('R\$ ${productsFiltered[i].price.toStringAsFixed(2)}'),
-                                  style: pw.TextStyle(
-                                      fontWeight: pw.FontWeight.bold,
-                                      font: fontRoboto,
-                                      //font: ttf,
-                                      fontSize: 12,
-                                      color: PdfColors.pink600),
-                                ),
+                                // pw.Text(
+                                //   ('R\$ ${productsFiltered[i].price.toStringAsFixed(2)}'),
+                                //   style: pw.TextStyle(
+                                //       fontWeight: pw.FontWeight.bold,
+                                //       font: fontRoboto,
+                                //       //font: ttf,
+                                //       fontSize: 12,
+                                //       color: PdfColors.pink600),
+                                // ),
                               ]);
                             }),
                       ]),

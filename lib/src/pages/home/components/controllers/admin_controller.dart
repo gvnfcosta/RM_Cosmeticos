@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../models/user_list.dart';
-import '../../../../models/user_model.dart';
 
 class AdminController with ChangeNotifier {
   bool _isAdmin = false;

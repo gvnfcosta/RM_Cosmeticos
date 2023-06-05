@@ -13,67 +13,70 @@ class SubCategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (c) {
-                  return ProductsTab(subCategory.nome);
-                },
-              ),
-            );
-          },
-          child: Card(
-            elevation: 2,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: Center(
-              child: Text(
-                subCategory.nome,
-                style: TextStyle(
-                  color: CustomColors.customContrastColor,
-                  fontSize: 16,
+    return Container(
+      height: 100,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (c) {
+                    return ProductsTab(subCategory.nome);
+                  },
+                ),
+              );
+            },
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              child: Center(
+                child: Text(
+                  subCategory.nome,
+                  style: TextStyle(
+                    color: CustomColors.customContrastColor,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        //Botão editar
-        isAdmin
-            ? Positioned(
-                top: 3,
-                right: 3,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      topRight: Radius.circular(10)),
-                  child: Material(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                            AppRoutes.subCategoryForm,
-                            arguments: subCategory);
-                      },
-                      child: Ink(
-                        height: 30,
-                        width: 28,
-                        decoration: const BoxDecoration(
-                          color: Colors.pinkAccent,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
+          //Botão editar
+          isAdmin
+              ? Positioned(
+                  top: 3,
+                  right: 3,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        topRight: Radius.circular(10)),
+                    child: Material(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                              AppRoutes.subCategoryForm,
+                              arguments: subCategory);
+                        },
+                        child: Ink(
+                          height: 30,
+                          width: 28,
+                          decoration: const BoxDecoration(
+                            color: Colors.pinkAccent,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            : const SizedBox(),
-      ],
+                )
+              : const SizedBox(),
+        ],
+      ),
     );
   }
 }

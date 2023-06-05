@@ -5,10 +5,10 @@ class Product {
   String description;
   String category;
   String subCategory;
-  String offer;
-  double price;
+  // String offer;
+  // double price;
+  // bool show;
   String unit;
-  bool show;
   String imageUrl;
 
   Product({
@@ -18,10 +18,10 @@ class Product {
     required this.description,
     required this.category,
     required this.subCategory,
-    required this.offer,
-    required this.price,
+    // required this.offer,
+    // required this.price,
+    // required this.show,
     required this.unit,
-    required this.show,
     required this.imageUrl,
   });
 }

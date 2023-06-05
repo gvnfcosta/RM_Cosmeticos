@@ -9,5 +9,5 @@ class CartItemModel {
     required this.quantity,
   });
 
-  totalPrice() => product.price * quantity;
+//  totalPrice() => product.price * quantity;
 }

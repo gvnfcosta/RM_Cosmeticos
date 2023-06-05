@@ -22,8 +22,6 @@ class UserList with ChangeNotifier {
   List<UserModel> get usuario =>
       items.where((element) => element.email == _email).toList();
 
-  // Iterable<UserModel> get usuario => items.where((p) => p.id == _userId);
-
   Future<void> loadData() async {
     _items.clear();
 

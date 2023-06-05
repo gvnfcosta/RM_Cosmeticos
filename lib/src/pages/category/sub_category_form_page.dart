@@ -12,11 +12,9 @@ class SubCategoryFormPage extends StatefulWidget {
 
 class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
   final _nomeFocus = FocusNode();
-  final _imageUrlFocus = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-  final _imageUrlController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -50,9 +48,7 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     _formKey.currentState?.save();
 
@@ -80,12 +76,41 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size deviceSize = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(title: const Text('Editar SubCategorias'), actions: [
-        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
+        Row(
+          children: [
+            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              iconSize: 20,
+              color: Colors.white,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Categoria'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                        child: const Text('SIM'),
+                        onPressed: () {
+                          // Provider.of<SubCategoryList>(context, listen: false)
+                          //     .removeDados(subCategory);
+                          Navigator.of(ctx).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
+          ],
+        )
       ]),
       body: Center(
         child: !_isLoading

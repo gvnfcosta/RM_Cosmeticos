@@ -89,12 +89,12 @@ class SubCategoryList with ChangeNotifier {
     }
   }
 
-  Future<void> _removeDados(SubCategory subCategories) async {
-    int index = _items.indexWhere((p) => p.id == subCategories.id);
+  Future<void> removeDados(SubCategory subCategory) async {
+    int index = _items.indexWhere((p) => p.id == subCategory.id);
 
     if (index >= 0) {
-      final subCategories = _items[index];
-      _items.remove(subCategories);
+      final subCategory = _items[index];
+      _items.remove(subCategory);
       notifyListeners();
 
       final response = await http.delete(
@@ -102,7 +102,7 @@ class SubCategoryList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, subCategories);
+        _items.insert(index, subCategory);
         notifyListeners();
         throw HttpException(
           msg: 'Não foi possível excluir esta SubCategoria.',
