@@ -2,19 +2,19 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/config/custom_colors.dart';
-import '../models/catalog_list.dart';
-import '../models/catalog_model.dart';
-import '../models/user_list.dart';
-import '../models/user_model.dart';
+import '../../models/catalog_list.dart';
+import '../../models/catalog_model.dart';
+import '../../models/user_list.dart';
+import '../../models/user_model.dart';
 
-class CatalogFormPage extends StatefulWidget {
-  const CatalogFormPage({super.key});
+class NewCatalogForm extends StatefulWidget {
+  const NewCatalogForm({super.key});
 
   @override
-  State<CatalogFormPage> createState() => _CatalogFormPageState();
+  State<NewCatalogForm> createState() => _NewCatalogFormState();
 }
 
-class _CatalogFormPageState extends State<CatalogFormPage> {
+class _NewCatalogFormState extends State<NewCatalogForm> {
   final _nameFocus = FocusNode();
   final _sellerFocus = FocusNode();
   final _discountFocus = FocusNode();
@@ -141,7 +141,7 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              // NOME
+                              // NOME DO CATÁLOGO
                               TextFormField(
                                   maxLines: 2,
                                   initialValue: _data['name']?.toString(),
@@ -168,29 +168,7 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
                                     return null;
                                   }),
 
-                              //EMAIL
-                              TextFormField(
-                                  maxLines: 2,
-                                  initialValue:
-                                      _data['discount']?.toString() ?? '0.0',
-                                  decoration: InputDecoration(
-                                    labelText: 'Desconto',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        gapPadding: 20),
-                                  ),
-                                  textInputAction: TextInputAction.next,
-                                  focusNode: _discountFocus,
-                                  onFieldSubmitted: (_) {
-                                    FocusScope.of(context)
-                                        .requestFocus(_sellerFocus);
-                                  },
-                                  onSaved: (discount) => _data['discount'] =
-                                      double.parse(discount ?? '0'),
-                                  validator: (e) {
-                                    return null;
-                                  }),
-
+                              //VENDEDOR
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -237,6 +215,30 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
                                     ),
                                   ),
                                 ]),
+                              ),
+
+                              //DESCONTO
+                              TextFormField(
+                                maxLines: 2,
+                                initialValue:
+                                    _data['discount']?.toString() ?? '0.0',
+                                decoration: InputDecoration(
+                                  labelText: 'Desconto',
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      gapPadding: 20),
+                                ),
+                                textInputAction: TextInputAction.next,
+                                focusNode: _discountFocus,
+                                onFieldSubmitted: (_) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_sellerFocus);
+                                },
+                                onSaved: (discount) => _data['discount'] =
+                                    double.parse(discount ?? '0'),
+                                validator: (e) {
+                                  return null;
+                                },
                               ),
                             ]),
                       ),

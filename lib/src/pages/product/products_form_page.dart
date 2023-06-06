@@ -21,7 +21,6 @@ class ProductFormPage extends StatefulWidget {
 class _ProductFormPageState extends State<ProductFormPage> {
   final utilsServices = UtilsServices();
 
-  final bool _readOnly = false;
   bool _isLoading = false;
 
   final _codeFocus = FocusNode();
@@ -31,9 +30,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _subCategoryFocus = FocusNode();
   final _unitFocus = FocusNode();
   final _imageUrlFocus = FocusNode();
+
   final _imageUrlController = TextEditingController();
-  // final _offerFocus = FocusNode();
-  // final _priceFocus = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
@@ -65,8 +63,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       _formData['unit'] = 'Un';
-      // _formData['show'] = true;
-      // _formData['offer'] = appData.ofertas;
 
       if (arg != null) {
         final product = arg as Product;
@@ -79,9 +75,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['unit'] = product.unit;
         _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
-        // _formData['offer'] = product.offer;
-        // _formData['price'] = product.price;
-        // _formData['show'] = product.show;
       }
     }
   }
@@ -96,8 +89,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _subCategoryFocus.dispose();
     _unitFocus.dispose();
     _imageUrlFocus.dispose();
-    // _offerFocus.dispose();
-    // _priceFocus.dispose();
   }
 
   void updateImage() {
@@ -151,7 +142,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
     final CategoryList categoria = Provider.of(context);
     final SubCategoryList subCategoria = Provider.of(context);
 
-    // selectedOffer = _formData['offer']?.toString();
     selectedUnidade = _formData['unit']?.toString();
     selectedCategoria = _formData['category']?.toString();
     selectedSubCategoria = _formData['subCategory']?.toString();
@@ -197,7 +187,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
               child: !_isLoading
                   ? Form(
                       key: _formKey,
-                      child: Container(
+                      child: SizedBox(
                         height: 380,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,

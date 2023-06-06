@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
-import 'src/catalog/catalg_form_page.dart';
-import 'src/catalog/new_catalog_page.dart';
+import 'src/models/catalog_products_list.dart';
+import 'src/pages/catalogs/catalog_form_page.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
 import 'src/models/product_list.dart';
@@ -47,6 +47,15 @@ class MyApp extends StatelessWidget {
           create: (_) => CategoryList('', []),
           update: (ctx, auth, previous) {
             return CategoryList(
+              auth.token ?? '',
+              previous?.items ?? [],
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, CatalogProductsList>(
+          create: (_) => CatalogProductsList('', []),
+          update: (ctx, auth, previous) {
+            return CatalogProductsList(
               auth.token ?? '',
               previous?.items ?? [],
             );
@@ -101,12 +110,12 @@ class MyApp extends StatelessWidget {
           AppRoutes.productPage: (ctx) => const ProductPage(),
           AppRoutes.productForm: (ctx) => const ProductFormPage(),
           AppRoutes.categoryForm: (ctx) => const CategoryFormPage(),
-          AppRoutes.catalogForm: (ctx) => const CatalogFormPage(),
-          AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
-          AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
+          AppRoutes.catalogForm: (ctx) => const CatalogFormPage(),
           AppRoutes.catalogTab: (ctx) =>
               const CatalogTab(selectedCategory: 'Kits'),
+          AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
+          AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
         },
       ),
     );

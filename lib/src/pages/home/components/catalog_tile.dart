@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../catalog/new_catalog_page.dart';
+import '../../catalogs/catalog_unit_page.dart';
 import '../../../models/catalog_model.dart';
-import '../../../utils/app_routes.dart';
 import '/src/services/utils_services.dart';
 
 final UtilsServices utilsServices = UtilsServices();
@@ -44,12 +43,12 @@ class CatalogTile extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (c) {
-                        return NewCatalogPage(catalog);
+                        return CatalogUnitPage(catalog);
                       },
                     ),
                   );
                 },
-                icon: const Icon(Icons.note_add, color: Colors.red),
+                icon: const Icon(Icons.list, color: Colors.red),
               ),
             ),
           ],

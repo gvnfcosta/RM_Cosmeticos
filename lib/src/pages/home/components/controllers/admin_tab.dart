@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../catalog/catalogs_page.dart';
+import '../../../catalogs/catalogs_page.dart';
 import '../../../user/users_page.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -38,5 +38,5 @@ class AdminScreen extends StatelessWidget {
 
 List<Widget> tabItems = [
   const Tab(text: 'Usuários'),
-  const Tab(text: '   Catálogos'),
+  const Tab(text: 'Catálogos'),
 ];

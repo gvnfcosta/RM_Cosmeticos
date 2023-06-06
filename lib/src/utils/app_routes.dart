@@ -1,8 +1,6 @@
 class AppRoutes {
   static const authOrHome = '/';
-  static const signInPage = '/sign-in';
   static const signUpPage = '/sign-up';
-  static const homeTab = '/home-tab';
   static const baseScreen = '/base-screen';
   static const userForm = '/user-form';
   static const productForm = '/product-form';
@@ -12,6 +10,5 @@ class AppRoutes {
   static const categoryPage = '/category-page';
   static const subCategoryPage = '/sub-category-page';
   static const catalogTab = '/catalogs-tab';
-  static const catalogForm = '/catalogs-form';
-  static const newCatalogPage = '/new-catalog-page';
+  static const catalogForm = '/catalog-form';
 }
