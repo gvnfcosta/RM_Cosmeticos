@@ -8,17 +8,17 @@ import 'sub_category_model.dart';
 
 class SubCategoryList with ChangeNotifier {
   final String _token;
-  List<SubCategory> _items = [];
+  List<SubCategory> items_ = [];
 
-  List<SubCategory> get items => [..._items];
-  List<SubCategory> get subCategories => _items.toList();
+  List<SubCategory> get items => [...items_];
+  List<SubCategory> get subCategories => items_.toList();
 
-  SubCategoryList(this._token, this._items);
+  SubCategoryList(this._token, this.items_);
 
-  int get itemsCount => _items.length;
+  int get itemsCount => items_.length;
 
   Future<void> loadSubCategories() async {
-    _items.clear();
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/subcategories.json?auth=$_token'));
@@ -27,7 +27,7 @@ class SubCategoryList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      _items.add(
+      items_.add(
         SubCategory(
           id: dataId,
           nome: dataDados['nome'],
@@ -62,7 +62,7 @@ class SubCategoryList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
+    items_.add(
       SubCategory(
         id: id,
         nome: subCategories.nome,
@@ -72,7 +72,7 @@ class SubCategoryList with ChangeNotifier {
   }
 
   Future<void> _updateDados(SubCategory subCategories) async {
-    int index = _items.indexWhere((p) => p.id == subCategories.id);
+    int index = items_.indexWhere((p) => p.id == subCategories.id);
 
     if (index >= 0) {
       await http.patch(
@@ -84,17 +84,17 @@ class SubCategoryList with ChangeNotifier {
         }),
       );
 
-      _items[index] = subCategories;
+      items_[index] = subCategories;
       notifyListeners();
     }
   }
 
   Future<void> removeDados(SubCategory subCategory) async {
-    int index = _items.indexWhere((p) => p.id == subCategory.id);
+    int index = items_.indexWhere((p) => p.id == subCategory.id);
 
     if (index >= 0) {
-      final subCategory = _items[index];
-      _items.remove(subCategory);
+      final subCategory = items_[index];
+      items_.remove(subCategory);
       notifyListeners();
 
       final response = await http.delete(
@@ -102,7 +102,7 @@ class SubCategoryList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, subCategory);
+        items_.insert(index, subCategory);
         notifyListeners();
         throw HttpException(
           msg: 'Não foi possível excluir esta SubCategoria.',

@@ -17,7 +17,7 @@ Future<void> _refreshProducts(BuildContext context) {
   return Provider.of<ProductList>(
     context,
     listen: false,
-  ).loadProducts();
+  ).loadData();
 }
 
 class _ProductsTabState extends State<ProductsTab> {
@@ -29,7 +29,7 @@ class _ProductsTabState extends State<ProductsTab> {
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).loadProducts().then((value) {
+    ).loadData().then((value) {
       setState(() {
         _isLoading = false;
       });

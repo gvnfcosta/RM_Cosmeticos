@@ -17,7 +17,7 @@ class ProductItem extends StatelessWidget {
         title: Text('RM ${product.code}', style: const TextStyle(fontSize: 12)),
         subtitle: Text(product.name, style: const TextStyle(fontSize: 14)),
         trailing: SizedBox(
-          width: 86,
+          width: 96,
           child: Row(
             children: [
               IconButton(
@@ -46,7 +46,7 @@ class ProductItem extends StatelessWidget {
                           child: const Text('SIM'),
                           onPressed: () {
                             Provider.of<ProductList>(context, listen: false)
-                                .removeProduct(product);
+                                .removeData(product);
                             Navigator.of(ctx).pop();
                           },
                         ),

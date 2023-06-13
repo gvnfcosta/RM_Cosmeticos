@@ -7,29 +7,31 @@ import 'catalog_products_model.dart';
 
 class CatalogProductsList with ChangeNotifier {
   final String _token;
-  List<CatalogProducts> items2 = [];
+  List<CatalogProducts> items_ = [];
 
-  List<CatalogProducts> get items => [...items2];
-  List<CatalogProducts> get product => items2.toList();
+  List<CatalogProducts> get items => [...items_];
+  List<CatalogProducts> get product => items_.toList();
 
-  CatalogProductsList(this._token, this.items2);
+  CatalogProductsList(this._token, this.items_);
 
-  int get itemsCount => items2.length;
+  int get itemsCount => items_.length;
 
-  Future<void> loadProducts(String path) async {
-    items2.clear();
+  Future<void> loadData() async {
+    items_.clear();
 
     final response = await http.get(
-        Uri.parse('${Constants.baseUrl}/$path/products.json?auth=$_token'));
+        Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      items2.add(
+      items_.add(
         CatalogProducts(
           id: dataId,
           productId: dataDados['productId'],
+          seller: dataDados['seller'],
+          catalog: dataDados['catalog'],
           price: dataDados['price'],
           show: dataDados['show'],
         ),
@@ -37,40 +39,46 @@ class CatalogProductsList with ChangeNotifier {
     });
   }
 
-  Future<void> saveProduct(Map<String, Object> dataDados, String path) {
+  Future<void> saveData(Map<String, Object> dataDados) {
     bool hasId = dataDados['id'] != null;
     double idAleatorio = Random().nextDouble() * 100000;
 
     final product = CatalogProducts(
       id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
       productId: dataDados['productId'] as String,
+      seller: dataDados['seller'] as String,
+      catalog: dataDados['catalog'] as String,
       price: dataDados['price'] as double,
       show: dataDados['show'] as bool,
     );
 
     if (hasId) {
-      return updateProduct(product, path);
+      return updateData(product);
     } else {
-      return addProduct(product, path);
+      return addData(product);
     }
   }
 
-  Future<void> addProduct(CatalogProducts product, String path) async {
+  Future<void> addData(CatalogProducts product) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/$path/products.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'),
       body: jsonEncode({
         'id': product.id,
         'productId': product.productId,
+        'seller': product.seller,
+        'catalog': product.catalog,
         'price': product.price,
         'show': product.show,
       }),
     );
 
     final id = jsonDecode(response.body)['name'];
-    items2.add(
+    items_.add(
       CatalogProducts(
         id: id,
         productId: product.productId,
+        seller: product.seller,
+        catalog: product.catalog,
         price: product.price,
         show: product.show,
       ),
@@ -78,30 +86,32 @@ class CatalogProductsList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(CatalogProducts product, String path) async {
-    int index = items2.indexWhere((p) => p.id == product.id);
+  Future<void> updateData(CatalogProducts product) async {
+    int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/$path/products.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'),
         body: jsonEncode({
           'productId': product.productId,
+          'seller': product.seller,
+          'catalog': product.catalog,
           'price': product.price,
           'show': product.show,
         }),
       );
 
-      items2[index] = product;
+      items_[index] = product;
       notifyListeners();
     }
   }
 
-  // Future<void> removeProduct(Product product) async {
-  //   int index = items2.indexWhere((p) => p.id == product.id);
+  // Future<void> removeData(Product product) async {
+  //   int index = items_.indexWhere((p) => p.id == product.id);
 
   //   if (index >= 0) {
-  //     final product = items2[index];
-  //     items2.remove(product);
+  //     final product = items_[index];
+  //     items_.remove(product);
   //     notifyListeners();
 
   //     final response = await http.delete(
@@ -109,7 +119,7 @@ class CatalogProductsList with ChangeNotifier {
   //     );
 
   //     if (response.statusCode >= 400) {
-  //       items2.insert(index, product);
+  //       items_.insert(index, product);
   //       notifyListeners();
 
   //       throw HttpException('Não foi possível excluir ${product.name}.');

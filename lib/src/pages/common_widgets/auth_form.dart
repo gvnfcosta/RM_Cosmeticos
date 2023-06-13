@@ -33,15 +33,15 @@ class _AuthFormState extends State<AuthForm> {
     _isObscure = true;
   }
 
-  // void _switchAuthMode() {
-  //   setState(() {
-  //     if (_isLogin()) {
-  //       _authMode = AuthMode.signup;
-  //     } else {
-  //       _authMode = AuthMode.login;
-  //     }
-  //   });
-  // }
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.signup;
+      } else {
+        _authMode = AuthMode.login;
+      }
+    });
+  }
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -72,19 +72,19 @@ class _AuthFormState extends State<AuthForm> {
     Auth auth = Provider.of(context, listen: false);
 
     try {
-      //  if (_isLogin()) {
-      // Login
-      await auth.login(
-        _authData['email']!,
-        _authData['password']!,
-      );
-      // } else {
-      //   // Registrar
-      //   await auth.signup(
-      //     _authData['email']!,
-      //     _authData['password']!,
-      //   );
-      // }
+      if (_isLogin()) {
+        // Login
+        await auth.login(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      } else {
+        // Registrar
+        await auth.signup(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {

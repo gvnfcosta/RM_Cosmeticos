@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/user_list.dart';
 import '../../models/user_model.dart';
-import '../home/components/controllers/admin_tab.dart';
+import '../home/components/admin_tab.dart';
 import '../home/catalog_tab.dart';
 import '../home/category_tab.dart';
 import '../home/sub_category_tab.dart';
@@ -29,11 +29,7 @@ class _BaseScreenState extends State<BaseScreen> {
     Provider.of<UserList>(
       context,
       listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    ).loadData().then((value) => setState(() => _isLoading = false));
   }
 
   @override

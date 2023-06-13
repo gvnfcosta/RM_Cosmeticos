@@ -9,6 +9,6 @@ class AppRoutes {
   static const subCategoryForm = '/sub-category-form';
   static const categoryPage = '/category-page';
   static const subCategoryPage = '/sub-category-page';
-  static const catalogTab = '/catalogs-tab';
-  static const catalogForm = '/catalog-form';
+  static const catalogTab = '/catalog-tab';
+  static const catalogProductsForm = '/catalog-form';
 }

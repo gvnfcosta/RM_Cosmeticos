@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../catalogs/catalog_unit_page.dart';
 import '../../../models/catalog_model.dart';
+import '../catalogs_products_page.dart';
 import '/src/services/utils_services.dart';
 
 final UtilsServices utilsServices = UtilsServices();
@@ -20,20 +20,20 @@ class CatalogTile extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                catalog.name,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.blue),
-              ),
-            ),
-            Expanded(
-              child: Text(
                 catalog.seller,
                 style: const TextStyle(
                     fontSize: 18,
                     color: Colors.red,
                     fontWeight: FontWeight.w600),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                catalog.name,
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.blue),
               ),
             ),
             SizedBox(
@@ -43,7 +43,7 @@ class CatalogTile extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (c) {
-                        return CatalogUnitPage(catalog);
+                        return CatalogProductsPage(catalog);
                       },
                     ),
                   );

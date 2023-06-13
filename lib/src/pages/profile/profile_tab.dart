@@ -198,7 +198,6 @@ class _ProfileTabState extends State<ProfileTab> {
                 child: IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    ;
                   },
                   icon: const Icon(Icons.close),
                 ),

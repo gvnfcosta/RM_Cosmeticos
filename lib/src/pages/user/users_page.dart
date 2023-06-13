@@ -39,7 +39,7 @@ class _UsersScreenState extends State<UsersScreen> {
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        title: const Text('USUÁRIOS', style: TextStyle(color: Colors.red)),
+        // title: const Text('USUÁRIOS', style: TextStyle(color: Colors.red)),
         actions: [
           IconButton(
             onPressed: () {
@@ -61,21 +61,19 @@ class _UsersScreenState extends State<UsersScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Expanded(
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: users.length,
-                      itemBuilder: (_, i) {
-                        return UserTile(user: users[i]);
-                      },
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 300,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 7,
-                      ),
+                  child: GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: users.length,
+                    itemBuilder: (_, i) {
+                      return UserTile(user: users[i]);
+                    },
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5,
+                      childAspectRatio: 6 / 4,
                     ),
                   ),
                 ),

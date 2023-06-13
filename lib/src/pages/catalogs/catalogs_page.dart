@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/pages/catalogs/new_catalog_form.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';
-import '../home/components/catalog_tile.dart';
+import 'catalog_form_page.dart';
+import 'components/catalog_tile.dart';
 
 class CatalogsPage extends StatefulWidget {
   const CatalogsPage({super.key});
@@ -39,12 +39,11 @@ class _CatalogsPageState extends State<CatalogsPage> {
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        title: const Text('CATÁLOGOS', style: TextStyle(color: Colors.red)),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (c) => const NewCatalogForm()));
+                  MaterialPageRoute(builder: (c) => const CatalogFormPage()));
             },
             icon: const Icon(
               Icons.add,

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../models/user_list.dart';
 
 class AdminController with ChangeNotifier {
-  bool _isAdmin = false;
+  final bool _isAdmin = false;
 
   bool get isAdmin => _isAdmin;
 

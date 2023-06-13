@@ -25,7 +25,7 @@ class _ProductPageState extends State<ProductPage> {
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).loadProducts().then((value) {
+    ).loadData().then((value) {
       setState(() {
         _isLoading = false;
       });
@@ -160,5 +160,5 @@ class _ProductPageState extends State<ProductPage> {
 }
 
 Future<void> _refreshProduct(BuildContext context) {
-  return Provider.of<ProductList>(context, listen: false).loadProducts();
+  return Provider.of<ProductList>(context, listen: false).loadData();
 }

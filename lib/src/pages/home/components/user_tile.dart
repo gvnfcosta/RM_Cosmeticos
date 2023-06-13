@@ -55,20 +55,6 @@ class UserTile extends StatelessWidget {
                     fontWeight: FontWeight.w300, color: Colors.blue),
               ),
               const SizedBox(height: 10),
-              user.level == 1
-                  ? ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AppRoutes.baseScreen, arguments: user);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text('Catálogos '),
-                          Icon(Icons.list, color: Colors.white),
-                        ],
-                      ))
-                  : const SizedBox(height: 30),
             ],
           ),
         ),

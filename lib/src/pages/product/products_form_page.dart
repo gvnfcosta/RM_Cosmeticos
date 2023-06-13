@@ -21,7 +21,7 @@ class ProductFormPage extends StatefulWidget {
 class _ProductFormPageState extends State<ProductFormPage> {
   final utilsServices = UtilsServices();
 
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   final _codeFocus = FocusNode();
   final _nameFocus = FocusNode();
@@ -46,13 +46,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
     super.initState();
     Provider.of<CategoryList>(context, listen: false)
         .loadCategories()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-        _imageUrlFocus.addListener(updateImage);
-      });
-    });
-    Provider.of<SubCategoryList>(context, listen: false).loadSubCategories();
+        .then((value) => setState(() {
+              _isLoading = false;
+              _imageUrlFocus.addListener(updateImage);
+            }));
+    Provider.of<SubCategoryList>(context, listen: false)
+        .loadSubCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -97,9 +97,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   bool isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-        url.toLowerCase().endsWith('.jpg') ||
-        url.toLowerCase().endsWith('.jpeg');
+    // bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+    //     url.toLowerCase().endsWith('.jpg') ||
+    //     url.toLowerCase().endsWith('.jpeg');
     return isValidUrl; //&& endsWithFile;
   }
 
@@ -114,7 +114,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     try {
       await Provider.of<ProductList>(context, listen: false)
-          .saveProduct(_formData);
+          .saveData(_formData);
     } catch (error) {
       await showDialog<void>(
         context: context,

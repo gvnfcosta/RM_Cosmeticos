@@ -5,7 +5,6 @@ import 'package:rm/src/models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
-import '../pdf/pdf_page.dart';
 import 'components/product_tile.dart';
 import '../../config/app_data.dart' as appData;
 
@@ -28,19 +27,11 @@ class _CatalogTabState extends State<CatalogTab> {
     Provider.of<CategoryList>(
       context,
       listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    ).loadCategories().then((value) => setState(() => _isLoading = false));
     Provider.of<ProductList>(
       context,
       listen: false,
-    ).loadProducts().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    ).loadData().then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -85,15 +76,15 @@ class _CatalogTabState extends State<CatalogTab> {
                 ],
               ),
               actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const PdfPage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.picture_as_pdf)),
+                // IconButton(
+                //     onPressed: () {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const PdfPage(),
+                //         ),
+                //       );
+                //     },
+                //     icon: const Icon(Icons.picture_as_pdf)),
                 PopupMenuButton(
                   icon: const Icon(Icons.more_vert),
                   itemBuilder: (_) => List.generate(
@@ -198,11 +189,4 @@ class _CatalogTabState extends State<CatalogTab> {
             ),
           );
   }
-}
-
-Future<void> _refreshProducts(BuildContext context) {
-  return Provider.of<ProductList>(
-    context,
-    listen: false,
-  ).loadProducts();
 }

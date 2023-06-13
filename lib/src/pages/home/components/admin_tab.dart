@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../catalogs/catalogs_page.dart';
-import '../../../user/users_page.dart';
+import '../../catalogs/catalogs_page.dart';
+import '../../user/users_page.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
