@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -30,10 +31,7 @@ class CatalogProductsList with ChangeNotifier {
         CatalogProducts(
           id: dataId,
           productId: dataDados['productId'],
-          seller: dataDados['seller'],
-          catalog: dataDados['catalog'],
           price: dataDados['price'],
-          show: dataDados['show'],
         ),
       );
     });
@@ -46,10 +44,7 @@ class CatalogProductsList with ChangeNotifier {
     final product = CatalogProducts(
       id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
       productId: dataDados['productId'] as String,
-      seller: dataDados['seller'] as String,
-      catalog: dataDados['catalog'] as String,
       price: dataDados['price'] as double,
-      show: dataDados['show'] as bool,
     );
 
     if (hasId) {
@@ -65,10 +60,8 @@ class CatalogProductsList with ChangeNotifier {
       body: jsonEncode({
         'id': product.id,
         'productId': product.productId,
-        'seller': product.seller,
-        'catalog': product.catalog,
         'price': product.price,
-        'show': product.show,
+        // 'show': product.show,
       }),
     );
 
@@ -77,10 +70,8 @@ class CatalogProductsList with ChangeNotifier {
       CatalogProducts(
         id: id,
         productId: product.productId,
-        seller: product.seller,
-        catalog: product.catalog,
         price: product.price,
-        show: product.show,
+        // show: product.show,
       ),
     );
     notifyListeners();
@@ -91,13 +82,12 @@ class CatalogProductsList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/$dataPath/products/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           'productId': product.productId,
-          'seller': product.seller,
-          'catalog': product.catalog,
           'price': product.price,
-          'show': product.show,
+          // 'show': product.show,
         }),
       );
 
@@ -106,24 +96,25 @@ class CatalogProductsList with ChangeNotifier {
     }
   }
 
-  // Future<void> removeData(Product product, String dataPath) async {
-  //   int index = items_.indexWhere((p) => p.id == product.id);
+  Future<void> removeData(CatalogProducts product, String dataPath) async {
+    int index = items_.indexWhere((p) => p.id == product.id);
 
-  //   if (index >= 0) {
-  //     final product = items_[index];
-  //     items_.remove(product);
-  //     notifyListeners();
+    if (index >= 0) {
+      final product = items_[index];
+      items_.remove(product);
+      notifyListeners();
 
-  //     final response = await http.delete(
-  //       Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
-  //     );
+      final response = await http.delete(
+        Uri.parse(
+            '${Constants.baseUrl}/$dataPath/products/${product.id}.json?auth=$_token'),
+      );
 
-  //     if (response.statusCode >= 400) {
-  //       items_.insert(index, product);
-  //       notifyListeners();
+      if (response.statusCode >= 400) {
+        items_.insert(index, product);
+        notifyListeners();
 
-  //       throw HttpException('Não foi possível excluir ${product.name}.');
-  //     }
-  //   }
-  // }
+        throw HttpException('Não foi possível excluir ${product.id}.');
+      }
+    }
+  }
 }

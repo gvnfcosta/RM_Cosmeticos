@@ -60,9 +60,16 @@ class _CatalogsPageState extends State<CatalogsPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: ListView.builder(
+                    child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 160,
+                        mainAxisSpacing: 3,
+                        crossAxisSpacing: 3,
+                        childAspectRatio: 10 / 12,
+                      ),
                       itemCount: catalogs.length,
                       itemBuilder: (_, i) {
                         return CatalogTile(catalog: catalogs[i]);

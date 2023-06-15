@@ -37,9 +37,9 @@ class ProductList with ChangeNotifier {
           subCategory: dataDados['subCategory'],
           unit: dataDados['unit'],
           imageUrl: dataDados['imageUrl'],
+          show: dataDados['show'],
           // offer: dataDados['offer'],
           // price: dataDados['price'],
-          // show: dataDados['show'],
         ),
       );
     });
@@ -59,9 +59,9 @@ class ProductList with ChangeNotifier {
       subCategory: dataDados['subCategory'] as String,
       unit: dataDados['unit'] as String,
       imageUrl: dataDados['imageUrl'] as String,
+      show: dataDados['show'] as bool,
       // offer: dataDados['offer'] as String,
       // price: dataDados['price'] as double,
-      // show: dataDados['show'] as bool,
     );
 
     if (hasId) {
@@ -83,9 +83,9 @@ class ProductList with ChangeNotifier {
         'subCategory': product.subCategory,
         'unit': product.unit,
         'imageUrl': product.imageUrl,
+        'show': product.show,
         // 'offer': product.offer,
         // 'price': product.price,
-        // 'show': product.show,
       }),
     );
 
@@ -100,9 +100,9 @@ class ProductList with ChangeNotifier {
         subCategory: product.subCategory,
         unit: product.unit,
         imageUrl: product.imageUrl,
+        show: product.show,
         // offer: product.offer,
         // price: product.price,
-        // show: product.show,
       ),
     );
     notifyListeners();
@@ -113,7 +113,8 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/products/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           'code': product.code,
           'name': product.name,
@@ -122,9 +123,9 @@ class ProductList with ChangeNotifier {
           'subCategory': product.subCategory,
           'unit': product.unit,
           'imageUrl': product.imageUrl,
+          'show': product.show,
           // 'offer': product.offer,
           // 'price': product.price,
-          // 'show': product.show,
         }),
       );
 

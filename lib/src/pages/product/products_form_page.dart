@@ -63,6 +63,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       _formData['unit'] = 'Un';
+      _formData['show'] = true;
 
       if (arg != null) {
         final product = arg as Product;
@@ -73,6 +74,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['category'] = product.category;
         _formData['subCategory'] = product.subCategory;
         _formData['unit'] = product.unit;
+        _formData['show'] = product.show;
         _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
       }
@@ -294,6 +296,25 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         ),
                                       ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.visibility,
+                                            color: Colors.indigo,
+                                          ),
+                                          Switch(
+                                              value: _formData['show'] as bool,
+                                              activeColor: Colors.blue,
+                                              onChanged: (bool value) {
+                                                setState(() {
+                                                  _formData['show'] = value;
+                                                });
+                                              }),
+                                        ],
+                                      ),
+                                    ),
                                   ]),
                               Row(
                                 mainAxisAlignment:
@@ -316,7 +337,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                     child: SizedBox(
                                       child: Container(
                                         height: 40,
-                                        width: 180,
+                                        width: 130,
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               width: 1,

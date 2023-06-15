@@ -48,9 +48,10 @@ class _ProductPageState extends State<ProductPage> {
     Auth auth = Provider.of(context);
     bool isAdmin = true; // auth.isAdmin;
 
-    final List<Product> products = Provider.of<ProductList>(context).items
-      // .where((element) => element.show == !_isSecret)
-      // .toList()
+    final List<Product> products = Provider.of<ProductList>(context)
+        .items
+        .where((element) => element.show == !_isSecret)
+        .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     List<Product> productsFiltered = products
@@ -62,7 +63,6 @@ class _ProductPageState extends State<ProductPage> {
         .toList()
       ..sort(((a, b) => a.nome.compareTo(b.nome)));
 
-    // ignore: unrelated_type_equality_checks
     if (allCategories.length == 1) {
       for (final value in categories) {
         allCategories.add(value.nome);

@@ -35,7 +35,9 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserList>(context);
-    final List<UserModel> users = provider.user.toList();
+    final List<UserModel> users = provider.usuario.toList();
+
+    String usuario = users.first.name;
 
     if (users.isNotEmpty) isAdmin = users.first.level == 0;
 
@@ -63,7 +65,7 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   final List<Widget> adminPageViews = [
-    const CatalogTab(selectedCategory: 'Todos'),
+    CatalogTab(selectedCategory: 'Todos', usuario: users.first.name),
     const CategoryTab(),
     const SubCategoryTab(),
     const ProductPage(),

@@ -16,42 +16,35 @@ class CatalogTile extends StatelessWidget {
       color: Colors.blueGrey.shade50,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (c) {
+                  return CatalogProductsPage(catalog);
+                },
+              ),
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
                 catalog.seller,
                 style: const TextStyle(
                     fontSize: 18,
                     color: Colors.red,
                     fontWeight: FontWeight.w600),
               ),
-            ),
-            Expanded(
-              child: Text(
+              Text(
                 catalog.name,
                 style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: Colors.blue),
               ),
-            ),
-            SizedBox(
-              width: 50,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (c) {
-                        return CatalogProductsPage(catalog);
-                      },
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.list, color: Colors.red),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/catalog_products_list.dart';
 import 'package:rm/src/models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../models/product_list.dart';
@@ -9,9 +10,11 @@ import 'components/product_tile.dart';
 import '../../config/app_data.dart' as appData;
 
 class CatalogTab extends StatefulWidget {
-  const CatalogTab({super.key, required this.selectedCategory});
+  const CatalogTab(
+      {super.key, required this.selectedCategory, required this.usuario});
 
   final String selectedCategory;
+  final String usuario;
   @override
   State<CatalogTab> createState() => _CatalogTabState();
 }
@@ -24,11 +27,13 @@ class _CatalogTabState extends State<CatalogTab> {
   void initState() {
     super.initState();
 
+    String dataPath = widget.usuario;
+
     Provider.of<CategoryList>(
       context,
       listen: false,
     ).loadCategories().then((value) => setState(() => _isLoading = false));
-    Provider.of<ProductList>(
+    Provider.of<CatalogProductsList>(
       context,
       listen: false,
     ).loadData().then((value) => setState(() => _isLoading = false));
@@ -36,9 +41,11 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context).items.toList()
-      // .where((element) => element.show)
-      // .toList()
+    final products = Provider.of<ProductList>(context)
+        .items
+        .toList()
+        .where((element) => element.show)
+        .toList()
       // .where((element) => element.offer == selectedTipo)
       // .toList()
       ..sort((a, b) => a.name.compareTo(b.name));

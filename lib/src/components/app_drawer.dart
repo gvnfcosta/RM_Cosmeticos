@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_model.dart';
 import '../models/auth.dart';
+import '../models/user_list.dart';
 import '../utils/app_routes.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -8,40 +10,45 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
+    String nomeUsuario = 'Convidado';
+    List<UserModel> usuario = Provider.of<UserList>(context).usuario;
+    nomeUsuario = usuario.first.name;
 
     return Drawer(
       child: Column(
         children: [
           AppBar(
-            title: Text('Bem vindo! ${auth.email}'),
+            title: Text('Bem vindo ${nomeUsuario.split(' ')[0]}!'),
             automaticallyImplyLeading: false,
           ),
-          ListTile(
-            leading: const Icon(Icons.category),
-            title: const Text('Categories'),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                AppRoutes.categoryPage,
-              );
-            },
+          Column(
+            children: [
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.person_2_outlined),
+                title: const Text('Administradores'),
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.userForm);
+                },
+              ),
+              const Divider(),
+            ],
           ),
           ListTile(
-            leading: const Icon(Icons.interests),
-            title: const Text('Subcategories'),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                AppRoutes.subCategoryPage,
-              );
-            },
+            leading: const Icon(Icons.help),
+            title: const Text('Ajuda'),
+            onTap: () {},
           ),
-          const Divider(),
           ListTile(
-            leading: const Icon(Icons.list),
-            title: const Text('Produtos'),
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Sair'),
             onTap: () {
-              Navigator.of(context).pushNamed(
-                AppRoutes.productPage,
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logout();
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.authOrHome,
               );
             },
           ),

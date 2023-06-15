@@ -22,12 +22,12 @@ class SignInScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color.fromRGBO(255, 255, 255, 0.3),
-                Color.fromRGBO(255, 255, 255, 0.2),
+                Color.fromRGBO(255, 255, 255, 1),
+                Color.fromRGBO(255, 255, 255, 0.1),
                 Color.fromRGBO(215, 117, 255, 0.8),
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Column(

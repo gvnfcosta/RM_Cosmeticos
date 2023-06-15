@@ -38,11 +38,7 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
     final List<CatalogProducts> products =
         Provider.of<CatalogProductsList>(context).items.toList();
 
-    List<CatalogProducts> catalogSellerProducts = products
-        .where((element) =>
-            element.seller == widget.catalog.seller &&
-            element.catalog == widget.catalog.name)
-        .toList();
+    List<CatalogProducts> catalogSellerProducts = products.toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,8 +51,9 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
           IconButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (c) =>
-                      CatalogProductsFormPage(catalog: widget.catalog)));
+                  builder: (c) => CatalogProductsFormPage(
+                      seller: widget.catalog.seller,
+                      catalog: widget.catalog.name)));
             },
             icon: Icon(
               Icons.add,
@@ -83,9 +80,4 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
           : const Center(child: Text('Catálogo Vazio')),
     );
   }
-}
-
-Future<void> _refreshProduct(BuildContext context, CatalogModel catalog) {
-  return Provider.of<CatalogProductsList>(context, listen: false)
-      .loadData('${catalog.seller}/${catalog.name}');
 }
