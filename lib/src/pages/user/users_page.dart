@@ -57,27 +57,29 @@ class _UsersScreenState extends State<UsersScreen> {
 
       // Campo Pesquisa
       body: !_isLoading
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: GridView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: users.length,
-                    itemBuilder: (_, i) {
-                      return UserTile(user: users[i]);
-                    },
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisSpacing: 5,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: 6 / 4,
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (_, i) {
+                        return UserTile(user: users[i]);
+                      },
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 5,
+                        childAspectRatio: 6 / 4,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           : const Center(),
     );

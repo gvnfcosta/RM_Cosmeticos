@@ -16,11 +16,11 @@ class CatalogProductsList with ChangeNotifier {
 
   int get itemsCount => items_.length;
 
-  Future<void> loadData() async {
+  Future<void> loadData(String dataPath) async {
     items_.clear();
 
     final response = await http.get(
-        Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'));
+        Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -39,7 +39,7 @@ class CatalogProductsList with ChangeNotifier {
     });
   }
 
-  Future<void> saveData(Map<String, Object> dataDados) {
+  Future<void> saveData(Map<String, Object> dataDados, String dataPath) {
     bool hasId = dataDados['id'] != null;
     double idAleatorio = Random().nextDouble() * 100000;
 
@@ -53,15 +53,15 @@ class CatalogProductsList with ChangeNotifier {
     );
 
     if (hasId) {
-      return updateData(product);
+      return updateData(product, dataPath);
     } else {
-      return addData(product);
+      return addData(product, dataPath);
     }
   }
 
-  Future<void> addData(CatalogProducts product) async {
+  Future<void> addData(CatalogProducts product, String dataPath) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
       body: jsonEncode({
         'id': product.id,
         'productId': product.productId,
@@ -86,12 +86,12 @@ class CatalogProductsList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateData(CatalogProducts product) async {
+  Future<void> updateData(CatalogProducts product, String dataPath) async {
     int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/seller_products.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
         body: jsonEncode({
           'productId': product.productId,
           'seller': product.seller,
@@ -106,7 +106,7 @@ class CatalogProductsList with ChangeNotifier {
     }
   }
 
-  // Future<void> removeData(Product product) async {
+  // Future<void> removeData(Product product, String dataPath) async {
   //   int index = items_.indexWhere((p) => p.id == product.id);
 
   //   if (index >= 0) {
@@ -115,7 +115,7 @@ class CatalogProductsList with ChangeNotifier {
   //     notifyListeners();
 
   //     final response = await http.delete(
-  //       Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
+  //       Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
   //     );
 
   //     if (response.statusCode >= 400) {

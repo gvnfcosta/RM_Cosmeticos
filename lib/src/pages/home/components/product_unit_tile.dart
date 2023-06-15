@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/catalog_model.dart';
 import '../../../models/catalog_products_list.dart';
 import '../../../models/catalog_products_model.dart';
 import '../../../models/product_list.dart';
 import '../../../services/utils_services.dart';
-import '../../../utils/app_routes.dart';
 
 class ProductUnitTile extends StatefulWidget {
   const ProductUnitTile(
-      {super.key, required this.product, required this.catalog});
+      {super.key, required this.product, required this.dataPath});
 
   final CatalogProducts product;
-  final CatalogModel catalog;
+  final String dataPath;
 
   @override
   State<ProductUnitTile> createState() => _ProductUnitTileState();
@@ -30,32 +28,22 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
     Provider.of<CatalogProductsList>(
       context,
       listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
+    )
+        .loadData(widget.dataPath)
+        .then((value) => setState(() => _isLoading = false));
+    // Provider.of<ProductList>(
+    //   context,
+    //   listen: false,
+    // ).loadData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final baseProduct = Provider.of<ProductList>(context).product.toList();
-    final catalogProduct =
-        Provider.of<CatalogProductsList>(context).product.toList();
-
     final product = Provider.of<ProductList>(context)
-        .product
+        .items
         .toList()
         .where((element) => element.name == widget.product.productId)
-        .toList()
-      // .where((element) => element.offer == selectedTipo)
-      // .toList()
-      ..sort((a, b) => a.name.compareTo(b.name));
-
-    // final List<Category> category = Provider.of<CategoryList>(context)
-    //     .categories
-    //     .toList()
-    //   ..sort((a, b) => a.nome.compareTo(b.nome));
+        .toList();
 
     return Stack(
       children: [
@@ -71,7 +59,7 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
           },
           //Conteúdo
           child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center()
               : Card(
                   color: Colors.grey[100],
                   elevation: 0,
@@ -90,10 +78,10 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _customText('Código', product.first.code),
-                            _customText('Produto', product.first.name),
-                            _customText('Descrição', product.first.description),
-                            _customText(
+                            CustomLabel('Código', product.first.code),
+                            CustomLabel('Produto', product.first.name),
+                            CustomLabel('Descrição', product.first.description),
+                            CustomLabel(
                                 'Preço',
                                 utilsServices
                                     .priceToCurrency(widget.product.price)
@@ -107,28 +95,36 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
         ),
 
         // Botão Edit Product
-        editProduct
-            ? Positioned(
-                top: 10,
-                right: 10,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(
-                        AppRoutes.catalogProductsForm,
-                        arguments: widget.product);
-                  },
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.red,
-                  ),
-                ),
-              )
-            : Container(),
+        // editProduct
+        //     ? Positioned(
+        //         top: 10,
+        //         right: 10,
+        //         child: GestureDetector(
+        //           onTap: () {
+        //             Navigator.of(context).pushNamed(
+        //                 AppRoutes.catalogProductsForm,
+        //                 arguments: widget.product);
+        //           },
+        //           child: const Icon(
+        //             Icons.edit,
+        //             color: Colors.red,
+        //           ),
+        //         ),
+        //       )
+        //     : Container(),
       ],
     );
   }
+}
 
-  Widget _customText(String label, String description) {
+class CustomLabel extends StatelessWidget {
+  const CustomLabel(this.label, this.description, {super.key});
+
+  final String label;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Text(

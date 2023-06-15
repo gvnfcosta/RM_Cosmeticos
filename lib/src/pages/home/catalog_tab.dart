@@ -36,7 +36,7 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context).product.toList()
+    final products = Provider.of<ProductList>(context).items.toList()
       // .where((element) => element.show)
       // .toList()
       // .where((element) => element.offer == selectedTipo)

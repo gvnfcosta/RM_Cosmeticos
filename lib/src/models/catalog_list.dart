@@ -37,6 +37,7 @@ class CatalogList with ChangeNotifier {
         ),
       );
     });
+    notifyListeners();
   }
 
   Future<void> saveData(Map<String, Object> dataDados) {

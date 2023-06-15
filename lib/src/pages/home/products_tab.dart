@@ -48,7 +48,7 @@ class _ProductsTabState extends State<ProductsTab> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductList>(context);
 
-    final List<Product> products = provider.product.toList()
+    final List<Product> products = provider.items.toList()
       // .where((element) => element.show)
       // .toList()
       ..sort((a, b) => a.name.compareTo(b.name));

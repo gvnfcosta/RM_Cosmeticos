@@ -28,12 +28,13 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       listen: false,
     ).loadData().then((value) => setState(() => _isLoadingCatalog = false));
     Provider.of<CatalogProductsList>(context, listen: false)
-        .loadData()
+        .loadData('${widget.catalog.seller}/${widget.catalog.name}')
         .then((value) => setState(() => _isLoadingProducts = false));
   }
 
   @override
   Widget build(BuildContext context) {
+    String dataPath = '${widget.catalog.seller}/${widget.catalog.name}';
     final List<CatalogProducts> products =
         Provider.of<CatalogProductsList>(context).items.toList();
 
@@ -54,9 +55,8 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
           IconButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (c) => CatalogProductsFormPage(
-                      catalog: widget.catalog.name,
-                      seller: widget.catalog.seller)));
+                  builder: (c) =>
+                      CatalogProductsFormPage(catalog: widget.catalog)));
             },
             icon: Icon(
               Icons.add,
@@ -67,34 +67,25 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       ),
 
       // Campo Pesquisa
-      body: !_isLoadingCatalog && !_isLoadingProducts
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () => _refreshProduct(context),
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: catalogSellerProducts.length,
-                        itemBuilder: (_, i) {
-                          return ProductUnitTile(
-                              product: catalogSellerProducts[i],
-                              catalog: widget.catalog);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      body: !_isLoadingCatalog
+          ? Padding(
+              padding: const EdgeInsets.all(10),
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: catalogSellerProducts.length,
+                itemBuilder: (_, i) {
+                  return ProductUnitTile(
+                      product: catalogSellerProducts[i], dataPath: dataPath);
+                },
+              ),
             )
           : const Center(child: Text('Catálogo Vazio')),
     );
   }
 }
 
-Future<void> _refreshProduct(BuildContext context) {
-  return Provider.of<CatalogProductsList>(context, listen: false).loadData();
+Future<void> _refreshProduct(BuildContext context, CatalogModel catalog) {
+  return Provider.of<CatalogProductsList>(context, listen: false)
+      .loadData('${catalog.seller}/${catalog.name}');
 }

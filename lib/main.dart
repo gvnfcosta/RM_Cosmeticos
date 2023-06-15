@@ -9,7 +9,6 @@ import 'src/models/product_list.dart';
 import 'src/models/sub_category_list.dart';
 import 'src/models/user_list.dart';
 import 'src/pages/auth/auth_home_page.dart';
-import 'src/pages/catalogs/catalogs_products_form_page.dart';
 import 'src/pages/category/category_form_page.dart';
 import 'src/pages/category/category_page.dart';
 import 'src/pages/category/sub_category_form_page.dart';
@@ -113,8 +112,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
           AppRoutes.catalogTab: (ctx) =>
               const CatalogTab(selectedCategory: 'Kits'),
-          AppRoutes.catalogProductsForm: (ctx) =>
-              const CatalogProductsFormPage(catalog: '', seller: ''),
+          // AppRoutes.catalogProductsForm: (ctx) =>
+          //     CatalogProductsFormPage(),
           AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
           AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
         },

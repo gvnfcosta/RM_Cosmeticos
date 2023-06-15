@@ -26,37 +26,33 @@ class UserTile extends StatelessWidget {
       color: corCartao,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Expanded(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(levels[user.level].toString()),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.userForm, arguments: user);
-                    },
-                    icon: const Icon(Icons.edit, color: Colors.red),
-                  ),
-                ],
-              ),
-              Text(
-                user.name,
-                style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                user.email,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w300, color: Colors.blue),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(levels[user.level].toString()),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.userForm, arguments: user);
+                  },
+                  icon: const Icon(Icons.edit, color: Colors.red),
+                ),
+              ],
+            ),
+            Text(
+              user.name,
+              style: const TextStyle(
+                  fontSize: 18, color: Colors.red, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              user.email,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w300, color: Colors.blue),
+            ),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );

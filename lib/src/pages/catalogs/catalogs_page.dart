@@ -55,11 +55,11 @@ class _CatalogsPageState extends State<CatalogsPage> {
 
       // Campo Pesquisa
       body: !_isLoading
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Expanded(
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
@@ -69,8 +69,8 @@ class _CatalogsPageState extends State<CatalogsPage> {
                       },
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           : const Center(),
     );
