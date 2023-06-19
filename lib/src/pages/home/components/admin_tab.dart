@@ -8,37 +8,18 @@ class AdminScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Builder(
-        builder: (BuildContext conext) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              centerTitle: true,
-              elevation: 0,
-              title: TabBar(
-                tabs: tabItems,
-                indicatorColor: Colors.white,
-              ),
-            ),
-
-            // Campo Pesquisa
-            body: const TabBarView(
-              children: [
-                UsersScreen(),
-                CatalogsPage(),
-              ],
-            ),
-            drawer: const AppDrawer(),
-          );
-        },
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
+        title: const Text('Usuários'),
       ),
+
+      // Campo Pesquisa
+      body: const UsersScreen(),
+
+      drawer: const AppDrawer(),
     );
   }
 }
-
-List<Widget> tabItems = [
-  const Tab(text: 'Usuários'),
-  const Tab(text: 'Catálogos'),
-];

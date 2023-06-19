@@ -14,10 +14,7 @@ class ProductsTab extends StatefulWidget {
 }
 
 Future<void> _refreshProducts(BuildContext context) {
-  return Provider.of<ProductList>(
-    context,
-    listen: false,
-  ).loadData();
+  return Provider.of<ProductList>(context, listen: false).loadData();
 }
 
 class _ProductsTabState extends State<ProductsTab> {
@@ -26,22 +23,12 @@ class _ProductsTabState extends State<ProductsTab> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<ProductList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -79,28 +66,28 @@ class _ProductsTabState extends State<ProductsTab> {
 
       // Campo Pesquisa
       body: !_isLoading
-          ? Column(
+          ? const Column(
               children: [
                 // Grid
-                const SizedBox(height: 12),
-                Expanded(
-                    child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: quantidadeItemsTela,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    childAspectRatio: 8 / 11,
-                  ),
-                  itemCount: widget.selectedCategory == 'Todos'
-                      ? products.length
-                      : productsFiltered.length,
-                  itemBuilder: (_, index) {
-                    return widget.selectedCategory == 'Todos'
-                        ? ProductTile(product: products[index])
-                        : ProductTile(product: productsFiltered[index]);
-                  },
-                ))
+                // const SizedBox(height: 12),
+                // Expanded(
+                //     child: GridView.builder(
+                //   physics: const BouncingScrollPhysics(),
+                //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: quantidadeItemsTela,
+                //     mainAxisSpacing: 2,
+                //     crossAxisSpacing: 2,
+                //     childAspectRatio: 8 / 11,
+                //   ),
+                //   itemCount: widget.selectedCategory == 'Todos'
+                //       ? products.length
+                //       : productsFiltered.length,
+                //   itemBuilder: (_, index) {
+                //     return widget.selectedCategory == 'Todos'
+                //         ? ProductTile(product: products[index])
+                //         : ProductTile(product: productsFiltered[index]);
+                //   },
+                // ))
               ],
             )
           : const Center(child: CircularProgressIndicator()),

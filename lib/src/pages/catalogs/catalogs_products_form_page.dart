@@ -24,7 +24,7 @@ bool _editing = false;
 final _formKey = GlobalKey<FormState>();
 final _formData = <String, Object>{};
 
-String? selectedProduto;
+String? selectedProduct;
 
 class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   @override
@@ -34,7 +34,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
         .loadData()
         .then((value) => setState(() => _isLoading = false));
     Provider.of<CatalogProductsList>(context, listen: false)
-        .loadData('${widget.seller}/${widget.catalog}')
+        .loadData()
         .then((value) => setState(() => _isLoading = false));
   }
 
@@ -45,32 +45,34 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
     if (_formData.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      // _formData['price'] = '';
-      // _formData['productId'] = '';
-
       if (arg != null) {
         final catalogProduct = arg as CatalogProducts;
         _formData['id'] = catalogProduct.id;
         _formData['productId'] = catalogProduct.productId;
         _formData['price'] = catalogProduct.price;
+        _formData['seller'] = catalogProduct.seller;
+        _formData['catalog'] = catalogProduct.catalog;
 
-        selectedProduto = _formData['productId'].toString();
+        selectedProduct = _formData['productId'].toString();
         _editing = true;
       }
     }
   }
 
   Future<void> _submitForm() async {
+    _formData['seller'] = widget.seller;
+    _formData['catalog'] = widget.catalog;
+
     final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) return;
 
     _formKey.currentState?.save();
     setState(() => _isLoading = true);
 
-    if (!isValid) return;
-
     try {
       await Provider.of<CatalogProductsList>(context, listen: false)
-          .saveData(_formData, '${widget.seller}/${widget.catalog}');
+          .saveData(_formData);
     } catch (error) {
       await showDialog<void>(
           context: context,
@@ -96,7 +98,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
     return Scaffold(
         backgroundColor: Colors.white.withAlpha(240),
         appBar: AppBar(
-          title: Text('Catálogo ${widget.seller}/${widget.catalog}',
+          title: Text('${widget.seller} ${widget.catalog}',
               style: const TextStyle(fontSize: 16)),
           actions: [
             IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
@@ -148,12 +150,14 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                                                       fontSize:
                                                                           14))))
                                                   .toList(),
-                                              value: _formData['productId'],
+                                              value: selectedProduct,
                                               isDense: true,
                                               onChanged: (value) {
                                                 setState(() =>
                                                     _formData['productId'] =
                                                         value as String);
+                                                selectedProduct =
+                                                    value as String;
                                               },
                                               buttonHeight: 30,
                                               buttonWidth: 10,
@@ -173,7 +177,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                 child: TextFormField(
                                     style: const TextStyle(fontSize: 14),
                                     initialValue:
-                                        _formData['price']?.toString(),
+                                        _formData['price']?.toString() ?? '0',
                                     decoration: InputDecoration(
                                         labelText: 'Preço',
                                         labelStyle:

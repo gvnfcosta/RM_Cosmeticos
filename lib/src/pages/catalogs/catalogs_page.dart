@@ -36,7 +36,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        title: const Text('Catálogos'),
         centerTitle: true,
         elevation: 0,
         actions: [

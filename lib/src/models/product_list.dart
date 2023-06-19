@@ -11,7 +11,7 @@ class ProductList with ChangeNotifier {
   List<Product> items_ = [];
 
   List<Product> get items => [...items_];
-  //List<Product> get product => items_.toList();
+  List<Product> get product => items_.toList();
 
   ProductList(this._token, this.items_);
 

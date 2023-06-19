@@ -113,10 +113,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
           AppRoutes.catalogTab: (ctx) =>
               const CatalogTab(selectedCategory: 'Kits'),
-          AppRoutes.catalogProductsForm: (ctx) => const CatalogProductsFormPage(
-                seller: '',
-                catalog: '',
-              ),
+          AppRoutes.catalogProductsForm: (ctx) =>
+              const CatalogProductsFormPage(seller: '', catalog: ''),
           AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
           AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
         },

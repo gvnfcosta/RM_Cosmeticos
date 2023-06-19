@@ -17,11 +17,11 @@ class CatalogProductsList with ChangeNotifier {
 
   int get itemsCount => items_.length;
 
-  Future<void> loadData(String dataPath) async {
+  Future<void> loadData() async {
     items_.clear();
 
     final response = await http.get(
-        Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'));
+        Uri.parse('${Constants.baseUrl}/catalog_products.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -32,36 +32,40 @@ class CatalogProductsList with ChangeNotifier {
           id: dataId,
           productId: dataDados['productId'],
           price: dataDados['price'],
+          seller: dataDados['seller'],
+          catalog: dataDados['catalog'],
         ),
       );
     });
   }
 
-  Future<void> saveData(Map<String, Object> dataDados, String dataPath) {
+  Future<void> saveData(Map<String, Object> dataDados) {
     bool hasId = dataDados['id'] != null;
     double idAleatorio = Random().nextDouble() * 100000;
 
     final product = CatalogProducts(
-      id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
-      productId: dataDados['productId'] as String,
-      price: dataDados['price'] as double,
-    );
+        id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
+        productId: dataDados['productId'] as String,
+        price: dataDados['price'] as double,
+        seller: dataDados['seller'] as String,
+        catalog: dataDados['catalog'] as String);
 
     if (hasId) {
-      return updateData(product, dataPath);
+      return updateData(product);
     } else {
-      return addData(product, dataPath);
+      return addData(product);
     }
   }
 
-  Future<void> addData(CatalogProducts product, String dataPath) async {
+  Future<void> addData(CatalogProducts product) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/$dataPath/products.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/catalog_products.json?auth=$_token'),
       body: jsonEncode({
         'id': product.id,
         'productId': product.productId,
         'price': product.price,
-        // 'show': product.show,
+        'seller': product.seller,
+        'catalog': product.catalog,
       }),
     );
 
@@ -71,22 +75,25 @@ class CatalogProductsList with ChangeNotifier {
         id: id,
         productId: product.productId,
         price: product.price,
-        // show: product.show,
+        seller: product.seller,
+        catalog: product.catalog,
       ),
     );
     notifyListeners();
   }
 
-  Future<void> updateData(CatalogProducts product, String dataPath) async {
+  Future<void> updateData(CatalogProducts product) async {
     int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
         Uri.parse(
-            '${Constants.baseUrl}/$dataPath/products/${product.id}.json?auth=$_token'),
+            '${Constants.baseUrl}/catalog_products/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           'productId': product.productId,
           'price': product.price,
+          'seller': product.seller,
+          'catalog': product.catalog,
           // 'show': product.show,
         }),
       );
@@ -96,7 +103,7 @@ class CatalogProductsList with ChangeNotifier {
     }
   }
 
-  Future<void> removeData(CatalogProducts product, String dataPath) async {
+  Future<void> removeData(CatalogProducts product) async {
     int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
@@ -106,7 +113,7 @@ class CatalogProductsList with ChangeNotifier {
 
       final response = await http.delete(
         Uri.parse(
-            '${Constants.baseUrl}/$dataPath/products/${product.id}.json?auth=$_token'),
+            '${Constants.baseUrl}/catalog_products/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

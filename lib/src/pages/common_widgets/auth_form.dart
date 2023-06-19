@@ -16,7 +16,7 @@ class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  AuthMode _authMode = AuthMode.login;
+  final AuthMode _authMode = AuthMode.login;
 
   final Map<String, String> _authData = {
     'email': '',
@@ -24,7 +24,7 @@ class _AuthFormState extends State<AuthForm> {
   };
 
   bool _isLogin() => _authMode == AuthMode.login;
-  bool _isSignup() => _authMode == AuthMode.signup;
+  //bool _isSignup() => _authMode == AuthMode.signup;
   bool _isObscure = false;
 
   @override
@@ -33,15 +33,15 @@ class _AuthFormState extends State<AuthForm> {
     _isObscure = true;
   }
 
-  void _switchAuthMode() {
-    setState(() {
-      if (_isLogin()) {
-        _authMode = AuthMode.signup;
-      } else {
-        _authMode = AuthMode.login;
-      }
-    });
-  }
+  // void _switchAuthMode() {
+  //   setState(() {
+  //     if (_isLogin()) {
+  //       _authMode = AuthMode.signup;
+  //     } else {
+  //       _authMode = AuthMode.login;
+  //     }
+  //   });
+  // }
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -96,8 +96,6 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 3),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),

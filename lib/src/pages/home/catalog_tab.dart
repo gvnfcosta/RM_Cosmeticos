@@ -2,37 +2,43 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_products_list.dart';
+import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/user_list.dart';
+import 'package:rm/src/models/user_model.dart';
+import '../../models/auth.dart';
 import '../../models/category_model.dart';
-import '../../models/product_list.dart';
-import '../../models/product_model.dart';
 import 'components/product_tile.dart';
-import '../../config/app_data.dart' as appData;
 
 class CatalogTab extends StatefulWidget {
-  const CatalogTab(
-      {super.key, required this.selectedCategory, required this.usuario});
+  const CatalogTab({
+    super.key,
+    required this.selectedCategory,
+  });
 
   final String selectedCategory;
-  final String usuario;
   @override
   State<CatalogTab> createState() => _CatalogTabState();
 }
 
 class _CatalogTabState extends State<CatalogTab> {
   bool _isLoading = true;
-  String selectedTipo = appData.ofertas[0];
+  String selectedTipo = "Principal";
 
   @override
   void initState() {
     super.initState();
 
-    String dataPath = widget.usuario;
+    Provider.of<UserList>(
+      context,
+      listen: false,
+    ).loadData().then((value) => setState(() => _isLoading = false));
 
     Provider.of<CategoryList>(
       context,
       listen: false,
     ).loadCategories().then((value) => setState(() => _isLoading = false));
+
     Provider.of<CatalogProductsList>(
       context,
       listen: false,
@@ -41,14 +47,25 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context)
+    // final products = Provider.of<ProductList>(context)
+    //     .items
+    //     .toList()
+    //     .where((element) => element.show)
+    //     .toList()
+    //   ..sort((a, b) => a.name.compareTo(b.name));
+
+    Auth auth = Provider.of(context);
+    final List<UserModel> users = Provider.of<UserList>(context).user.toList();
+    // final List<UserModel> usuarios =
+    //     Provider.of<UserList>(context).items.toList();
+    final usuario = users.firstWhere((element) => element.email == auth.email);
+
+    final products = Provider.of<CatalogProductsList>(context)
         .items
+        .where((element) => element.seller == usuario.name)
+        // .where((element) => element.catalog == selectedTipo)
         .toList()
-        .where((element) => element.show)
-        .toList()
-      // .where((element) => element.offer == selectedTipo)
-      // .toList()
-      ..sort((a, b) => a.name.compareTo(b.name));
+      ..sort((a, b) => a.productId.compareTo(b.productId));
 
     final List<Category> category = Provider.of<CategoryList>(context)
         .categories
@@ -82,7 +99,7 @@ class _CatalogTabState extends State<CatalogTab> {
                   ),
                 ],
               ),
-              actions: [
+              actions: const [
                 // IconButton(
                 //     onPressed: () {
                 //       Navigator.of(context).push(
@@ -92,24 +109,25 @@ class _CatalogTabState extends State<CatalogTab> {
                 //       );
                 //     },
                 //     icon: const Icon(Icons.picture_as_pdf)),
-                PopupMenuButton(
-                  icon: const Icon(Icons.more_vert),
-                  itemBuilder: (_) => List.generate(
-                    appData.ofertas.length,
-                    (i) => PopupMenuItem(
-                      value: appData.ofertas[i],
-                      height: 30,
-                      child: Text(appData.ofertas[i]),
-                    ),
-                  ),
-                  onSelected: (valor) => setState(
-                    () {
-                      setState(() {
-                        selectedTipo = valor.toString();
-                      });
-                    },
-                  ),
-                ),
+
+                // PopupMenuButton(
+                //   icon: Icon(Icons.more_vert),
+                //   itemBuilder: (_) => List.generate(
+                //     category.length,
+                //     (i) => PopupMenuItem(
+                //       value: category[i].nome,
+                //       height: 30,
+                //       child: Text(category[i].nome),
+                //     ),
+                //   ),
+                //   onSelected: (valor) => setState(
+                //     () {
+                //       setState(() {
+                //         selectedTipo = valor.toString();
+                //       });
+                //     },
+                //   ),
+                // ),
               ],
             ),
             body: SafeArea(
@@ -123,10 +141,10 @@ class _CatalogTabState extends State<CatalogTab> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: category.length,
                           itemBuilder: (_, index) {
-                            List<Product> productsFiltered = products
-                                .where((element) =>
-                                    element.category == category[index].nome)
-                                .toList();
+                            List<CatalogProducts> productsFiltered = products;
+                            // .where((element) =>
+                            //     element.category == category[index].nome)
+                            // .toList();
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty

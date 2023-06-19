@@ -18,7 +18,6 @@ class CatalogProductsPage extends StatefulWidget {
 
 class _CatalogProductsPageState extends State<CatalogProductsPage> {
   bool _isLoadingCatalog = true;
-  bool _isLoadingProducts = true;
 
   @override
   void initState() {
@@ -26,19 +25,24 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
     Provider.of<CatalogList>(
       context,
       listen: false,
-    ).loadData().then((value) => setState(() => _isLoadingCatalog = false));
+    ).loadData().then((value) => setState(() {}));
     Provider.of<CatalogProductsList>(context, listen: false)
-        .loadData('${widget.catalog.seller}/${widget.catalog.name}')
-        .then((value) => setState(() => _isLoadingProducts = false));
+        .loadData()
+        .then((value) => setState(() {
+              _isLoadingCatalog = false;
+            }));
   }
 
   @override
   Widget build(BuildContext context) {
-    String dataPath = '${widget.catalog.seller}/${widget.catalog.name}';
     final List<CatalogProducts> products =
         Provider.of<CatalogProductsList>(context).items.toList();
 
-    List<CatalogProducts> catalogSellerProducts = products.toList();
+    final List<CatalogProducts> catalogFiltered = products
+        .where((element) =>
+            element.seller == widget.catalog.seller &&
+            element.catalog == widget.catalog.name)
+        .toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,10 +54,13 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).push(
+                MaterialPageRoute(
                   builder: (c) => CatalogProductsFormPage(
                       seller: widget.catalog.seller,
-                      catalog: widget.catalog.name)));
+                      catalog: widget.catalog.name),
+                ),
+              );
             },
             icon: Icon(
               Icons.add,
@@ -70,10 +77,9 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: catalogSellerProducts.length,
+                itemCount: catalogFiltered.length,
                 itemBuilder: (_, i) {
-                  return ProductUnitTile(
-                      product: catalogSellerProducts[i], dataPath: dataPath);
+                  return ProductUnitTile(filteredProduct: catalogFiltered[i]);
                 },
               ),
             )

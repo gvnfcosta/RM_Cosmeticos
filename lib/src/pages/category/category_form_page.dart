@@ -64,18 +64,14 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
   bool _isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-        url.toLowerCase().endsWith('.jpg') ||
-        url.toLowerCase().endsWith('.jpeg');
+
     return isValidUrl;
   }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     _formKey.currentState?.save();
 

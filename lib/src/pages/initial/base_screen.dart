@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import '../../models/user_list.dart';
 import '../../models/user_model.dart';
 import '../home/components/admin_tab.dart';
@@ -9,14 +10,14 @@ import '../home/sub_category_tab.dart';
 import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
 
-bool _isLoading = true;
-
 class BaseScreen extends StatefulWidget {
   const BaseScreen({super.key});
 
   @override
   State<BaseScreen> createState() => _BaseScreenState();
 }
+
+bool _isLoading = true;
 
 class _BaseScreenState extends State<BaseScreen> {
   int currentIndex = 0;
@@ -37,16 +38,16 @@ class _BaseScreenState extends State<BaseScreen> {
     final provider = Provider.of<UserList>(context);
     final List<UserModel> users = provider.usuario.toList();
 
-    String usuario = users.first.name;
-
     if (users.isNotEmpty) isAdmin = users.first.level == 0;
 
     return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController, //indica qual a tela aberta
-        children: isAdmin ? adminPageViews : userPageViews,
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageController, //indica qual a tela aberta
+              children: isAdmin ? adminPageViews : userPageViews,
+            ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (indice) {
@@ -65,7 +66,7 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   final List<Widget> adminPageViews = [
-    CatalogTab(selectedCategory: 'Todos', usuario: users.first.name),
+    const CatalogsPage(),
     const CategoryTab(),
     const SubCategoryTab(),
     const ProductPage(),
@@ -81,7 +82,7 @@ class _BaseScreenState extends State<BaseScreen> {
   final List<BottomNavigationBarItem> adminNavigationItens = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.menu_book),
-      label: 'Catálogo',
+      label: 'Catálogos',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.category),
