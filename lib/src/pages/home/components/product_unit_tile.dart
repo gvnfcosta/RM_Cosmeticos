@@ -28,7 +28,7 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context).product.toList();
+    final products = Provider.of<ProductList>(context).items2.toList();
 
     List<Product> productFiltered = products
         .where((element) => element.name == widget.filteredProduct.productId)

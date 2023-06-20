@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_products_list.dart';
 import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/product_list.dart';
+import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
 import '../../models/auth.dart';
@@ -11,10 +13,7 @@ import '../../models/category_model.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
-  const CatalogTab({
-    super.key,
-    required this.selectedCategory,
-  });
+  const CatalogTab({super.key, required this.selectedCategory});
 
   final String selectedCategory;
   @override
@@ -22,57 +21,65 @@ class CatalogTab extends StatefulWidget {
 }
 
 class _CatalogTabState extends State<CatalogTab> {
-  bool _isLoading = true;
-  String selectedTipo = "Principal";
+  String tipoCatalogo = "Principal";
 
   @override
   void initState() {
     super.initState();
 
-    Provider.of<UserList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
+    Provider.of<UserList>(context, listen: false).loadData();
 
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) => setState(() => _isLoading = false));
-
-    Provider.of<CatalogProductsList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
+    Provider.of<CategoryList>(context, listen: false).loadCategories();
+    Provider.of<ProductList>(context, listen: false).loadData();
+    Provider.of<CatalogProductsList>(context, listen: false).loadData();
   }
+
+  List<Category> items = [];
 
   @override
   Widget build(BuildContext context) {
-    // final products = Provider.of<ProductList>(context)
-    //     .items
-    //     .toList()
-    //     .where((element) => element.show)
-    //     .toList()
-    //   ..sort((a, b) => a.name.compareTo(b.name));
+    final products = Provider.of<ProductList>(context).products
+      ..sort((a, b) => a.name.compareTo(b.name));
 
     Auth auth = Provider.of(context);
-    final List<UserModel> users = Provider.of<UserList>(context).user.toList();
-    // final List<UserModel> usuarios =
-    //     Provider.of<UserList>(context).items.toList();
-    final usuario = users.firstWhere((element) => element.email == auth.email);
+    final List<UserModel> usuarios =
+        Provider.of<UserList>(context).items.toList();
+    late final vendedor =
+        usuarios.firstWhere((element) => element.email == auth.email);
 
-    final products = Provider.of<CatalogProductsList>(context)
-        .items
-        .where((element) => element.seller == usuario.name)
-        // .where((element) => element.catalog == selectedTipo)
-        .toList()
-      ..sort((a, b) => a.productId.compareTo(b.productId));
+    List<CatalogProducts> catalogProduct =
+        Provider.of<CatalogProductsList>(context)
+            .items
+            .where((element) => element.seller == vendedor.name)
+            .where((element) => element.catalog == tipoCatalogo)
+            .toList()
+          ..sort((a, b) => a.productId.compareTo(b.productId));
 
     final List<Category> category = Provider.of<CategoryList>(context)
         .categories
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    return _isLoading
+    // List<ProductFiltered> productsFiltered = [];
+
+    //    catalogProduct.forEach((key, valor) {
+    //   items.add(
+    //     ProductFiltered(
+    //       id: catalogProduct.id,
+    //       code: dataDados['code'],
+    //       name: dataDados['name'],
+    //       description: dataDados['description'],
+    //       category: dataDados['category'],
+    //       subCategory: dataDados['subCategory'],
+    //       show: dataDados['show'],
+    //       unit: dataDados['unit'],
+    //       imageUrl: dataDados['imageUrl'],
+    //       price: dataDados['price'],
+    //     ),
+    //   );
+    // });
+
+    return catalogProduct.isEmpty && products.isEmpty && category.isEmpty
         ? const Center(child: CircularProgressIndicator())
         : Scaffold(
             backgroundColor: Colors.white,
@@ -90,7 +97,7 @@ class _CatalogTabState extends State<CatalogTab> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '  Produtos $selectedTipo',
+                          '${vendedor.name} $tipoCatalogo',
                           style: const TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
@@ -141,13 +148,13 @@ class _CatalogTabState extends State<CatalogTab> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: category.length,
                           itemBuilder: (_, index) {
-                            List<CatalogProducts> productsFiltered = products;
-                            // .where((element) =>
-                            //     element.category == category[index].nome)
-                            // .toList();
+                            List<Product> productsFiltered = products
+                                .where((element) =>
+                                    element.category == category[index].nome)
+                                .toList();
                             return Column(
                               children: [
-                                productsFiltered.isNotEmpty
+                                catalogProduct.isNotEmpty
                                     ? Padding(
                                         padding: const EdgeInsets.only(
                                             top: 10, bottom: 8),
@@ -183,7 +190,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                         ),
                                       )
                                     : const SizedBox(),
-                                productsFiltered.isNotEmpty
+                                catalogProduct.isNotEmpty
                                     ? GridView.builder(
                                         physics:
                                             const NeverScrollableScrollPhysics(),
@@ -198,7 +205,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                         itemCount: productsFiltered.length,
                                         itemBuilder: (_, index) {
                                           return ProductTile(
-                                              product: productsFiltered[index]);
+                                              products: products[index]);
                                         },
                                       )
                                     : const SizedBox(),
