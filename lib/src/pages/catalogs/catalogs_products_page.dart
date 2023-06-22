@@ -28,9 +28,7 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
     ).loadData().then((value) => setState(() {}));
     Provider.of<CatalogProductsList>(context, listen: false)
         .loadData()
-        .then((value) => setState(() {
-              _isLoadingCatalog = false;
-            }));
+        .then((value) => setState(() => _isLoadingCatalog = false));
   }
 
   @override
@@ -78,7 +76,7 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: catalogFiltered.length,
-                itemBuilder: (_, i) {
+                itemBuilder: (ctx, i) {
                   return ProductUnitTile(filteredProduct: catalogFiltered[i]);
                 },
               ),

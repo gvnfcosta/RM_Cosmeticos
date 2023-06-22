@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_products_list.dart';
 import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
-import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
 import '../../models/auth.dart';
@@ -20,6 +20,8 @@ class CatalogTab extends StatefulWidget {
   State<CatalogTab> createState() => _CatalogTabState();
 }
 
+bool _isLoading = true;
+
 class _CatalogTabState extends State<CatalogTab> {
   String tipoCatalogo = "Principal";
 
@@ -28,9 +30,10 @@ class _CatalogTabState extends State<CatalogTab> {
     super.initState();
 
     Provider.of<UserList>(context, listen: false).loadData();
-
     Provider.of<CategoryList>(context, listen: false).loadCategories();
-    Provider.of<ProductList>(context, listen: false).loadData();
+    Provider.of<ProductList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
     Provider.of<CatalogProductsList>(context, listen: false).loadData();
   }
 
@@ -47,7 +50,7 @@ class _CatalogTabState extends State<CatalogTab> {
     late final vendedor =
         usuarios.firstWhere((element) => element.email == auth.email);
 
-    List<CatalogProducts> catalogProduct =
+    final List<CatalogProducts> catalogProduct =
         Provider.of<CatalogProductsList>(context)
             .items
             .where((element) => element.seller == vendedor.name)
@@ -60,27 +63,11 @@ class _CatalogTabState extends State<CatalogTab> {
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    // List<ProductFiltered> productsFiltered = [];
+    final List<ProductFiltered> items =
+        filtraCatalogo(products, catalogProduct);
 
-    //    catalogProduct.forEach((key, valor) {
-    //   items.add(
-    //     ProductFiltered(
-    //       id: catalogProduct.id,
-    //       code: dataDados['code'],
-    //       name: dataDados['name'],
-    //       description: dataDados['description'],
-    //       category: dataDados['category'],
-    //       subCategory: dataDados['subCategory'],
-    //       show: dataDados['show'],
-    //       unit: dataDados['unit'],
-    //       imageUrl: dataDados['imageUrl'],
-    //       price: dataDados['price'],
-    //     ),
-    //   );
-    // });
-
-    return catalogProduct.isEmpty && products.isEmpty && category.isEmpty
-        ? const Center(child: CircularProgressIndicator())
+    return items.isEmpty
+        ? const Center(child: Text(''))
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -106,16 +93,16 @@ class _CatalogTabState extends State<CatalogTab> {
                   ),
                 ],
               ),
-              actions: const [
-                // IconButton(
-                //     onPressed: () {
-                //       Navigator.of(context).push(
-                //         MaterialPageRoute(
-                //           builder: (context) => const PdfPage(),
-                //         ),
-                //       );
-                //     },
-                //     icon: const Icon(Icons.picture_as_pdf)),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      //       Navigator.of(context).push(
+                      //         MaterialPageRoute(
+                      //           builder: (context) => const PdfPage(),
+                      //         ),
+                      //       );
+                    },
+                    icon: const Icon(Icons.picture_as_pdf)),
 
                 // PopupMenuButton(
                 //   icon: Icon(Icons.more_vert),
@@ -148,13 +135,13 @@ class _CatalogTabState extends State<CatalogTab> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: category.length,
                           itemBuilder: (_, index) {
-                            List<Product> productsFiltered = products
+                            List<ProductFiltered> productsFiltered = items
                                 .where((element) =>
                                     element.category == category[index].nome)
                                 .toList();
                             return Column(
                               children: [
-                                catalogProduct.isNotEmpty
+                                productsFiltered.isNotEmpty
                                     ? Padding(
                                         padding: const EdgeInsets.only(
                                             top: 10, bottom: 8),
@@ -205,7 +192,8 @@ class _CatalogTabState extends State<CatalogTab> {
                                         itemCount: productsFiltered.length,
                                         itemBuilder: (_, index) {
                                           return ProductTile(
-                                              products: products[index]);
+                                              products:
+                                                  productsFiltered[index]);
                                         },
                                       )
                                     : const SizedBox(),
@@ -221,4 +209,35 @@ class _CatalogTabState extends State<CatalogTab> {
             ),
           );
   }
+}
+
+filtraCatalogo(products, catalogProduct) {
+  List<ProductFiltered> items = [];
+
+  for (var element in products) {
+    String productName = element.name;
+    List<CatalogProducts> catalog =
+        (catalogProduct.where((t) => t.productId == productName)).toList();
+
+    double price;
+
+    if (catalog.isNotEmpty) {
+      price = catalog.first.price;
+      items.add(
+        ProductFiltered(
+          id: element.id,
+          code: element.code,
+          name: element.name,
+          description: element.description,
+          category: element.category,
+          subCategory: element.subCategory,
+          show: element.show,
+          unit: element.unit,
+          imageUrl: element.imageUrl,
+          price: price,
+        ),
+      );
+    }
+  }
+  return items;
 }

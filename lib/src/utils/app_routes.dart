@@ -11,4 +11,5 @@ class AppRoutes {
   static const subCategoryPage = '/sub-category-page';
   static const catalogTab = '/catalog-tab';
   static const catalogProductsForm = '/catalog-form';
+  static const catalogProductsEditForm = '/catalog-edit-form';
 }

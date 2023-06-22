@@ -1,20 +1,15 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/catalog_products_list.dart';
 import '../../models/catalog_products_model.dart';
 import '../../models/product_list.dart';
 
-class CatalogProductsFormPage extends StatefulWidget {
-  const CatalogProductsFormPage(
-      {super.key, required this.seller, required this.catalog});
-
-  final String seller;
-  final String catalog;
+class CatalogProductsFormEditPage extends StatefulWidget {
+  const CatalogProductsFormEditPage({super.key});
 
   @override
-  State<CatalogProductsFormPage> createState() =>
-      _CatalogProductsFormPageState();
+  State<CatalogProductsFormEditPage> createState() =>
+      _CatalogProductsFormEditPageState();
 }
 
 bool _isLoading = false;
@@ -22,10 +17,10 @@ bool _isLoading = false;
 final _formKey = GlobalKey<FormState>();
 final _formData = <String, Object>{};
 
-bool _isEditing = false;
-String? selectedProduct;
+String selectedProduct = '';
 
-class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
+class _CatalogProductsFormEditPageState
+    extends State<CatalogProductsFormEditPage> {
   @override
   void initState() {
     super.initState();
@@ -37,6 +32,9 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
         .then((value) => setState(() => _isLoading = false));
   }
 
+  String? seller;
+  String? catalog;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -44,22 +42,18 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
     if (_formData.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      _formData['id'] = '';
-      _formData['productId'] = '';
-      _formData['price'] = '';
-      _formData['seller'] = widget.seller;
-      _formData['catalog'] = widget.catalog;
-      selectedProduct = '';
-
       if (arg != null) {
         final catalogProduct = arg as CatalogProducts;
         _formData['id'] = catalogProduct.id;
         _formData['productId'] = catalogProduct.productId;
+        selectedProduct = catalogProduct.productId;
         _formData['price'] = catalogProduct.price;
         _formData['seller'] = catalogProduct.seller;
         _formData['catalog'] = catalogProduct.catalog;
+        // seller = _formData['seller'].toString();
+        // catalog = _formData['catalog'].toString();
 
-        selectedProduct = catalogProduct.productId;
+        selectedProduct = _formData['productId'].toString();
       }
     }
   }
@@ -106,15 +100,10 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
     // List<Product> products = product;
     // List<CatalogProducts> catalogProducts = catalogProduct;
 
-    if (selectedProduct != '') {
-      _isEditing = true;
-    }
-
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),
       appBar: AppBar(
-        title: Text('${widget.seller} ${widget.catalog}',
-            style: const TextStyle(fontSize: 16)),
+        title: Text('$seller $catalog', style: const TextStyle(fontSize: 16)),
         actions: [
           IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
         ],
@@ -140,41 +129,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                   border:
                                       Border.all(width: 1, color: Colors.grey),
                                 ),
-                                child: DropdownButtonHideUnderline(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: DropdownButton2(
-                                      focusColor: Colors.white.withAlpha(240),
-                                      dropdownElevation: 18,
-                                      hint: Text('Produto',
-                                          style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor)),
-                                      items: product
-                                          .toList()
-                                          .map(
-                                            (item) => DropdownMenuItem<String>(
-                                              value: item.name,
-                                              child: Text(item.name,
-                                                  style: const TextStyle(
-                                                      fontSize: 14)),
-                                            ),
-                                          )
-                                          .toList(),
-                                      value: selectedProduct,
-                                      isDense: true,
-                                      onChanged: (value) {
-                                        setState(() => _formData['productId'] =
-                                            value as String);
-                                        selectedProduct = value as String;
-                                      },
-                                      buttonHeight: 30,
-                                      buttonWidth: 10,
-                                      itemHeight: 30,
-                                      autofocus: true,
-                                    ),
-                                  ),
-                                ),
+                                child: Text('   $selectedProduct'),
                               ),
                             ),
                           ],

@@ -18,6 +18,7 @@ class ProductUnitTile extends StatefulWidget {
 
 class _ProductUnitTileState extends State<ProductUnitTile> {
   final UtilsServices utilsServices = UtilsServices();
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +32,8 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
     final products = Provider.of<ProductList>(context).items2.toList();
 
     List<Product> productFiltered = products
-        .where((element) => element.name == widget.filteredProduct.productId)
+        .where((element) =>
+            element.name == widget.filteredProduct.productId && element.show)
         .toList();
 
     return productFiltered.isEmpty
@@ -86,7 +88,7 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
-                                  AppRoutes.catalogProductsForm,
+                                  AppRoutes.catalogProductsEditForm,
                                   arguments: widget.filteredProduct);
                             },
                             child: const Icon(Icons.edit_outlined,

@@ -38,8 +38,6 @@ class ProductList with ChangeNotifier {
           unit: dataDados['unit'],
           imageUrl: dataDados['imageUrl'],
           show: dataDados['show'],
-          // offer: dataDados['offer'],
-          // price: dataDados['price'],
         ),
       );
     });
@@ -60,8 +58,6 @@ class ProductList with ChangeNotifier {
       unit: dataDados['unit'] as String,
       imageUrl: dataDados['imageUrl'] as String,
       show: dataDados['show'] as bool,
-      // offer: dataDados['offer'] as String,
-      // price: dataDados['price'] as double,
     );
 
     if (hasId) {
@@ -84,8 +80,6 @@ class ProductList with ChangeNotifier {
         'unit': product.unit,
         'imageUrl': product.imageUrl,
         'show': product.show,
-        // 'offer': product.offer,
-        // 'price': product.price,
       }),
     );
 
@@ -101,8 +95,6 @@ class ProductList with ChangeNotifier {
         unit: product.unit,
         imageUrl: product.imageUrl,
         show: product.show,
-        // offer: product.offer,
-        // price: product.price,
       ),
     );
     notifyListeners();
@@ -124,8 +116,6 @@ class ProductList with ChangeNotifier {
           'unit': product.unit,
           'imageUrl': product.imageUrl,
           'show': product.show,
-          // 'offer': product.offer,
-          // 'price': product.price,
         }),
       );
 

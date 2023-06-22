@@ -21,11 +21,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
     Provider.of<CatalogList>(
       context,
       listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    ).loadData().then((value) => setState(() => _isLoading = false));
   }
 
   @override

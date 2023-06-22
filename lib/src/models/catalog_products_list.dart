@@ -94,7 +94,6 @@ class CatalogProductsList with ChangeNotifier {
           'price': product.price,
           'seller': product.seller,
           'catalog': product.catalog,
-          // 'show': product.show,
         }),
       );
 

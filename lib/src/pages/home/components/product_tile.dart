@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rm/src/models/product_model.dart';
+import 'package:rm/src/config/custom_colors.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '/src/services/utils_services.dart';
 
 class ProductTile extends StatelessWidget {
   ProductTile({super.key, required this.products});
 
-  final Product products;
+  final ProductFiltered products;
   // final CatalogProducts productsFiltered;
   // final List<Product> products
 
@@ -53,17 +54,17 @@ class ProductTile extends StatelessWidget {
                 ),
 
                 //Preço
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Text(
-                    //   utilsServices.priceToCurrency(product.price),
-                    //   style: TextStyle(
-                    //     fontWeight: FontWeight.w500,
-                    //     fontSize: 10,
-                    //     color: CustomColors.customSwatchColor,
-                    //   ),
-                    // ),
+                    Text(
+                      utilsServices.priceToCurrency(products.price),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 10,
+                        color: CustomColors.customSwatchColor,
+                      ),
+                    ),
                   ],
                 ),
               ],
