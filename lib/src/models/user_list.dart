@@ -10,17 +10,24 @@ class UserList with ChangeNotifier {
   final String _token;
   final String _email;
 
-  List<UserModel> items_ = [];
+  List<UserModel> items_;
 
   List<UserModel> get items => [...items_];
-  List<UserModel> get user => items_.toList();
 
   UserList(this._token, this._email, this.items_);
 
   int get itemsCount => items_.length;
 
-  List<UserModel> get usuario =>
-      items.where((element) => element.email == _email).toList();
+  // UserModel get user =>
+  //     items.where((element) => element.email == _email).toList().first;
+
+  List<UserModel> get user =>
+      items_.where((element) => element.email == _email).toList();
+
+  //UserModel get user => users.first;
+
+  //String get userName => users.first.name;
+  //bool get isAdmin => users.first.level == 0;
 
   Future<void> loadData() async {
     items_.clear();
@@ -123,7 +130,7 @@ class UserList with ChangeNotifier {
         items_.insert(index, user);
         notifyListeners();
 
-        throw HttpException('Não foi possível excluir ${usuario.first.name}}.');
+        throw HttpException('Não foi possível excluir ${user.name}}.');
       }
     }
   }

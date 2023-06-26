@@ -13,9 +13,11 @@ import '../../models/category_model.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
-  const CatalogTab({super.key, required this.selectedCategory});
+  CatalogTab(this.seller, this.catalog, {super.key});
 
-  final String selectedCategory;
+  String seller;
+  String catalog;
+
   @override
   State<CatalogTab> createState() => _CatalogTabState();
 }
@@ -23,8 +25,6 @@ class CatalogTab extends StatefulWidget {
 bool _isLoading = true;
 
 class _CatalogTabState extends State<CatalogTab> {
-  String tipoCatalogo = "Principal";
-
   @override
   void initState() {
     super.initState();
@@ -53,8 +53,8 @@ class _CatalogTabState extends State<CatalogTab> {
     final List<CatalogProducts> catalogProduct =
         Provider.of<CatalogProductsList>(context)
             .items
-            .where((element) => element.seller == vendedor.name)
-            .where((element) => element.catalog == tipoCatalogo)
+            .where((element) => element.seller == widget.seller)
+            .where((element) => element.catalog == widget.catalog)
             .toList()
           ..sort((a, b) => a.productId.compareTo(b.productId));
 
@@ -84,7 +84,7 @@ class _CatalogTabState extends State<CatalogTab> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${vendedor.name} $tipoCatalogo',
+                          '${vendedor.name} ${widget.catalog}',
                           style: const TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
@@ -192,8 +192,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                         itemCount: productsFiltered.length,
                                         itemBuilder: (_, index) {
                                           return ProductTile(
-                                              products:
-                                                  productsFiltered[index]);
+                                              productsFiltered[index]);
                                         },
                                       )
                                     : const SizedBox(),

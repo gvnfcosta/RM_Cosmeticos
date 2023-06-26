@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
-import 'package:rm/src/pages/catalogs/catalogs_products_form_edit_page.dart';
-import 'package:rm/src/pages/catalogs/catalogs_products_form_page.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
 import 'src/models/catalog_products_list.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        // ChangeNotifierProvider(create: (_) => AdminController()),
+        //ChangeNotifierProvider(create: (_) => AdminController()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {
@@ -112,8 +112,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.productForm: (ctx) => const ProductFormPage(),
           AppRoutes.categoryForm: (ctx) => const CategoryFormPage(),
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
-          AppRoutes.catalogTab: (ctx) =>
-              const CatalogTab(selectedCategory: 'Kits'),
+          //AppRoutes.catalogTab: (ctx) => const CatalogTab(),
           AppRoutes.catalogProductsForm: (ctx) =>
               const CatalogProductsFormPage(seller: '', catalog: ''),
           AppRoutes.catalogProductsEditForm: (ctx) =>

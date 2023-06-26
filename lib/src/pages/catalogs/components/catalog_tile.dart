@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
 import '../../../models/catalog_model.dart';
-import '../catalogs_products_page.dart';
 import '/src/services/utils_services.dart';
 
 final UtilsServices utilsServices = UtilsServices();
@@ -13,7 +13,7 @@ class CatalogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.blueGrey.shade50,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
@@ -29,19 +29,24 @@ class CatalogTile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                catalog.seller,
-                style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w600),
+              SizedBox(
+                height: 180,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
+                  child: Image.asset(
+                    'assets/images/CatalogoFace.png',
+                  ),
+                ),
               ),
               Text(
                 catalog.name,
                 style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.blue),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black),
               ),
             ],
           ),

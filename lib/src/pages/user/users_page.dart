@@ -18,20 +18,15 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserList>(
-      context,
-      listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserList>(context);
-    final List<UserModel> users = provider.user.toList();
+    final List<UserModel> users = provider.items.toList();
 
     return Scaffold(
       backgroundColor: Colors.white,

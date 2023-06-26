@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/catalog_products_list.dart';
+import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/product_filtered.dart';
+import 'package:rm/src/pages/home/catalog_tab.dart';
+import 'package:rm/src/pages/home/components/product_tile.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
-import 'components/product_tile.dart';
 
 class ProductsTab extends StatefulWidget {
-  ProductsTab(this.selectedCategory, {super.key});
+  const ProductsTab(this.selectedCategory, {super.key});
 
-  String selectedCategory;
+  final String selectedCategory;
   @override
   State<ProductsTab> createState() => _ProductsTabState();
-}
-
-Future<void> _refreshProducts(BuildContext context) {
-  return Provider.of<ProductList>(context, listen: false).loadData();
 }
 
 class _ProductsTabState extends State<ProductsTab> {
@@ -33,19 +33,23 @@ class _ProductsTabState extends State<ProductsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context);
-
-    final List<Product> products = provider.items.toList()
-      // .where((element) => element.show)
-      // .toList()
+    final List<Product> products = Provider.of<ProductList>(context)
+        .items
+        .toList()
+        .where((element) => element.show)
+        .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
     List<Product> productsFiltered = products
-        // .where((element) =>
-        //     element.category == widget.selectedCategory && element.show)
+        .where((element) => element.category == widget.selectedCategory)
         .toList();
 
-    final CategoryList category = Provider.of(context);
+    final List<CatalogProducts> catalogProduct =
+        Provider.of<CatalogProductsList>(context).items
+          ..sort((a, b) => a.productId.compareTo(b.productId));
+
+    final List<ProductFiltered> items =
+        filtraCatalogo(productsFiltered, catalogProduct);
 
     double tamanhoTela = MediaQuery.of(context).size.width;
     int quantidadeItemsTela = tamanhoTela ~/ 150; // divisão por inteiro
@@ -66,28 +70,23 @@ class _ProductsTabState extends State<ProductsTab> {
 
       // Campo Pesquisa
       body: !_isLoading
-          ? const Column(
+          ? Column(
               children: [
-                // Grid
-                // const SizedBox(height: 12),
-                // Expanded(
-                //     child: GridView.builder(
-                //   physics: const BouncingScrollPhysics(),
-                //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //     crossAxisCount: quantidadeItemsTela,
-                //     mainAxisSpacing: 2,
-                //     crossAxisSpacing: 2,
-                //     childAspectRatio: 8 / 11,
-                //   ),
-                //   itemCount: widget.selectedCategory == 'Todos'
-                //       ? products.length
-                //       : productsFiltered.length,
-                //   itemBuilder: (_, index) {
-                //     return widget.selectedCategory == 'Todos'
-                //         ? ProductTile(product: products[index])
-                //         : ProductTile(product: productsFiltered[index]);
-                //   },
-                // ))
+                const SizedBox(height: 12),
+                Expanded(
+                    child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: quantidadeItemsTela,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
+                    childAspectRatio: 8 / 11,
+                  ),
+                  itemCount: productsFiltered.length,
+                  itemBuilder: (_, index) {
+                    return ProductTile(items[index]);
+                  },
+                ))
               ],
             )
           : const Center(child: CircularProgressIndicator()),

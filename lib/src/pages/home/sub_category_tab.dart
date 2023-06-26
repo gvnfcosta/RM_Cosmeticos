@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/auth.dart';
 import '../../models/sub_category_list.dart';
 import '../../models/sub_category_model.dart';
 import '../../utils/app_routes.dart';
@@ -23,18 +22,13 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
     Provider.of<SubCategoryList>(
       context,
       listen: false,
-    ).loadSubCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    ).loadSubCategories().then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = false;
     final provider = Provider.of<SubCategoryList>(context);
-    Auth auth = Provider.of(context);
-    bool isAdmin = true; //auth.isAdmin;
 
     final List<SubCategory> subCategories = provider.subCategories.toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
@@ -78,8 +72,7 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
                       itemCount: subCategories.length,
                       itemBuilder: (_, index) {
                         return SubCategoryTile(
-                            subCategory: subCategories[index],
-                            isAdmin: isAdmin);
+                            subCategory: subCategories[index]);
                       },
                     ),
                   )

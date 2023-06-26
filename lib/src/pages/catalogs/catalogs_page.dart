@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_list.dart';
+import 'package:rm/src/models/user_model.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';
 import 'catalog_form_page.dart';
@@ -14,39 +16,52 @@ class CatalogsPage extends StatefulWidget {
 
 class _CatalogsPageState extends State<CatalogsPage> {
   bool _isLoading = true;
+  String userName = '';
+  bool isAdmin = false;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<CatalogList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
+    Provider.of<CatalogList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CatalogList>(context);
-    final List<CatalogModel> catalogs = provider.items.toList();
+    List<UserModel> user = Provider.of<UserList>(context).user;
+
+    if (user.isNotEmpty) {
+      userName = user.first.name;
+      isAdmin = user.first.level == 0;
+    }
+
+    final List<CatalogModel> allCatalogs =
+        Provider.of<CatalogList>(context).items;
+
+    final List<CatalogModel> catalogs =
+        allCatalogs.where((element) => element.seller == userName).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text('Catálogos'),
+        title: Text('Catálogos $userName'),
         centerTitle: true,
         elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (c) => const CatalogFormPage()));
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.orange,
-            ),
-          ),
-        ],
+        actions: isAdmin
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) => const CatalogFormPage()));
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.orange,
+                  ),
+                ),
+              ]
+            : [],
       ),
 
       // Campo Pesquisa
@@ -61,7 +76,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                       shrinkWrap: true,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 160,
+                        maxCrossAxisExtent: 260,
                         mainAxisSpacing: 3,
                         crossAxisSpacing: 3,
                         childAspectRatio: 10 / 12,

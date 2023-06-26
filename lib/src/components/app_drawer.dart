@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
 import '../models/auth.dart';
-import '../models/user_list.dart';
 import '../utils/app_routes.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -10,15 +10,15 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String nomeUsuario = 'Convidado';
-    List<UserModel> usuario = Provider.of<UserList>(context).usuario;
-    nomeUsuario = usuario.first.name;
+    List<UserModel> user = Provider.of<UserList>(context).user;
+    String userName = user.first.name;
+    bool isAdmin = user.first.level == 0;
 
     return Drawer(
       child: Column(
         children: [
           AppBar(
-            title: Text('Bem vindo ${nomeUsuario.split(' ')[0]}!'),
+            title: Text('Bem vindo ${userName.split(' ')[0]}!'),
             automaticallyImplyLeading: false,
           ),
           Column(

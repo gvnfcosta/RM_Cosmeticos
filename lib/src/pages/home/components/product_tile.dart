@@ -4,7 +4,7 @@ import 'package:rm/src/models/product_filtered.dart';
 import '/src/services/utils_services.dart';
 
 class ProductTile extends StatelessWidget {
-  ProductTile({super.key, required this.products});
+  ProductTile(this.products, {super.key});
 
   final ProductFiltered products;
   // final CatalogProducts productsFiltered;

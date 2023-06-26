@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_model.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
+import 'package:rm/src/pages/category/category_page.dart';
 import '../../models/user_list.dart';
-import '../../models/user_model.dart';
 import '../home/components/admin_tab.dart';
-import '../home/catalog_tab.dart';
-import '../home/category_tab.dart';
 import '../home/sub_category_tab.dart';
 import '../product/product_page.dart';
 import '/src/pages/profile/profile_tab.dart';
@@ -18,27 +17,29 @@ class BaseScreen extends StatefulWidget {
 }
 
 bool _isLoading = true;
+String userName = '';
+bool isAdmin = false;
 
 class _BaseScreenState extends State<BaseScreen> {
   int currentIndex = 0;
-  bool isAdmin = false;
   final pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    Provider.of<UserList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() => _isLoading = false));
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<UserList>(context);
-    final List<UserModel> users = provider.usuario.toList();
+    List<UserModel> user = Provider.of<UserList>(context).user;
 
-    if (users.isNotEmpty) isAdmin = users.first.level == 0;
+    if (user.isNotEmpty) {
+      userName = user.first.name;
+      isAdmin = user.first.level == 0;
+    }
 
     return Scaffold(
       body: _isLoading
@@ -67,50 +68,38 @@ class _BaseScreenState extends State<BaseScreen> {
 
   final List<Widget> adminPageViews = [
     const CatalogsPage(),
-    const CategoryTab(),
+    const CategoryPage(),
     const SubCategoryTab(),
     const ProductPage(),
     const AdminScreen(),
   ];
 
   final List<Widget> userPageViews = [
-    const CatalogTab(selectedCategory: 'Todos'),
-    const CategoryTab(),
+    const CatalogsPage(),
     const ProfileTab(),
   ];
 
   final List<BottomNavigationBarItem> adminNavigationItens = [
     const BottomNavigationBarItem(
-      icon: Icon(Icons.menu_book),
-      label: 'Catálogos',
-    ),
+        icon: Icon(Icons.menu_book), label: 'Catálogos'),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.category),
-      label: 'Categorias',
-    ),
+        icon: Icon(Icons.category), label: 'Categorias'),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.interests),
-      label: 'SubCategorias',
-    ),
+        icon: Icon(Icons.interests), label: 'SubCategorias'),
+    const BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Produtos'),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.list),
-      label: 'Produtos',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.admin_panel_settings),
-      label: 'Painel',
-    ),
+        icon: Icon(Icons.admin_panel_settings), label: 'Painel'),
   ];
 
   final List<BottomNavigationBarItem> userNavigationItens = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.menu_book),
-      label: 'Catálogo',
+      label: 'Catálogos',
     ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.category),
-      label: 'Categorias',
-    ),
+    // const BottomNavigationBarItem(
+    //   icon: Icon(Icons.category),
+    //   label: 'Categorias',
+    // ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_outline),
       label: 'Perfil',

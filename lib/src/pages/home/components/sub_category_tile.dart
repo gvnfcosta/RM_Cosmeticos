@@ -5,14 +5,13 @@ import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
 class SubCategoryTile extends StatelessWidget {
-  const SubCategoryTile(
-      {super.key, required this.subCategory, required this.isAdmin});
+  const SubCategoryTile({super.key, required this.subCategory});
 
   final SubCategory subCategory;
-  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = false;
     return SizedBox(
       height: 100,
       child: Stack(

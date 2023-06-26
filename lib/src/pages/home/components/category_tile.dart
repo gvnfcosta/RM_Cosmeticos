@@ -5,14 +5,13 @@ import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
 class CategoryTile extends StatelessWidget {
-  const CategoryTile(
-      {super.key, required this.category, required this.isAdmin});
+  const CategoryTile({super.key, required this.category});
 
   final Category category;
-  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = false;
     return Stack(
       children: [
         GestureDetector(
