@@ -20,11 +20,7 @@ class _CategoryPageState extends State<CategoryPage> {
     super.initState();
     Provider.of<CategoryList>(context, listen: false)
         .loadCategories()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override

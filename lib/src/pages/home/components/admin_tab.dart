@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../components/app_drawer.dart';
-import '../../catalogs/catalogs_page.dart';
 import '../../user/users_page.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -18,7 +17,6 @@ class AdminScreen extends StatelessWidget {
 
       // Campo Pesquisa
       body: const UsersScreen(),
-
       drawer: const AppDrawer(),
     );
   }

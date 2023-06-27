@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/catalog_products_list.dart';
-import 'package:rm/src/models/catalog_products_model.dart';
-import 'package:rm/src/models/user_list.dart';
-import 'package:rm/src/models/user_model.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '../../models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../utils/app_routes.dart';
 import 'components/category_tile.dart';
 
 class CategoryTab extends StatefulWidget {
-  CategoryTab(this.seller, this.catalog, {super.key});
+  const CategoryTab({super.key, required this.items});
 
-  String seller;
-  String catalog;
+  final List<ProductFiltered> items;
 
   @override
   State<CategoryTab> createState() => _CategoryTabState();
@@ -22,51 +18,31 @@ class CategoryTab extends StatefulWidget {
 class _CategoryTabState extends State<CategoryTab> {
   bool _isLoading = true;
   bool isAdmin = false;
-  String userName = '';
 
   @override
   void initState() {
     super.initState();
-
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
-
-    if (user.isNotEmpty) {
-      userName = user.first.name;
-      isAdmin = user.first.level == 0;
-    }
     final List<Category> categories = Provider.of<CategoryList>(context)
         .categories
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    final List<CatalogProducts> catalogProduct =
-        Provider.of<CatalogProductsList>(context)
-            .items
-            .where((element) => element.seller == widget.seller)
-            .where((element) => element.catalog == widget.catalog)
-            .toList()
-          ..sort((a, b) => a.productId.compareTo(b.productId));
-
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(220),
+      backgroundColor: Colors.grey[200],
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: Image.asset('assets/images/LogoRM.png'),
+        title:
+            const Text('CATEGORIAS'), //Image.asset('assets/images/LogoRM.png'),
         actions: isAdmin
             ? [
                 IconButton(
@@ -76,7 +52,7 @@ class _CategoryTabState extends State<CategoryTab> {
                   icon: const Icon(Icons.add),
                 ),
               ]
-            : [],
+            : null,
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
@@ -96,7 +72,10 @@ class _CategoryTabState extends State<CategoryTab> {
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {
-                        return CategoryTile(category: categories[index]);
+                        return CategoryTile(
+                          category: categories[index],
+                          items: widget.items,
+                        );
                       },
                     ),
                   )

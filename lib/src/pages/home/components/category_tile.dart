@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:rm/src/models/category_model.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '../../../utils/app_routes.dart';
 import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
 class CategoryTile extends StatelessWidget {
-  const CategoryTile({super.key, required this.category});
+  const CategoryTile({
+    super.key,
+    required this.category,
+    required this.items,
+  });
 
   final Category category;
+  final List<ProductFiltered> items;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,10 @@ class CategoryTile extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (c) {
-                  return ProductsTab(category.nome);
+                  return ProductsTab(
+                    selectedCategory: category.nome,
+                    items: items,
+                  );
                 },
               ),
             );

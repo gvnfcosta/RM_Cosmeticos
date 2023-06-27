@@ -22,6 +22,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<UserList>(context, listen: false).loadData();
     Provider.of<CatalogList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
@@ -30,7 +31,6 @@ class _CatalogsPageState extends State<CatalogsPage> {
   @override
   Widget build(BuildContext context) {
     List<UserModel> user = Provider.of<UserList>(context).user;
-
     if (user.isNotEmpty) {
       userName = user.first.name;
       isAdmin = user.first.level == 0;
@@ -39,8 +39,12 @@ class _CatalogsPageState extends State<CatalogsPage> {
     final List<CatalogModel> allCatalogs =
         Provider.of<CatalogList>(context).items;
 
-    final List<CatalogModel> catalogs =
-        allCatalogs.where((element) => element.seller == userName).toList();
+    List<CatalogModel> catalogs = allCatalogs.toList();
+
+    if (userName != 'Admin') {
+      catalogs =
+          allCatalogs.where((element) => element.seller == userName).toList();
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -61,7 +65,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                   ),
                 ),
               ]
-            : [],
+            : null,
       ),
 
       // Campo Pesquisa
@@ -90,7 +94,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                 ],
               ),
             )
-          : const Center(),
+          : null,
     );
   }
 }

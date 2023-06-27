@@ -93,7 +93,6 @@ class _CatalogProductsFormEditPageState
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ProductList>(context).items.toList();
     // final catalogProduct =
     //     Provider.of<CatalogProductsList>(context).items.toList();
 

@@ -11,9 +11,13 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<UserModel> user = Provider.of<UserList>(context).user;
-    String userName = user.first.name;
-    bool isAdmin = user.first.level == 0;
+    bool isAdmin = false;
+    String userName = '';
 
+    if (user.isNotEmpty) {
+      userName = user.first.name;
+      isAdmin = user.first.level == 0;
+    }
     return Drawer(
       child: Column(
         children: [
@@ -43,13 +47,8 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Sair'),
             onTap: () {
-              Provider.of<Auth>(
-                context,
-                listen: false,
-              ).logout();
-              Navigator.of(context).pushReplacementNamed(
-                AppRoutes.authOrHome,
-              );
+              Provider.of<Auth>(context, listen: false).logout();
+              Navigator.of(context).pushReplacementNamed(AppRoutes.authOrHome);
             },
           ),
         ],

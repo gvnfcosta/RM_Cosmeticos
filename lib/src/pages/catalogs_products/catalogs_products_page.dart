@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_model.dart';
+import 'package:rm/src/models/catalog_products_list.dart';
+import 'package:rm/src/models/catalog_products_model.dart';
+import 'package:rm/src/models/product_filtered.dart';
+import 'package:rm/src/models/product_list.dart';
+import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/pages/home/catalog_tab.dart';
 import 'package:rm/src/pages/home/category_tab.dart';
-import '../../models/catalog_list.dart';
-import '../../models/catalog_products_list.dart';
-import '../../models/catalog_products_model.dart';
-import '../home/components/product_unit_tile.dart';
 
 class CatalogProductsPage extends StatefulWidget {
   const CatalogProductsPage(this.catalog, {super.key});
@@ -17,35 +18,41 @@ class CatalogProductsPage extends StatefulWidget {
   State<CatalogProductsPage> createState() => _CatalogProductsPageState();
 }
 
+bool _isLoading = true;
+
 class _CatalogProductsPageState extends State<CatalogProductsPage> {
-  bool _isLoading = true;
   int currentIndex = 0;
   final pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    Provider.of<CatalogList>(
-      context,
-      listen: false,
-    ).loadData().then((value) => setState(() {}));
+
     Provider.of<CatalogProductsList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    String seller = widget.catalog.seller;
-    String catalog = widget.catalog.name;
-    final List<CatalogProducts> products =
-        Provider.of<CatalogProductsList>(context).items.toList();
+    final productProvider = Provider.of<ProductList>(context);
+    final catalogProvider = Provider.of<CatalogProductsList>(context);
 
-    final List<CatalogProducts> catalogFiltered = products
-        .where((element) =>
-            element.seller == widget.catalog.seller &&
-            element.catalog == widget.catalog.name)
+    final List<Product> products = productProvider.items
+        .where((element) => element.show)
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+
+    final List<CatalogProducts> catalogProduct = catalogProvider.items
+        .where((element) => element.seller == widget.catalog.seller)
+        .where((element) => element.catalog == widget.catalog.name)
         .toList();
+
+    final List<ProductFiltered> items =
+        filtraCatalogo(products, catalogProduct);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,8 +62,8 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController, //indica qual a tela aberta
         children: [
-          CatalogTab(seller, catalog),
-          CategoryTab(seller, catalog),
+          CatalogTab(items: items),
+          CategoryTab(items: items),
         ],
       ),
 
@@ -85,31 +92,62 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
   ];
 }
 
-class CatalogWidget extends StatelessWidget {
-  const CatalogWidget(this.catalogFiltered, {super.key});
+filtraCatalogo(products, catalogProduct) {
+  List<ProductFiltered> items = [];
 
-  final List<CatalogProducts> catalogFiltered;
+  for (var element in products) {
+    String productName = element.name;
+    List<CatalogProducts> catalog =
+        (catalogProduct.where((t) => t.productId == productName)).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: catalogFiltered.length,
-      itemBuilder: (ctx, i) {
-        return ProductUnitTile(filteredProduct: catalogFiltered[i]);
-      },
-    );
+    double price;
+
+    if (catalog.isNotEmpty) {
+      price = catalog.first.price;
+      items.add(
+        ProductFiltered(
+          id: element.id,
+          code: element.code,
+          name: element.name,
+          description: element.description,
+          category: element.category,
+          subCategory: element.subCategory,
+          show: element.show,
+          unit: element.unit,
+          imageUrl: element.imageUrl,
+          price: price,
+        ),
+      );
+    }
   }
+  return items;
 }
 
-class CategoryWidget extends StatelessWidget {
-  const CategoryWidget(this.catalogFiltered, {super.key});
+// class CatalogWidget extends StatelessWidget {
+//   const CatalogWidget(this.catalogFiltered, {super.key});
 
-  final List<CatalogProducts> catalogFiltered;
+//   final List<CatalogProducts> catalogFiltered;
 
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//       physics: const BouncingScrollPhysics(),
+//       shrinkWrap: true,
+//       itemCount: catalogFiltered.length,
+//       itemBuilder: (ctx, i) {
+//         return ProductUnitTile(filteredProduct: catalogFiltered[i]);
+//       },
+//     );
+//   }
+// }
+
+// class CategoryWidget extends StatelessWidget {
+//   const CategoryWidget(this.catalogFiltered, {super.key});
+
+//   final List<CatalogProducts> catalogFiltered;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }

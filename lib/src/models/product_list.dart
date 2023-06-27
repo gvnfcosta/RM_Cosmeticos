@@ -8,7 +8,7 @@ import 'product_model.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
-  List<Product> items2 = [];
+  List<Product> items2;
 
   List<Product> get items => [...items2];
   List<Product> get products => items2.toList();

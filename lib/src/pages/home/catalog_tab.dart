@@ -1,22 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/catalog_products_list.dart';
-import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
-import 'package:rm/src/models/user_list.dart';
-import 'package:rm/src/models/user_model.dart';
-import '../../models/auth.dart';
 import '../../models/category_model.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
-  CatalogTab(this.seller, this.catalog, {super.key});
+  const CatalogTab({super.key, required this.items});
 
-  String seller;
-  String catalog;
+  final List<ProductFiltered> items;
 
   @override
   State<CatalogTab> createState() => _CatalogTabState();
@@ -29,102 +23,72 @@ class _CatalogTabState extends State<CatalogTab> {
   void initState() {
     super.initState();
 
-    Provider.of<UserList>(context, listen: false).loadData();
+    // Provider.of<UserList>(context, listen: false).loadData();
     Provider.of<CategoryList>(context, listen: false).loadCategories();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
-    Provider.of<CatalogProductsList>(context, listen: false).loadData();
+    // Provider.of<CatalogProductsList>(context, listen: false)
+    //     .loadData()
+    //     .then((value) => Timer(
+    //           const Duration(seconds: 1),
+    //           () => setState(() => _isLoading = false),
+    //         ));
   }
-
-  List<Category> items = [];
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context).products
-      ..sort((a, b) => a.name.compareTo(b.name));
-
-    Auth auth = Provider.of(context);
-    final List<UserModel> usuarios =
-        Provider.of<UserList>(context).items.toList();
-    late final vendedor =
-        usuarios.firstWhere((element) => element.email == auth.email);
-
-    final List<CatalogProducts> catalogProduct =
-        Provider.of<CatalogProductsList>(context)
-            .items
-            .where((element) => element.seller == widget.seller)
-            .where((element) => element.catalog == widget.catalog)
-            .toList()
-          ..sort((a, b) => a.productId.compareTo(b.productId));
-
     final List<Category> category = Provider.of<CategoryList>(context)
         .categories
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    final List<ProductFiltered> items =
-        filtraCatalogo(products, catalogProduct);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        title: Row(
+          children: [
+            Container(
+                width: 80,
+                transform: Matrix4.rotationZ(-8 * pi / 150)..translate(0.0, 6),
+                child: Image.asset("assets/images/LogoRM.png")),
+          ],
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const PdfPage(),
+                //         ),
+                //       );
+              },
+              icon: const Icon(Icons.picture_as_pdf)),
 
-    return items.isEmpty
-        ? const Center(child: Text(''))
-        : Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.pinkAccent,
-              title: Row(
-                children: [
-                  Container(
-                      width: 80,
-                      transform: Matrix4.rotationZ(-8 * pi / 150)
-                        ..translate(0.0, 6),
-                      child: Image.asset("assets/images/LogoRM.png")),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${vendedor.name} ${widget.catalog}',
-                          style: const TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      //       Navigator.of(context).push(
-                      //         MaterialPageRoute(
-                      //           builder: (context) => const PdfPage(),
-                      //         ),
-                      //       );
-                    },
-                    icon: const Icon(Icons.picture_as_pdf)),
-
-                // PopupMenuButton(
-                //   icon: Icon(Icons.more_vert),
-                //   itemBuilder: (_) => List.generate(
-                //     category.length,
-                //     (i) => PopupMenuItem(
-                //       value: category[i].nome,
-                //       height: 30,
-                //       child: Text(category[i].nome),
-                //     ),
-                //   ),
-                //   onSelected: (valor) => setState(
-                //     () {
-                //       setState(() {
-                //         selectedTipo = valor.toString();
-                //       });
-                //     },
-                //   ),
-                // ),
-              ],
-            ),
-            body: SafeArea(
+          // PopupMenuButton(
+          //   icon: Icon(Icons.more_vert),
+          //   itemBuilder: (_) => List.generate(
+          //     category.length,
+          //     (i) => PopupMenuItem(
+          //       value: category[i].nome,
+          //       height: 30,
+          //       child: Text(category[i].nome),
+          //     ),
+          //   ),
+          //   onSelected: (valor) => setState(
+          //     () {
+          //       setState(() {
+          //         selectedTipo = valor.toString();
+          //       });
+          //     },
+          //   ),
+          // ),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
               child: CustomScrollView(
                 slivers: [
                   SliverList(
@@ -135,7 +99,8 @@ class _CatalogTabState extends State<CatalogTab> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: category.length,
                           itemBuilder: (_, index) {
-                            List<ProductFiltered> productsFiltered = items
+                            List<ProductFiltered> productsFiltered = widget
+                                .items
                                 .where((element) =>
                                     element.category == category[index].nome)
                                 .toList();
@@ -177,25 +142,22 @@ class _CatalogTabState extends State<CatalogTab> {
                                         ),
                                       )
                                     : const SizedBox(),
-                                catalogProduct.isNotEmpty
-                                    ? GridView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 130,
-                                          mainAxisSpacing: 1,
-                                          crossAxisSpacing: 1,
-                                          childAspectRatio: 10 / 16,
-                                        ),
-                                        itemCount: productsFiltered.length,
-                                        itemBuilder: (_, index) {
-                                          return ProductTile(
-                                              productsFiltered[index]);
-                                        },
-                                      )
-                                    : const SizedBox(),
+                                GridView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 130,
+                                    mainAxisSpacing: 1,
+                                    crossAxisSpacing: 1,
+                                    childAspectRatio: 10 / 16,
+                                  ),
+                                  itemCount: productsFiltered.length,
+                                  itemBuilder: (_, index) {
+                                    return ProductTile(
+                                        products: productsFiltered[index]);
+                                  },
+                                )
                               ],
                             );
                           },
@@ -206,37 +168,6 @@ class _CatalogTabState extends State<CatalogTab> {
                 ],
               ),
             ),
-          );
+    );
   }
-}
-
-filtraCatalogo(products, catalogProduct) {
-  List<ProductFiltered> items = [];
-
-  for (var element in products) {
-    String productName = element.name;
-    List<CatalogProducts> catalog =
-        (catalogProduct.where((t) => t.productId == productName)).toList();
-
-    double price;
-
-    if (catalog.isNotEmpty) {
-      price = catalog.first.price;
-      items.add(
-        ProductFiltered(
-          id: element.id,
-          code: element.code,
-          name: element.name,
-          description: element.description,
-          category: element.category,
-          subCategory: element.subCategory,
-          show: element.show,
-          unit: element.unit,
-          imageUrl: element.imageUrl,
-          price: price,
-        ),
-      );
-    }
-  }
-  return items;
 }

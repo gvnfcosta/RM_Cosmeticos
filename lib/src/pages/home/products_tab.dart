@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/catalog_products_list.dart';
-import 'package:rm/src/models/catalog_products_model.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/product_filtered.dart';
-import 'package:rm/src/pages/home/catalog_tab.dart';
 import 'package:rm/src/pages/home/components/product_tile.dart';
 import '../../models/product_list.dart';
-import '../../models/product_model.dart';
 
 class ProductsTab extends StatefulWidget {
-  const ProductsTab(this.selectedCategory, {super.key});
+  const ProductsTab({
+    super.key,
+    required this.selectedCategory,
+    required this.items,
+  });
 
   final String selectedCategory;
+  final List<ProductFiltered> items;
+
   @override
   State<ProductsTab> createState() => _ProductsTabState();
 }
@@ -33,39 +35,30 @@ class _ProductsTabState extends State<ProductsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> products = Provider.of<ProductList>(context)
-        .items
-        .toList()
-        .where((element) => element.show)
+    final List<ProductFiltered> products = widget.items
+        .where((element) => element.category == widget.selectedCategory)
         .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
-
-    List<Product> productsFiltered = products
-        .where((element) => element.category == widget.selectedCategory)
-        .toList();
-
-    final List<CatalogProducts> catalogProduct =
-        Provider.of<CatalogProductsList>(context).items
-          ..sort((a, b) => a.productId.compareTo(b.productId));
-
-    final List<ProductFiltered> items =
-        filtraCatalogo(productsFiltered, catalogProduct);
 
     double tamanhoTela = MediaQuery.of(context).size.width;
     int quantidadeItemsTela = tamanhoTela ~/ 150; // divisão por inteiro
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: Text(widget.selectedCategory,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w700)),
+        title: Row(
+          children: [
+            Text('Categoria: ${widget.selectedCategory}',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700)),
+          ],
+        ),
       ),
 
       // Campo Pesquisa
@@ -82,15 +75,14 @@ class _ProductsTabState extends State<ProductsTab> {
                     crossAxisSpacing: 2,
                     childAspectRatio: 8 / 11,
                   ),
-                  itemCount: productsFiltered.length,
+                  itemCount: products.length,
                   itemBuilder: (_, index) {
-                    return ProductTile(items[index]);
+                    return ProductTile(products: products[index]);
                   },
                 ))
               ],
             )
           : const Center(child: CircularProgressIndicator()),
-      //drawer: const AppDrawer(),
     );
   }
 }

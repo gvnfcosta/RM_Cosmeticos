@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/category_model.dart';
+import 'package:rm/src/models/user_list.dart';
+import 'package:rm/src/models/user_model.dart';
 import '../../components/product_item.dart';
-import '../../models/auth.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
 import '../../utils/app_routes.dart';
@@ -15,6 +16,8 @@ class ProductPage extends StatefulWidget {
   State<ProductPage> createState() => _ProductPageState();
 }
 
+bool isAdmin = false;
+
 class _ProductPageState extends State<ProductPage> {
   bool _isLoading = true;
   String selectedCategory = 'Todos';
@@ -22,22 +25,12 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<ProductList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   List<String> allCategories = ["Todos"];
@@ -45,8 +38,10 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
-    bool isAdmin = true; // auth.isAdmin;
+    List<UserModel> user = Provider.of<UserList>(context).user;
+    if (user.isNotEmpty) {
+      isAdmin = user.first.level == 0;
+    }
 
     final List<Product> products = Provider.of<ProductList>(context)
         .items
@@ -79,11 +74,7 @@ class _ProductPageState extends State<ProductPage> {
         title: Image.asset('assets/images/LogoRM.png'),
         actions: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  _isSecret = !_isSecret;
-                });
-              },
+              onPressed: () => setState(() => _isSecret = !_isSecret),
               icon: Icon(!_isSecret ? Icons.visibility : Icons.visibility_off)),
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),

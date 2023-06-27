@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../components/product_show.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '/src/config/custom_colors.dart';
-import '../../models/product_model.dart';
 import '/src/services/utils_services.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key, required this.product});
+  const ProductScreen({super.key, required this.products});
 
-  final Product product;
+  final ProductFiltered products;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -26,7 +25,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productUnit = widget.product;
+    final productUnit = widget.products;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -37,13 +36,13 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (c) {
-                          return ProductShow(product: widget.product);
-                        },
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (c) {
+                    //       return ProductShow(product: widget.products);
+                    //     },
+                    //   ),
+                    // );
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 30),
@@ -164,7 +163,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        'Descrição: ${widget.product.description}',
+                        'Descrição: ${widget.products.description}',
                         style: const TextStyle(
                             fontSize: 15, height: 1.2, color: Colors.blueGrey),
                         textAlign: TextAlign.justify,
