@@ -23,17 +23,10 @@ class _CatalogTabState extends State<CatalogTab> {
   void initState() {
     super.initState();
 
-    // Provider.of<UserList>(context, listen: false).loadData();
     Provider.of<CategoryList>(context, listen: false).loadCategories();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
-    // Provider.of<CatalogProductsList>(context, listen: false)
-    //     .loadData()
-    //     .then((value) => Timer(
-    //           const Duration(seconds: 1),
-    //           () => setState(() => _isLoading = false),
-    //         ));
   }
 
   @override
@@ -56,6 +49,13 @@ class _CatalogTabState extends State<CatalogTab> {
           ],
         ),
         actions: [
+          //                       IconButton(
+//                           onPressed: () {
+//                             Navigator.of(context)
+//                                 .pushNamed(AppRoutes.productsForm);
+//                           },
+//                           icon: const Icon(Icons.add))
+
           IconButton(
               onPressed: () {
                 //       Navigator.of(context).push(

@@ -7,29 +7,29 @@ import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
 import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/pages/catalogs/components/filtra_catalogo.dart';
-import 'package:rm/src/pages/home/catalog_tab.dart';
-import 'package:rm/src/pages/home/category_tab.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
+import 'package:rm/src/pages/home/components/product_unit_tile.dart';
 
-class CatalogProductsPage extends StatefulWidget {
-  const CatalogProductsPage(this.catalog, {super.key});
+class CatalogAdminPage extends StatefulWidget {
+  const CatalogAdminPage({super.key, required this.catalog});
 
   final CatalogModel catalog;
 
   @override
-  State<CatalogProductsPage> createState() => _CatalogProductsPageState();
+  State<CatalogAdminPage> createState() => _CatalogAdminPageState();
 }
 
 bool _isLoading = true;
 
-class _CatalogProductsPageState extends State<CatalogProductsPage> {
-  int currentIndex = 0;
-  final pageController = PageController();
-
+class _CatalogAdminPageState extends State<CatalogAdminPage> {
   @override
   void initState() {
     super.initState();
 
     Provider.of<CatalogProductsList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
   }
@@ -54,38 +54,33 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // Campo Pesquisa
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController, //indica qual a tela aberta
-        children: [
-          CatalogTab(items: items),
-          CategoryTab(items: items),
+      appBar: AppBar(
+        title: Text(
+          'Catálogo\n${widget.catalog.seller} ${widget.catalog.name}',
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CatalogProductsFormPage(
+                          seller: widget.catalog.seller,
+                          catalog: widget.catalog.name,
+                        )));
+              },
+              icon: const Icon(Icons.add)),
         ],
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (indice) {
-          setState(() {
-            currentIndex = indice;
-            pageController.jumpToPage(indice); //muda a tela pelo indice
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.pink.shade600,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white.withAlpha(100),
-        items: navigationItems,
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: items.length,
+              itemBuilder: (ctx, i) {
+                return ProductUnitTile(items: items[i]);
+              },
+            ),
     );
   }
-
-  final List<BottomNavigationBarItem> navigationItems = [
-    const BottomNavigationBarItem(
-        icon: Icon(Icons.menu_book), label: 'Catálogos'),
-    const BottomNavigationBarItem(
-        icon: Icon(Icons.category), label: 'Categorias'),
-  ];
 }

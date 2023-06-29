@@ -5,10 +5,7 @@ import 'package:rm/src/pages/product/product_screen.dart';
 import '/src/services/utils_services.dart';
 
 class ProductTile extends StatelessWidget {
-  ProductTile({
-    super.key,
-    required this.products,
-  });
+  ProductTile({super.key, required this.products});
 
   final ProductFiltered products;
   // final CatalogProducts productsFiltered;

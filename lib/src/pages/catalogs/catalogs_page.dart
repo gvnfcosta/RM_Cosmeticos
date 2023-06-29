@@ -49,7 +49,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Catálogos $userName'),
+        title: Text('Catálogos ${userName == "Admin" ? "" : userName}'),
         centerTitle: true,
         elevation: 0,
         actions: isAdmin
@@ -61,7 +61,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                   },
                   icon: const Icon(
                     Icons.add,
-                    color: Colors.orange,
+                    color: Colors.grey,
                   ),
                 ),
               ]

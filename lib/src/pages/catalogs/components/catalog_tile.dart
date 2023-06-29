@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_list.dart';
+import 'package:rm/src/models/user_model.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
+import 'package:rm/src/pages/catalogs_products/catalog_admin_page.dart';
 import '../../../models/catalog_model.dart';
 import '/src/services/utils_services.dart';
 
 final UtilsServices utilsServices = UtilsServices();
 
 class CatalogTile extends StatelessWidget {
-  const CatalogTile({super.key, required this.catalog});
+  CatalogTile({super.key, required this.catalog});
   final CatalogModel catalog;
+
+  bool _isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
+    List<UserModel> user = Provider.of<UserList>(context).user;
+    if (user.isNotEmpty) {
+      _isAdmin = user.first.level == 0;
+    }
     return Card(
       elevation: 5,
       color: Colors.white,
@@ -19,7 +29,9 @@ class CatalogTile extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (c) {
-                return CatalogProductsPage(catalog);
+                return _isAdmin
+                    ? CatalogAdminPage(catalog: catalog)
+                    : CatalogProductsPage(catalog);
               },
             ),
           );
@@ -49,7 +61,7 @@ class CatalogTile extends StatelessWidget {
                   ),
                   child: Container(
                     padding: const EdgeInsets.only(bottom: 5),
-                    color: Colors.pink[300],
+                    color: Colors.pink[400],
                     child: Text(
                       catalog.name,
                       textAlign: TextAlign.center,

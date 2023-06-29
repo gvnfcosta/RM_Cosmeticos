@@ -8,17 +8,17 @@ import 'product_model.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
-  List<Product> items2;
+  List<Product> items_;
 
-  List<Product> get items => [...items2];
-  List<Product> get products => items2.toList();
+  List<Product> get items => [...items_];
+  List<Product> get products => items_.toList();
 
-  ProductList(this._token, this.items2);
+  ProductList(this._token, this.items_);
 
-  int get itemsCount => items2.length;
+  int get itemsCount => items_.length;
 
   Future<void> loadData() async {
-    items2.clear();
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'));
@@ -27,7 +27,7 @@ class ProductList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      items2.add(
+      items_.add(
         Product(
           id: dataId,
           code: dataDados['code'],
@@ -84,7 +84,7 @@ class ProductList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
-    items2.add(
+    items_.add(
       Product(
         id: id,
         code: product.code,
@@ -101,7 +101,7 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> updateData(Product product) async {
-    int index = items2.indexWhere((p) => p.id == product.id);
+    int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
@@ -119,17 +119,17 @@ class ProductList with ChangeNotifier {
         }),
       );
 
-      items2[index] = product;
+      items_[index] = product;
       notifyListeners();
     }
   }
 
   Future<void> removeData(Product product) async {
-    int index = items2.indexWhere((p) => p.id == product.id);
+    int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      final product = items2[index];
-      items2.remove(product);
+      final product = items_[index];
+      items_.remove(product);
       notifyListeners();
 
       final response = await http.delete(
@@ -137,7 +137,7 @@ class ProductList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        items2.insert(index, product);
+        items_.insert(index, product);
         notifyListeners();
 
         throw HttpException('Não foi possível excluir ${product.name}.');

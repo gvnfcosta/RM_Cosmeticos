@@ -121,7 +121,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 ),
               ],
             ),
-      drawer: isAdmin ? AppDrawer() : null,
+      drawer: isAdmin ? const AppDrawer() : null,
     );
   }
 
