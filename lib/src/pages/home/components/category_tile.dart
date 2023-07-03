@@ -50,7 +50,7 @@ class CategoryTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: CustomColors.customContrastColor,
-                    fontSize: 16,
+                    fontSize: 13,
                   ),
                 ),
               ],

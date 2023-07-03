@@ -41,7 +41,7 @@ class _ProductsTabState extends State<ProductsTab> {
       ..sort((a, b) => a.name.compareTo(b.name));
 
     double tamanhoTela = MediaQuery.of(context).size.width;
-    int quantidadeItemsTela = tamanhoTela ~/ 150; // divisão por inteiro
+    int quantidadeItemsTela = tamanhoTela ~/ 130; // divisão por inteiro
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -52,11 +52,11 @@ class _ProductsTabState extends State<ProductsTab> {
         elevation: 0,
         title: Row(
           children: [
-            Text('Categoria: ${widget.selectedCategory}',
+            Text(widget.selectedCategory,
                 style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700)),
+                    fontSize: 30,
+                    fontWeight: FontWeight.w200)),
           ],
         ),
       ),
@@ -65,20 +65,22 @@ class _ProductsTabState extends State<ProductsTab> {
       body: !_isLoading
           ? Column(
               children: [
-                const SizedBox(height: 12),
                 Expanded(
-                    child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: quantidadeItemsTela,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    childAspectRatio: 8 / 11,
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: quantidadeItemsTela,
+                      mainAxisSpacing: 2,
+                      crossAxisSpacing: 2,
+                      childAspectRatio: 8 / 12,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (_, index) {
+                      return ProductTile(products: products[index]);
+                    },
                   ),
-                  itemCount: products.length,
-                  itemBuilder: (_, index) {
-                    return ProductTile(products: products[index]);
-                  },
                 ))
               ],
             )

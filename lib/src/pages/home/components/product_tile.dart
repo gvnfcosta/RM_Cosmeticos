@@ -8,16 +8,11 @@ class ProductTile extends StatelessWidget {
   ProductTile({super.key, required this.products});
 
   final ProductFiltered products;
-  // final CatalogProducts productsFiltered;
-  // final List<Product> products
 
   final UtilsServices utilsServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
-    // Product productFiltered = products
-    //     .firstWhere((element) => element.name == productsFiltered.productId);
-
     return Stack(
       children: [
         GestureDetector(
@@ -32,26 +27,33 @@ class ProductTile extends StatelessWidget {
           },
           //Conteúdo
           child: Card(
-            color: Colors.white.withAlpha(180),
-            elevation: 0,
+            color: Colors.white,
+            elevation: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //Imagem
-                SizedBox(
-                  child: Image.network(
-                    products.imageUrl,
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Image.network(products.imageUrl),
+                ),
+
+                //Código
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'RM ${products.code}',
+                    style: const TextStyle(
+                        fontSize: 12, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
                   ),
                 ),
 
                 //Nome
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'RM ${products.code}\n${products.name}',
-                    style: const TextStyle(fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
+                Text(
+                  products.name,
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
                 ),
 
                 //Preço
@@ -62,7 +64,7 @@ class ProductTile extends StatelessWidget {
                       utilsServices.priceToCurrency(products.price),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 10,
+                        fontSize: 13,
                         color: CustomColors.customSwatchColor,
                       ),
                     ),

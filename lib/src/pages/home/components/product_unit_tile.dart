@@ -33,8 +33,11 @@ class ProductUnitTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomLabel('Código', items.code),
+                    const SizedBox(height: 1),
                     CustomLabel('Produto', items.name),
+                    const SizedBox(height: 1),
                     CustomLabel('Descrição', items.description),
+                    const SizedBox(height: 1),
                     CustomLabel('Preço',
                         utilsServices.priceToCurrency(items.price).toString()),
                   ],

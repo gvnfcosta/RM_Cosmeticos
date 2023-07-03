@@ -55,7 +55,7 @@ class _CategoryTabState extends State<CategoryTab> {
             : null,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(15.0),
         child: !_isLoading
             ? Column(
                 children: [
@@ -65,7 +65,7 @@ class _CategoryTabState extends State<CategoryTab> {
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 150,
+                        maxCrossAxisExtent: 120,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 5,
                         childAspectRatio: 10 / 14,

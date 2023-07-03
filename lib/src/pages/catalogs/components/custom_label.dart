@@ -5,18 +5,22 @@ class CustomLabel extends StatelessWidget {
 
   final String label;
   final String description;
+  //Size? deviceSize = 100.0;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          '$label: ',
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-        ),
-        Text(
-          description,
-          style: const TextStyle(fontSize: 11),
+        // Text(
+        //   '$label: ',
+        //   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+        // ),
+        SizedBox(
+          //width: 230,
+          child: Text(
+            description,
+            style: const TextStyle(fontSize: 11),
+          ),
         ),
       ],
     );
