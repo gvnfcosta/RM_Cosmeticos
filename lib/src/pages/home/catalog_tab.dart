@@ -36,55 +36,31 @@ class _CatalogTabState extends State<CatalogTab> {
         .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
+    String catalogoName = '';
+    widget.items.isNotEmpty ? catalogoName = widget.items.first.catalog : null;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.pinkAccent[100],
         title: Row(
           children: [
             Container(
                 width: 80,
                 transform: Matrix4.rotationZ(-8 * pi / 150)..translate(0.0, 6),
                 child: Image.asset("assets/images/LogoRM.png")),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(catalogoName,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w200,
+                    )),
+              ),
+            )
           ],
         ),
-        actions: [
-          //                       IconButton(
-//                           onPressed: () {
-//                             Navigator.of(context)
-//                                 .pushNamed(AppRoutes.productsForm);
-//                           },
-//                           icon: const Icon(Icons.add))
-
-          IconButton(
-              onPressed: () {
-                //       Navigator.of(context).push(
-                //         MaterialPageRoute(
-                //           builder: (context) => const PdfPage(),
-                //         ),
-                //       );
-              },
-              icon: const Icon(Icons.picture_as_pdf)),
-
-          // PopupMenuButton(
-          //   icon: Icon(Icons.more_vert),
-          //   itemBuilder: (_) => List.generate(
-          //     category.length,
-          //     (i) => PopupMenuItem(
-          //       value: category[i].nome,
-          //       height: 30,
-          //       child: Text(category[i].nome),
-          //     ),
-          //   ),
-          //   onSelected: (valor) => setState(
-          //     () {
-          //       setState(() {
-          //         selectedTipo = valor.toString();
-          //       });
-          //     },
-          //   ),
-          // ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -141,16 +117,14 @@ class _CatalogTabState extends State<CatalogTab> {
                                           ],
                                         ),
                                       )
-                                    : const SizedBox(),
+                                    : const Center(),
                                 GridView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 130,
-                                    mainAxisSpacing: 1,
-                                    crossAxisSpacing: 1,
-                                    childAspectRatio: 10 / 16,
+                                    maxCrossAxisExtent: 150,
+                                    childAspectRatio: 6 / 11,
                                   ),
                                   itemCount: productsFiltered.length,
                                   itemBuilder: (_, index) {

@@ -1,6 +1,9 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/product_filtered.dart';
+import 'package:rm/src/models/product_model.dart';
+import 'package:rm/src/pages/catalogs/components/filtra_catalogo.dart';
 import '../../models/catalog_products_list.dart';
 import '../../models/catalog_products_model.dart';
 import '../../models/product_list.dart';
@@ -28,6 +31,7 @@ String? selectedProduct;
 class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   @override
   void initState() {
+    _formData.clear();
     super.initState();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
@@ -44,31 +48,20 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
     if (_formData.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      _formData['id'] = '';
-      _formData['productId'] = '';
-      _formData['price'] = '';
-      _formData['seller'] = widget.seller;
-      _formData['catalog'] = widget.catalog;
-      selectedProduct = '';
+      // if (arg != null) {
+      //   final catalogProduct = arg as CatalogProducts;
+      //   _formData['id'] = catalogProduct.id;
+      //   _formData['productId'] = catalogProduct.productId;
+      //   _formData['price'] = catalogProduct.price;
 
-      if (arg != null) {
-        final catalogProduct = arg as CatalogProducts;
-        _formData['id'] = catalogProduct.id;
-        _formData['productId'] = catalogProduct.productId;
-        _formData['price'] = catalogProduct.price;
-        _formData['seller'] = catalogProduct.seller;
-        _formData['catalog'] = catalogProduct.catalog;
-
-        selectedProduct = catalogProduct.productId;
-      }
+      //   //  selectedProduct = catalogProduct.productId;
+      // }
     }
   }
 
   Future<void> _submitForm() async {
-    // if (_formData.isEmpty) {
-    //   _formData['seller'] = widget.seller;
-    //   _formData['catalog'] = widget.catalog;
-    // }
+    _formData['seller'] = widget.seller;
+    _formData['catalog'] = widget.catalog;
 
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -93,18 +86,33 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                   ]));
     } finally {
       setState(() => _isLoading = false);
+      _formData.clear();
       Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ProductList>(context).items.toList();
-    // final catalogProduct =
-    //     Provider.of<CatalogProductsList>(context).items.toList();
+    final catalogProvider = Provider.of<CatalogProductsList>(context);
+    final ProductList product = Provider.of(context);
+    List<Product> allProducts = product.items;
 
-    // List<Product> products = product;
-    // List<CatalogProducts> catalogProducts = catalogProduct;
+    final List<CatalogProducts> catalogProduct = catalogProvider.items_
+        .where((element) => element.seller == widget.seller)
+        .where((element) => element.catalog == widget.catalog)
+        .toList();
+
+    final List<Product> products =
+        allProducts; // .where((element) => element.productId == e.name
+
+    // for (var e in allProducts) {
+    //   {
+    //     products.add(products.where((element) => element.productId == e.name));
+    //   }
+    // }
+
+    final List<ProductFiltered> items =
+        filtraCatalogo(products, catalogProduct);
 
     if (selectedProduct != '') {
       _isEditing = true;
@@ -150,7 +158,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                           style: TextStyle(
                                               color:
                                                   Theme.of(context).hintColor)),
-                                      items: product
+                                      items: products
                                           .toList()
                                           .map(
                                             (item) => DropdownMenuItem<String>(
@@ -161,7 +169,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                             ),
                                           )
                                           .toList(),
-                                      value: selectedProduct,
+                                      value: _formData['productId'],
                                       isDense: true,
                                       onChanged: (value) {
                                         setState(() => _formData['productId'] =

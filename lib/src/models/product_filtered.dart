@@ -5,6 +5,8 @@ class ProductFiltered {
   String description;
   String category;
   String subCategory;
+  String seller;
+  String catalog;
   bool show;
   String unit;
   String imageUrl;
@@ -17,6 +19,8 @@ class ProductFiltered {
     required this.description,
     required this.category,
     required this.subCategory,
+    required this.seller,
+    required this.catalog,
     required this.show,
     required this.unit,
     required this.imageUrl,

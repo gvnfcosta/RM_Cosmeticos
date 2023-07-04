@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '../../models/catalog_products_list.dart';
-import '../../models/catalog_products_model.dart';
 import '../../models/product_list.dart';
 
 class CatalogProductsFormEditPage extends StatefulWidget {
@@ -17,13 +17,14 @@ bool _isLoading = false;
 final _formKey = GlobalKey<FormState>();
 final _formData = <String, Object>{};
 
-String selectedProduct = '';
+String? selectedProduct;
 
 class _CatalogProductsFormEditPageState
     extends State<CatalogProductsFormEditPage> {
   @override
   void initState() {
     super.initState();
+    _formData.clear();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
@@ -43,27 +44,26 @@ class _CatalogProductsFormEditPageState
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       if (arg != null) {
-        final catalogProduct = arg as CatalogProducts;
+        final catalogProduct = arg as ProductFiltered;
         _formData['id'] = catalogProduct.id;
-        _formData['productId'] = catalogProduct.productId;
-        selectedProduct = catalogProduct.productId;
+        _formData['productId'] = catalogProduct.name;
         _formData['price'] = catalogProduct.price;
         _formData['seller'] = catalogProduct.seller;
+        seller = catalogProduct.seller;
         _formData['catalog'] = catalogProduct.catalog;
-        // seller = _formData['seller'].toString();
-        // catalog = _formData['catalog'].toString();
-
+        catalog = catalogProduct.catalog;
         selectedProduct = _formData['productId'].toString();
       }
+
+      //  final catalogProvider = Provider.of<CatalogProductsList>(context);
+      // Encontrar o produto no catalogo de produtos
+      //   final List<CatalogProducts> filteredProduct = catalogProvider.items_
+      // .where((element) => element.productId == catalogProduct.first.productId)
+      // .toList();
     }
   }
 
   Future<void> _submitForm() async {
-    // if (_formData.isEmpty) {
-    //   _formData['seller'] = widget.seller;
-    //   _formData['catalog'] = widget.catalog;
-    // }
-
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) return;

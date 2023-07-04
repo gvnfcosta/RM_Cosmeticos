@@ -59,10 +59,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (c) => const CatalogFormPage()));
                   },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.grey,
-                  ),
+                  icon: const Icon(Icons.add, color: Colors.amber),
                 ),
               ]
             : null,
@@ -80,10 +77,10 @@ class _CatalogsPageState extends State<CatalogsPage> {
                       shrinkWrap: true,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 260,
+                        maxCrossAxisExtent: 200,
                         mainAxisSpacing: 3,
                         crossAxisSpacing: 3,
-                        childAspectRatio: 10 / 12,
+                        childAspectRatio: 8 / 12,
                       ),
                       itemCount: catalogs.length,
                       itemBuilder: (_, i) {

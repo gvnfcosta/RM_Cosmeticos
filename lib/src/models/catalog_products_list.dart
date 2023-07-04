@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rm/src/models/product_filtered.dart';
 import '../config/app_data.dart';
 import 'catalog_products_model.dart';
 
@@ -82,28 +83,39 @@ class CatalogProductsList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateData(CatalogProducts product) async {
-    int index = items_.indexWhere((p) => p.id == product.id);
+  Future<void> updateData(CatalogProducts item) async {
+    int index = items_.indexWhere(
+      (p) =>
+          p.productId == item.productId &&
+          p.seller == item.seller &&
+          p.catalog == item.catalog,
+    );
 
     if (index >= 0) {
+      final product = items_[index];
       await http.patch(
         Uri.parse(
-            '${Constants.baseUrl}/catalog_products/${product.id}.json?auth=$_token'),
+            '${Constants.baseUrl}/catalog_products/${item.id}.json?auth=$_token'),
         body: jsonEncode({
-          'productId': product.productId,
-          'price': product.price,
-          'seller': product.seller,
-          'catalog': product.catalog,
+          'productId': item.id,
+          'price': item.price,
+          'seller': item.seller,
+          'catalog': item.catalog,
         }),
       );
 
-      items_[index] = product;
+      items_[index] = item;
       notifyListeners();
     }
   }
 
-  Future<void> removeData(CatalogProducts product) async {
-    int index = items_.indexWhere((p) => p.id == product.id);
+  Future<void> removeData(ProductFiltered item) async {
+    int index = items_.indexWhere(
+      (p) =>
+          p.productId == item.name &&
+          p.seller == item.seller &&
+          p.catalog == item.catalog,
+    );
 
     if (index >= 0) {
       final product = items_[index];

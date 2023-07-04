@@ -1,104 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rm/src/models/catalog_products_list.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/pages/catalogs/components/custom_label.dart';
 import '../../../services/utils_services.dart';
 import '../../../utils/app_routes.dart';
 
 class ProductUnitTile extends StatelessWidget {
-  ProductUnitTile({super.key, required this.items});
+  ProductUnitTile({super.key, required this.item});
 
-  final ProductFiltered items;
+  final ProductFiltered item;
 
   final UtilsServices utilsServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Card(
-          elevation: 0,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                //Imagem
-                SizedBox(
-                  height: 80,
-                  child: Image.network(items.imageUrl),
-                ),
+    final Size deviceSize = MediaQuery.of(context).size;
+    return Stack(children: [
+      Card(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //Imagem
+              SizedBox(height: 80, child: Image.network(item.imageUrl)),
 
-                //Nome
-                Column(
+              //Nome
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomLabel('Código', items.code),
+                    CustomLabel(label: 'Código', description: item.code),
                     const SizedBox(height: 1),
-                    CustomLabel('Produto', items.name),
+                    CustomLabel(label: 'Produto', description: item.name),
                     const SizedBox(height: 1),
-                    CustomLabel('Descrição', items.description),
+                    CustomLabel(
+                      label: 'Descrição',
+                      description: item.description,
+                      customWidth: deviceSize.width * 0.65,
+                    ),
                     const SizedBox(height: 1),
-                    CustomLabel('Preço',
-                        utilsServices.priceToCurrency(items.price).toString()),
+                    CustomLabel(
+                        label: 'Preço',
+                        description: utilsServices
+                            .priceToCurrency(item.price)
+                            .toString()),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
 
-        //Botão Edit Product
-        _editProduct
-            ? Positioned(
-                top: 20,
-                right: 20,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                            AppRoutes.catalogProductsEditForm,
-                            arguments: items);
-                      },
-                      child:
-                          const Icon(Icons.edit_outlined, color: Colors.orange),
-                    ),
-                    const SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (ctx) => AlertDialog(
-                                    title: const Text(
-                                        'Excluir Produto do Catálogo'),
-                                    content: const Text('Tem certeza?'),
-                                    actions: [
-                                      TextButton(
-                                          child: const Text('NÃO'),
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop()),
-                                      TextButton(
-                                          child: const Text('SIM'),
-                                          onPressed: () {
-                                            // Provider.of<CatalogProductsList>(
-                                            //         context,
-                                            //         listen: false)
-                                            //     .removeData(items);
-                                            // Navigator.of(ctx).pop();
-                                          })
-                                    ]));
-                      },
-                      child:
-                          const Icon(Icons.delete_outlined, color: Colors.red),
-                    ),
-                  ],
-                ),
-              )
-            : Container(),
-      ],
-    );
+      //Botão Edit Product
+      Positioned(
+        top: 20,
+        right: 20,
+        child: Column(children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRoutes.catalogProductsEditForm,
+                  arguments: item);
+            },
+            child: const Icon(Icons.edit_outlined, color: Colors.orange),
+          ),
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Produto do Catálogo'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                          child: const Text('SIM'),
+                          onPressed: () {
+                            Provider.of<CatalogProductsList>(context,
+                                    listen: false)
+                                .removeData(item);
+                            Navigator.of(ctx).pop();
+                          }),
+                    ]),
+              );
+            },
+            child: const Icon(Icons.delete_outlined, color: Colors.red),
+          ),
+        ]),
+      ),
+    ]);
   }
 }
-
-bool _isLoading = false;
-bool _editProduct = true;

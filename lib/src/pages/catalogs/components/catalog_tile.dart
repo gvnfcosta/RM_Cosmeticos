@@ -10,26 +10,25 @@ import '/src/services/utils_services.dart';
 final UtilsServices utilsServices = UtilsServices();
 
 class CatalogTile extends StatelessWidget {
-  CatalogTile({super.key, required this.catalog});
+  const CatalogTile({super.key, required this.catalog});
   final CatalogModel catalog;
-
-  bool _isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = false;
     List<UserModel> user = Provider.of<UserList>(context).user;
     if (user.isNotEmpty) {
-      _isAdmin = user.first.level == 0;
+      isAdmin = user.first.level == 0;
     }
     return Card(
-      elevation: 5,
+      elevation: 6,
       color: Colors.white,
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (c) {
-                return _isAdmin
+                return isAdmin
                     ? CatalogAdminPage(catalog: catalog)
                     : CatalogProductsPage(catalog);
               },
@@ -39,18 +38,32 @@ class CatalogTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              catalog.seller,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w100,
-                  color: Colors.grey),
-            ),
+            Row(
+                children: isAdmin
+                    ? [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            color: Colors.red[50],
+                            child: Text(
+                              catalog.seller,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.pink),
+                            ),
+                          ),
+                        ),
+                      ]
+                    : []),
+            const SizedBox(height: 5),
             Expanded(
               child: SizedBox(
                 child: Image.asset('assets/images/CatalogoFace.png'),
               ),
             ),
+            const SizedBox(height: 5),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -60,14 +73,14 @@ class CatalogTile extends StatelessWidget {
                     bottomRight: Radius.circular(5),
                   ),
                   child: Container(
-                    padding: const EdgeInsets.only(bottom: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     color: Colors.pink[400],
                     child: Text(
                       catalog.name,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w200,
                           color: Colors.white),
                     ),
                   ),

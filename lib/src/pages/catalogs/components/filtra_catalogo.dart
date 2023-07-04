@@ -10,18 +10,27 @@ filtraCatalogo(products, catalogProduct) {
     List<CatalogProducts> catalog =
         (catalogProduct.where((t) => t.productId == productName)).toList();
 
+    String id;
     double price;
+    String sellerName;
+    String catalogName;
 
     if (catalog.isNotEmpty) {
+      sellerName = catalog.first.seller;
+      catalogName = catalog.first.catalog;
+      id = catalog.first.id;
       price = catalog.first.price;
+
       items.add(
         ProductFiltered(
-          id: element.id,
+          id: id,
           code: element.code,
           name: element.name,
           description: element.description,
           category: element.category,
           subCategory: element.subCategory,
+          seller: sellerName,
+          catalog: catalogName,
           show: element.show,
           unit: element.unit,
           imageUrl: element.imageUrl,

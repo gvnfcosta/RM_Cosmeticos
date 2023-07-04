@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 
 class CustomLabel extends StatelessWidget {
-  const CustomLabel(this.label, this.description, {super.key});
+  const CustomLabel(
+      {super.key,
+      required this.label,
+      required this.description,
+      this.customWidth});
 
   final String label;
   final String description;
-  //Size? deviceSize = 100.0;
+  final double? customWidth;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Text(
-        //   '$label: ',
-        //   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-        // ),
         SizedBox(
-          //width: 230,
-          child: Text(
-            description,
-            style: const TextStyle(fontSize: 11),
-          ),
+          width: customWidth ?? customWidth,
+          child: Text(description, style: const TextStyle(fontSize: 11)),
         ),
       ],
     );

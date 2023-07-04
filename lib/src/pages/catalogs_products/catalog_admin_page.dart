@@ -68,7 +68,10 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
                           catalog: widget.catalog.name,
                         )));
               },
-              icon: const Icon(Icons.add)),
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              )),
         ],
       ),
       body: _isLoading
@@ -78,7 +81,7 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
               shrinkWrap: true,
               itemCount: items.length,
               itemBuilder: (ctx, i) {
-                return ProductUnitTile(items: items[i]);
+                return ProductUnitTile(item: items[i]);
               },
             ),
     );

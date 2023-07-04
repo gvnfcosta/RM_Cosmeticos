@@ -28,12 +28,13 @@ class ProductTile extends StatelessWidget {
           //Conteúdo
           child: Card(
             color: Colors.white,
-            elevation: 2,
+            elevation: 0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //Imagem
                 Container(
+                  height: 150,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.network(products.imageUrl),
                 ),
@@ -44,7 +45,7 @@ class ProductTile extends StatelessWidget {
                   child: Text(
                     'RM ${products.code}',
                     style: const TextStyle(
-                        fontSize: 12, fontStyle: FontStyle.italic),
+                        fontSize: 11, fontStyle: FontStyle.italic),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -64,7 +65,7 @@ class ProductTile extends StatelessWidget {
                       utilsServices.priceToCurrency(products.price),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 13,
+                        fontSize: 15,
                         color: CustomColors.customSwatchColor,
                       ),
                     ),
