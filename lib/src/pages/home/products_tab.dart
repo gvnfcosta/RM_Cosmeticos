@@ -44,7 +44,7 @@ class _ProductsTabState extends State<ProductsTab> {
     int quantidadeItemsTela = tamanhoTela ~/ 130; // divisão por inteiro
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
@@ -74,7 +74,7 @@ class _ProductsTabState extends State<ProductsTab> {
                       crossAxisCount: quantidadeItemsTela,
                       mainAxisSpacing: 2,
                       crossAxisSpacing: 2,
-                      childAspectRatio: 8 / 12,
+                      childAspectRatio: 8 / 14,
                     ),
                     itemCount: products.length,
                     itemBuilder: (_, index) {

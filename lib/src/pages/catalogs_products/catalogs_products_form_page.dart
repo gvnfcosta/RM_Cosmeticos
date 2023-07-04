@@ -25,7 +25,6 @@ bool _isLoading = false;
 final _formKey = GlobalKey<FormState>();
 final _formData = <String, Object>{};
 
-bool _isEditing = false;
 String? selectedProduct;
 
 class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
@@ -95,28 +94,33 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   Widget build(BuildContext context) {
     final catalogProvider = Provider.of<CatalogProductsList>(context);
     final ProductList product = Provider.of(context);
-    List<Product> allProducts = product.items;
+    List<Product> products = product.items;
 
     final List<CatalogProducts> catalogProduct = catalogProvider.items_
         .where((element) => element.seller == widget.seller)
         .where((element) => element.catalog == widget.catalog)
         .toList();
 
-    final List<Product> products =
-        allProducts; // .where((element) => element.productId == e.name
+    // final List<Product> products = ;
 
-    // for (var e in allProducts) {
-    //   {
-    //     products.add(products.where((element) => element.productId == e.name));
+    // for (var e in products) {
+    //   for (var p in catalogProduct) {
+    //     e.name == p.productId ? products.remove(e) : null;
+    //   }
+    // }
+
+// products.forEach((e)) {
+//   if(e % )
+// }
+
+    // for (var e in products) {
+    //   for (var p in catalogProduct) {
+    //     e.name == p.productId ? products.remove(e) : null;
     //   }
     // }
 
     final List<ProductFiltered> items =
         filtraCatalogo(products, catalogProduct);
-
-    if (selectedProduct != '') {
-      _isEditing = true;
-    }
 
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),

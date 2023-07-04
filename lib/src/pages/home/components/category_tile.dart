@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/product_filtered.dart';
-import '../../../utils/app_routes.dart';
 import '../products_tab.dart';
 import '/src/config/custom_colors.dart';
 
@@ -17,7 +16,6 @@ class CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = false;
     return Stack(
       children: [
         GestureDetector(
@@ -57,38 +55,6 @@ class CategoryTile extends StatelessWidget {
             ),
           ),
         ),
-
-        //Botão editar
-        isAdmin
-            ? Positioned(
-                top: 3,
-                right: 3,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      topRight: Radius.circular(10)),
-                  child: Material(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.categoryForm,
-                            arguments: category);
-                      },
-                      child: Ink(
-                        height: 30,
-                        width: 28,
-                        decoration: const BoxDecoration(
-                          color: Colors.pinkAccent,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : const SizedBox(),
       ],
     );
   }

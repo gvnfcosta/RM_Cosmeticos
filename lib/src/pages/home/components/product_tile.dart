@@ -8,7 +8,6 @@ class ProductTile extends StatelessWidget {
   ProductTile({super.key, required this.products});
 
   final ProductFiltered products;
-
   final UtilsServices utilsServices = UtilsServices();
 
   @override

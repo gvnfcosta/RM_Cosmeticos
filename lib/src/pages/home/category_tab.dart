@@ -41,8 +41,7 @@ class _CategoryTabState extends State<CategoryTab> {
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title:
-            const Text('CATEGORIAS'), //Image.asset('assets/images/LogoRM.png'),
+        title: const Text('CATEGORIAS'),
         actions: isAdmin
             ? [
                 IconButton(
@@ -65,10 +64,10 @@ class _CategoryTabState extends State<CategoryTab> {
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 120,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 14,
+                        maxCrossAxisExtent: 180,
+                        mainAxisSpacing: 3,
+                        crossAxisSpacing: 3,
+                        childAspectRatio: 10 / 13,
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {

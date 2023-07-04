@@ -97,12 +97,11 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
           color: Colors.pink.withAlpha(30),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(10))),
-      // height: _isLogin() ? 250 : 400,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20))),
       child: Form(
         key: _formKey,
         child: Column(
@@ -173,7 +172,7 @@ class _AuthFormState extends State<AuthForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 50,
+                    height: 40,
                     width: 180,
                     child: ElevatedButton(
                       onPressed: _submit,
