@@ -25,16 +25,12 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CatalogList>(context, listen: false).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    Provider.of<UserList>(context, listen: false).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<CatalogList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -235,7 +231,7 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
                                       .requestFocus(_sellerFocus);
                                 },
                                 onSaved: (discount) => _data['discount'] =
-                                    double.parse(discount ?? '0'),
+                                    double.parse(discount ?? '0.0'),
                                 validator: (e) {
                                   return null;
                                 },

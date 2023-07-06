@@ -33,7 +33,6 @@ class ProductTile extends StatelessWidget {
               children: [
                 //Imagem
                 Container(
-                  height: 150,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.network(products.imageUrl),
                 ),
@@ -52,7 +51,7 @@ class ProductTile extends StatelessWidget {
                 //Nome
                 Text(
                   products.name,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
 

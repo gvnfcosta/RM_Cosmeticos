@@ -282,9 +282,9 @@ class _UserFormPageState extends State<UserFormPage> {
                                 ),
                                 onFieldSubmitted: (_) => _submitForm(),
                                 onSaved: (discount) => _data['discount'] =
-                                    double.parse(discount ?? '0'),
+                                    double.parse(discount ?? '0.0'),
                                 validator: (e) {
-                                  final eString = e ?? '0';
+                                  final eString = e ?? '0.0';
                                   // final discount = double.tryParse(eString) ?? 0.0;
                                   return null;
                                 },

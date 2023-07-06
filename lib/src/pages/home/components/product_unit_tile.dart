@@ -18,47 +18,44 @@ class ProductUnitTile extends StatelessWidget {
     final Size deviceSize = MediaQuery.of(context).size;
     return Stack(children: [
       Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //Imagem
-              SizedBox(height: 80, child: Image.network(item.imageUrl)),
+        elevation: 0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 20),
+            //Imagem
+            SizedBox(height: 75, child: Image.network(item.imageUrl)),
 
-              //Nome
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomLabel(label: 'Código', description: item.code),
-                    const SizedBox(height: 1),
-                    CustomLabel(label: 'Produto', description: item.name),
-                    const SizedBox(height: 1),
-                    CustomLabel(
-                      label: 'Descrição',
-                      description: item.description,
-                      customWidth: deviceSize.width * 0.65,
-                    ),
-                    const SizedBox(height: 1),
-                    CustomLabel(
-                        label: 'Preço',
-                        description: utilsServices
-                            .priceToCurrency(item.price)
-                            .toString()),
-                  ],
-                ),
+            //Nome
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomLabel(label: 'Código', description: item.code),
+                  const SizedBox(height: 1),
+                  CustomLabel(label: 'Produto', description: item.name),
+                  const SizedBox(height: 1),
+                  CustomLabel(
+                    label: 'Descrição',
+                    description: item.description,
+                    customWidth: deviceSize.width * 0.65,
+                  ),
+                  const SizedBox(height: 1),
+                  CustomLabel(
+                      label: 'Preço',
+                      description:
+                          utilsServices.priceToCurrency(item.price).toString()),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
 
       //Botão Edit Product
       Positioned(
-        top: 20,
-        right: 20,
+        top: 15,
+        left: 8,
         child: Column(children: [
           GestureDetector(
             onTap: () {

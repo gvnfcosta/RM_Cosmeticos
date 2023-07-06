@@ -36,9 +36,11 @@ class SignInScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                      height: 300,
-                      child: Image.asset('assets/images/TelaInicial.png'),
+                    Expanded(
+                      child: SizedBox(
+                        //height: 300,
+                        child: Image.asset('assets/images/TelaInicial.png'),
+                      ),
                     ),
                     Column(
                       children: [
@@ -87,6 +89,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),

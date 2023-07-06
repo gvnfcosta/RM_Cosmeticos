@@ -39,6 +39,8 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
     final productProvider = Provider.of<ProductList>(context);
     final catalogProvider = Provider.of<CatalogProductsList>(context);
 
+    Future.delayed(const Duration(seconds: 1));
+
     final List<Product> products = productProvider.items_
         .where((element) => element.show)
         .toList()

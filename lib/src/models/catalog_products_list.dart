@@ -97,7 +97,8 @@ class CatalogProductsList with ChangeNotifier {
         Uri.parse(
             '${Constants.baseUrl}/catalog_products/${item.id}.json?auth=$_token'),
         body: jsonEncode({
-          'productId': item.id,
+          'id': item.id,
+          'productId': item.productId,
           'price': item.price,
           'seller': item.seller,
           'catalog': item.catalog,

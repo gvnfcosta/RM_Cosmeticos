@@ -43,19 +43,6 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    if (_formData.isEmpty) {
-      final arg = ModalRoute.of(context)?.settings.arguments;
-
-      // if (arg != null) {
-      //   final catalogProduct = arg as CatalogProducts;
-      //   _formData['id'] = catalogProduct.id;
-      //   _formData['productId'] = catalogProduct.productId;
-      //   _formData['price'] = catalogProduct.price;
-
-      //   //  selectedProduct = catalogProduct.productId;
-      // }
-    }
   }
 
   Future<void> _submitForm() async {
@@ -93,34 +80,25 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   @override
   Widget build(BuildContext context) {
     final catalogProvider = Provider.of<CatalogProductsList>(context);
-    final ProductList product = Provider.of(context);
-    List<Product> products = product.items;
+    final ProductList productProvider = Provider.of(context);
+
+    List<Product> products = productProvider.items.toList();
 
     final List<CatalogProducts> catalogProduct = catalogProvider.items_
         .where((element) => element.seller == widget.seller)
         .where((element) => element.catalog == widget.catalog)
         .toList();
 
-    // final List<Product> products = ;
-
-    // for (var e in products) {
-    //   for (var p in catalogProduct) {
-    //     e.name == p.productId ? products.remove(e) : null;
-    //   }
-    // }
-
-// products.forEach((e)) {
-//   if(e % )
-// }
-
-    // for (var e in products) {
-    //   for (var p in catalogProduct) {
-    //     e.name == p.productId ? products.remove(e) : null;
-    //   }
-    // }
-
     final List<ProductFiltered> items =
         filtraCatalogo(products, catalogProduct);
+
+    List<String> productNames = [];
+    for (ProductFiltered item in items) {
+      productNames.add(item.name);
+    }
+
+    List<Product> productsFiltered =
+        products.where((item) => !productNames.contains(item.name)).toList();
 
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),
@@ -162,8 +140,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                           style: TextStyle(
                                               color:
                                                   Theme.of(context).hintColor)),
-                                      items: products
-                                          .toList()
+                                      items: productsFiltered
                                           .map(
                                             (item) => DropdownMenuItem<String>(
                                               value: item.name,
@@ -198,7 +175,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                               child: TextFormField(
                                   style: const TextStyle(fontSize: 14),
                                   initialValue:
-                                      _formData['price']?.toString() ?? '0',
+                                      _formData['price']?.toString() ?? '0.0',
                                   decoration: InputDecoration(
                                       labelText: 'Preço',
                                       labelStyle: const TextStyle(fontSize: 12),
@@ -212,7 +189,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                     signed: true,
                                   ),
                                   onSaved: (price) => _formData['price'] =
-                                      double.parse(price ?? '0'),
+                                      double.parse(price ?? '0.0'),
                                   validator: (price_) {
                                     final priceString = price_ ?? '';
                                     final price =
