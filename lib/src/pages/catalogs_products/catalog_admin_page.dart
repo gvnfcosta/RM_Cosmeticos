@@ -78,9 +78,11 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
+          : ListView.separated(
+              padding: const EdgeInsets.all(16),
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
+              separatorBuilder: (_, index) => const Divider(),
               itemCount: items.length,
               itemBuilder: (ctx, i) {
                 return ProductUnitTile(item: items[i]);

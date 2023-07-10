@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_list.dart';
 import '../../../utils/app_routes.dart';
 import '/src/services/utils_services.dart';
 import '../../../models/user_model.dart';
@@ -28,18 +30,9 @@ class UserTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(levels[user.level].toString()),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.userForm, arguments: user);
-                  },
-                  icon: const Icon(Icons.edit, color: Colors.red),
-                ),
-              ],
+            Text(
+              levels[user.level].toString(),
+              style: const TextStyle(color: Colors.grey),
             ),
             Text(
               user.name,
@@ -52,6 +45,41 @@ class UserTile extends StatelessWidget {
                   fontWeight: FontWeight.w300, color: Colors.blue),
             ),
             const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.userForm, arguments: user);
+                  },
+                  icon: const Icon(Icons.edit, color: Colors.orange),
+                ),
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                          title: const Text('Excluir Usuário'),
+                          content: const Text('Tem certeza?'),
+                          actions: [
+                            TextButton(
+                                child: const Text('NÃO'),
+                                onPressed: () => Navigator.of(ctx).pop()),
+                            TextButton(
+                                child: const Text('SIM'),
+                                onPressed: () {
+                                  Provider.of<UserList>(context, listen: false)
+                                      .removeData(user);
+                                  Navigator.of(ctx).pop();
+                                }),
+                          ]),
+                    );
+                  },
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -35,19 +35,6 @@ class _UsersScreenState extends State<UsersScreen> {
         centerTitle: true,
         elevation: 0,
         // title: const Text('USUÁRIOS', style: TextStyle(color: Colors.red)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (c) => const UserFormPage()),
-              );
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.orange,
-            ),
-          ),
-        ],
       ),
 
       // Campo Pesquisa
@@ -77,6 +64,16 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
             )
           : const Center(),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (c) => const UserFormPage()),
+          );
+        },
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
     );
   }
 }

@@ -16,81 +16,75 @@ class ProductUnitTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size deviceSize = MediaQuery.of(context).size;
-    return Stack(children: [
-      Card(
-        elevation: 0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 20),
-            //Imagem
-            SizedBox(height: 75, child: Image.network(item.imageUrl)),
+    return Card(
+      elevation: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          //Imagem
+          SizedBox(height: 70, child: Image.network(item.imageUrl)),
 
-            //Nome
-            Expanded(
+          //Nome
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                    AppRoutes.catalogProductsEditForm,
+                    arguments: item);
+              },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomLabel(label: 'Código', description: item.code),
-                  const SizedBox(height: 1),
-                  CustomLabel(label: 'Produto', description: item.name),
-                  const SizedBox(height: 1),
                   CustomLabel(
-                    label: 'Descrição',
-                    description: item.description,
-                    customWidth: deviceSize.width * 0.65,
+                      label: 'Código', description: item.code, fontSize: 10),
+                  CustomLabel(
+                    label: 'Produto',
+                    description: item.name,
+                    fontColor: Colors.red[900],
                   ),
-                  const SizedBox(height: 1),
+                  CustomLabel(
+                      label: 'Descrição',
+                      description: item.description,
+                      customWidth: deviceSize.width * 0.60,
+                      fontSize: 10),
                   CustomLabel(
                       label: 'Preço',
                       description:
-                          utilsServices.priceToCurrency(item.price).toString()),
+                          utilsServices.priceToCurrency(item.price).toString(),
+                      fontSize: 11),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-
-      //Botão Edit Product
-      Positioned(
-        top: 15,
-        left: 8,
-        child: Column(children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(AppRoutes.catalogProductsEditForm,
-                  arguments: item);
-            },
-            child: const Icon(Icons.edit_outlined, color: Colors.orange),
           ),
-          const SizedBox(height: 10),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                    title: const Text('Excluir Produto do Catálogo'),
-                    content: const Text('Tem certeza?'),
-                    actions: [
-                      TextButton(
-                          child: const Text('NÃO'),
-                          onPressed: () => Navigator.of(ctx).pop()),
-                      TextButton(
-                          child: const Text('SIM'),
-                          onPressed: () {
-                            Provider.of<CatalogProductsList>(context,
-                                    listen: false)
-                                .removeData(item);
-                            Navigator.of(ctx).pop();
-                          }),
-                    ]),
-              );
-            },
-            child: const Icon(Icons.delete_outlined, color: Colors.red),
+          SizedBox(
+            width: 20,
+            child: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                      title: const Text('Excluir Produto do Catálogo'),
+                      content: const Text('Tem certeza?'),
+                      actions: [
+                        TextButton(
+                            child: const Text('NÃO'),
+                            onPressed: () => Navigator.of(ctx).pop()),
+                        TextButton(
+                            child: const Text('SIM'),
+                            onPressed: () {
+                              Provider.of<CatalogProductsList>(context,
+                                      listen: false)
+                                  .removeData(item);
+                              Navigator.of(ctx).pop();
+                            }),
+                      ]),
+                );
+              },
+              child: const Icon(Icons.delete_outlined, color: Colors.red),
+            ),
           ),
-        ]),
+        ],
       ),
-    ]);
+    );
   }
 }
