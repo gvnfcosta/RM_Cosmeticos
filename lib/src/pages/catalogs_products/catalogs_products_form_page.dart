@@ -190,6 +190,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                   ),
                                   onSaved: (price) => _formData['price'] =
                                       double.parse(price ?? '0.0'),
+                                  onFieldSubmitted: (_) => _submitForm(),
                                   validator: (price_) {
                                     final priceString = price_ ?? '';
                                     final price =

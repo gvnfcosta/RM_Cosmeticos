@@ -35,7 +35,7 @@ class _CategoryTabState extends State<CategoryTab> {
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white.withAlpha(220),
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,

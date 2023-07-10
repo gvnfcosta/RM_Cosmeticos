@@ -133,7 +133,8 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/products/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

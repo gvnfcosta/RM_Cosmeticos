@@ -106,46 +106,49 @@ class _ProductPageState extends State<ProductPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 40,
-                    color: Colors.pink,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          selectedCategory,
-                          style: const TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Container(
+                //     height: 40,
+                //     color: Colors.pink,
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Text(
+                //           selectedCategory,
+                //           style: const TextStyle(
+                //               fontSize: 26,
+                //               fontWeight: FontWeight.w300,
+                //               color: Colors.white),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
 
                 // Categories
 
-                Expanded(
-                  child: RefreshIndicator(
-                      onRefresh: () => _refreshProduct(context),
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: selectedCategory == "Todos"
-                            ? products.length
-                            : productsFiltered.length,
-                        itemBuilder: (ctx, index) => selectedCategory == "Todos"
-                            ? ProductItem(products[index])
-                            : ProductItem(productsFiltered[index]),
-                      )),
-                ),
+                RefreshIndicator(
+                    onRefresh: () => _refreshProduct(context),
+                    child: GridView.builder(
+                      //  padding: const EdgeInsets.all(8),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 140,
+                        mainAxisSpacing: 1,
+                        crossAxisSpacing: 1,
+                        childAspectRatio: 8 / 14,
+                      ),
+                      itemCount: selectedCategory == "Todos"
+                          ? products.length
+                          : productsFiltered.length,
+                      itemBuilder: (ctx, index) => selectedCategory == "Todos"
+                          ? ProductItem(products[index])
+                          : ProductItem(productsFiltered[index]),
+                    )),
               ],
             ),
-      //  drawer: isAdmin ? const AppDrawer() : null,
     );
   }
 }

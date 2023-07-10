@@ -54,12 +54,6 @@ class _CatalogProductsFormEditPageState
         catalog = catalogProduct.catalog;
         selectedProduct = _formData['productId'].toString();
       }
-
-      //  final catalogProvider = Provider.of<CatalogProductsList>(context);
-      // Encontrar o produto no catalogo de produtos
-      //   final List<CatalogProducts> filteredProduct = catalogProvider.items_
-      // .where((element) => element.productId == catalogProduct.first.productId)
-      // .toList();
     }
   }
 
@@ -93,12 +87,6 @@ class _CatalogProductsFormEditPageState
 
   @override
   Widget build(BuildContext context) {
-    // final catalogProduct =
-    //     Provider.of<CatalogProductsList>(context).items.toList();
-
-    // List<Product> products = product;
-    // List<CatalogProducts> catalogProducts = catalogProduct;
-
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),
       appBar: AppBar(
@@ -120,24 +108,20 @@ class _CatalogProductsFormEditPageState
                       children: [
                         Row(
                           children: [
-                            Expanded(
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  border:
-                                      Border.all(width: 1, color: Colors.grey),
-                                ),
-                                child: Text('   $selectedProduct'),
-                              ),
-                            ),
+                            Text('$selectedProduct',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: Colors.red)),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            Expanded(
+                            SizedBox(
+                              width: 120,
                               child: TextFormField(
+                                  textAlign: TextAlign.end,
                                   style: const TextStyle(fontSize: 14),
                                   initialValue:
                                       _formData['price']?.toString() ?? '0',

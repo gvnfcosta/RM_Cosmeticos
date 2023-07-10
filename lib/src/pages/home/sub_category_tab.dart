@@ -49,17 +49,10 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: Image.asset('assets/images/LogoRM.png'),
-        actions: isAdmin
-            ? [
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.subCategoryForm);
-                  },
-                  icon: const Icon(Icons.add),
-                ),
-              ]
-            : null,
+        title: Stack(alignment: Alignment.center, children: [
+          Image.asset('assets/images/LogoRM.png'),
+          const Text('SubCategorias'),
+        ]),
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
@@ -87,6 +80,12 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
                 ],
               )
             : const Center(child: CircularProgressIndicator()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.subCategoryForm);
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

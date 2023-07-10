@@ -56,14 +56,16 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       backgroundColor: Colors.white,
 
       // Campo Pesquisa
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController, //indica qual a tela aberta
-        children: [
-          CatalogTab(items: items),
-          CategoryTab(items: items),
-        ],
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageController, //indica qual a tela aberta
+              children: [
+                CatalogTab(items: items),
+                CategoryTab(items: items),
+              ],
+            ),
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,

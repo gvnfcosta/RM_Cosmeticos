@@ -49,20 +49,25 @@ class _CatalogsPageState extends State<CatalogsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Catálogos ${userName == "Admin" ? "" : userName}'),
+        backgroundColor: Colors.pink.shade200,
+
+        title: Stack(alignment: Alignment.center, children: [
+          Image.asset('assets/images/LogoRM.png'),
+          Text('Catálogos ${userName == "Admin" ? "Gerais" : userName}'),
+        ]),
         centerTitle: true,
         elevation: 0,
-        actions: isAdmin
-            ? [
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => const CatalogFormPage()));
-                  },
-                  icon: const Icon(Icons.add, color: Colors.amber),
-                ),
-              ]
-            : null,
+        // actions: isAdmin
+        //     ? [
+        //         IconButton(
+        //           onPressed: () {
+        //             Navigator.of(context).push(MaterialPageRoute(
+        //                 builder: (c) => const CatalogFormPage()));
+        //           },
+        //           icon: const Icon(Icons.add, color: Colors.amber),
+        //         ),
+        //       ]
+        //     : null,
       ),
 
       // Campo Pesquisa
@@ -77,7 +82,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
                       shrinkWrap: true,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
+                        maxCrossAxisExtent: 150,
                         mainAxisSpacing: 3,
                         crossAxisSpacing: 3,
                         childAspectRatio: 8 / 12,
@@ -90,6 +95,15 @@ class _CatalogsPageState extends State<CatalogsPage> {
                   ),
                 ],
               ),
+            )
+          : null,
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (c) => const CatalogFormPage()));
+              },
+              child: const Icon(Icons.add),
             )
           : null,
     );

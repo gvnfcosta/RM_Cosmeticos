@@ -78,7 +78,7 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('Editar SubCategorias'), actions: [
+      appBar: AppBar(title: const Text('Editar SubCategoria'), actions: [
         Row(
           children: [
             IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
@@ -90,7 +90,7 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
                 showDialog(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: const Text('Excluir Categoria'),
+                    title: const Text('Excluir SubCategoria'),
                     content: const Text('Tem certeza?'),
                     actions: [
                       TextButton(
@@ -99,8 +99,11 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
                       TextButton(
                         child: const Text('SIM'),
                         onPressed: () {
-                          // Provider.of<SubCategoryList>(context, listen: false)
-                          //     .removeDados(subCategory);
+                          Provider.of<SubCategoryList>(context, listen: false)
+                              .removeDados(ModalRoute.of(context)
+                                  ?.settings
+                                  .arguments as SubCategory);
+                          Navigator.of(ctx).pop();
                           Navigator.of(ctx).pop();
                         },
                       ),
@@ -112,39 +115,55 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
           ],
         )
       ]),
-      body: Center(
-        child: !_isLoading
-            ? Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: TextFormField(
-                      style: const TextStyle(fontSize: 14),
-                      initialValue: _formData['nome']?.toString(),
-                      decoration: InputDecoration(
-                          labelText: 'Nome',
-                          labelStyle: const TextStyle(fontSize: 12),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8))),
-                      textInputAction: TextInputAction.next,
-                      focusNode: _nomeFocus,
-                      onFieldSubmitted: (_) {
-                        _submitForm;
-                      },
-                      onSaved: (name) => _formData['nome'] = name ?? '',
-                      validator: (nam) {
-                        final name = nam ?? '';
+      body: !_isLoading
+          ? Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: TextFormField(
+                        style: const TextStyle(fontSize: 14),
+                        initialValue: _formData['nome']?.toString(),
+                        decoration: InputDecoration(
+                            labelText: 'Nome',
+                            labelStyle: const TextStyle(fontSize: 12),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8))),
+                        textInputAction: TextInputAction.next,
+                        focusNode: _nomeFocus,
+                        onFieldSubmitted: (_) => _submitForm(),
+                        onSaved: (name) => _formData['nome'] = name ?? '',
+                        validator: (nam) {
+                          final name = nam ?? '';
 
-                        if (name.trim().isEmpty) {
-                          return 'Nome é obrigatório';
-                        }
+                          if (name.trim().isEmpty) {
+                            return 'Nome é obrigatório';
+                          }
 
-                        return null;
-                      }),
-                ),
-              )
-            : const Center(child: CircularProgressIndicator()),
-      ),
+                          return null;
+                        }),
+                  ),
+                  const Text(
+                    'CUIDADO',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Se você tiver cadastrado produtos com esta subcategoria e mudar o nome ou excluir deverá ter problemas',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  )
+                ],
+              ),
+            )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

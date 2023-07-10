@@ -39,21 +39,15 @@ class CatalogTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: isAdmin
                     ? [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.all(5),
-                            alignment: Alignment.center,
-                            color: Colors.red[50],
-                            child: Text(
-                              catalog.seller,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.pink),
-                            ),
-                          ),
+                        Text(
+                          catalog.seller,
+                          style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.deepOrange),
                         ),
                       ]
                     : []),
@@ -79,7 +73,7 @@ class CatalogTile extends StatelessWidget {
                       catalog.name,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 25,
+                          fontSize: 22,
                           fontWeight: FontWeight.w200,
                           color: Colors.white),
                     ),

@@ -98,7 +98,8 @@ class SubCategoryList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/subcategories.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/subcategories/${subCategory.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {

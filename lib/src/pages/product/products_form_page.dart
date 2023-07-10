@@ -150,12 +150,38 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
-      appBar: AppBar(
-          title: const Text('Editar Produtos'),
-          elevation: 0,
-          actions: [
-            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
-          ]),
+      appBar:
+          AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
+        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+        IconButton(
+          icon: const Icon(Icons.delete),
+          iconSize: 25,
+          color: Colors.white,
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Excluir Categoria'),
+                content: const Text('Tem certeza?'),
+                actions: [
+                  TextButton(
+                      child: const Text('NÃO'),
+                      onPressed: () => Navigator.of(ctx).pop()),
+                  TextButton(
+                    child: const Text('SIM'),
+                    onPressed: () {
+                      Provider.of<ProductList>(context, listen: false)
+                          .removeData(ModalRoute.of(context)?.settings.arguments
+                              as Product);
+                      Navigator.of(ctx).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ]),
       body: SizedBox(
         height: deviceSize.height,
         width: deviceSize.width,

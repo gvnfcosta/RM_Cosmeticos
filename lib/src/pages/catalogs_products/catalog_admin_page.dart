@@ -57,9 +57,16 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
-          'Catálogo\n${widget.catalog.seller} ${widget.catalog.name}',
-          style: const TextStyle(fontSize: 14),
+        backgroundColor: Colors.pinkAccent[100],
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Catálogo', style: TextStyle(fontSize: 14)),
+            Text(
+              '${widget.catalog.seller} ${widget.catalog.name}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -79,7 +86,7 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
               separatorBuilder: (_, index) => const Divider(),

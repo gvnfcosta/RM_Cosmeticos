@@ -69,7 +69,7 @@ class SignInScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 42,
+                      height: 50,
                       child: DefaultTextStyle(
                         style: TextStyle(
                             fontSize: 36,
