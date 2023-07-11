@@ -68,33 +68,30 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CatalogProductsFormPage(
-                          seller: widget.catalog.seller,
-                          catalog: widget.catalog.name,
-                        )));
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              )),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.separated(
-              padding: const EdgeInsets.all(8),
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              separatorBuilder: (_, index) => const Divider(),
-              itemCount: items.length,
-              itemBuilder: (ctx, i) {
-                return ProductUnitTile(item: items[i]);
-              },
+          : SingleChildScrollView(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(8),
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                separatorBuilder: (_, index) => const Divider(),
+                itemCount: items.length,
+                itemBuilder: (ctx, i) {
+                  return ProductUnitTile(item: items[i]);
+                },
+              ),
             ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CatalogProductsFormPage(
+                      seller: widget.catalog.seller,
+                      catalog: widget.catalog.name,
+                    )));
+          },
+          child: const Icon(Icons.add)),
     );
   }
 }
