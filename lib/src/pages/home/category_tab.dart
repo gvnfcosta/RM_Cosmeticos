@@ -41,7 +41,7 @@ class _CategoryTabState extends State<CategoryTab> {
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: const Text('CATEGORIAS'),
+        title: const Text('Categorias'),
         actions: isAdmin
             ? [
                 IconButton(

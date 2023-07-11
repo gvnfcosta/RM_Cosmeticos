@@ -96,10 +96,6 @@ class _BaseScreenState extends State<BaseScreen> {
       icon: Icon(Icons.menu_book),
       label: 'Catálogos',
     ),
-    // const BottomNavigationBarItem(
-    //   icon: Icon(Icons.category),
-    //   label: 'Categorias',
-    // ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_outline),
       label: 'Perfil',

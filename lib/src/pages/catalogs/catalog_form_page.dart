@@ -1,7 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/config/custom_colors.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';
 import '../../models/user_list.dart';
@@ -90,12 +89,11 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size deviceSize = MediaQuery.of(context).size;
     final UserList user = Provider.of(context);
     List<UserModel> users = user.items.toList();
 
     return Scaffold(
-      backgroundColor: CustomColors.customSwatchColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('CATÁLOGOS'),
         elevation: 0,
@@ -104,143 +102,139 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
             onPressed: _submitForm,
             icon: const Icon(Icons.check),
           ),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Catálogo'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                          child: const Text('SIM'),
+                          onPressed: () {
+                            Provider.of<CatalogList>(context, listen: false)
+                                .removeData(ModalRoute.of(context)
+                                    ?.settings
+                                    .arguments as CatalogModel);
+                            Navigator.of(ctx).pop();
+                            Navigator.of(ctx).pop();
+                          }),
+                    ]),
+              );
+            },
+            icon: const Icon(Icons.delete_outline),
+          ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: SizedBox(
-          height: deviceSize.height * 0.8,
-          child: Column(children: [
-            Container(
-              alignment: Alignment.center,
-              height: 100,
-              child: Text(
-                'Novo Catálogo',
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(15),
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(color: Colors.white30, offset: Offset(5, 5)),
-                  ],
-                ),
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Form(
-                        key: _formKey,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              // NOME DO CATÁLOGO
-                              TextFormField(
-                                  maxLines: 2,
-                                  initialValue: _data['name']?.toString(),
-                                  decoration: InputDecoration(
-                                    labelText: 'Nome Catálogo',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        gapPadding: 20),
-                                  ),
-                                  textInputAction: TextInputAction.next,
-                                  focusNode: _nameFocus,
-                                  onFieldSubmitted: (_) {
-                                    FocusScope.of(context)
-                                        .requestFocus(_sellerFocus);
-                                  },
-                                  onSaved: (name) => _data['name'] = name ?? '',
-                                  validator: (e) {
-                                    final name = e ?? '';
-
-                                    if (name.trim().isEmpty) {
-                                      return 'Nome é obrigatório';
-                                    }
-
-                                    return null;
-                                  }),
-
-                              //VENDEDOR
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
+          height: 300,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // NOME DO CATÁLOGO
+                        TextFormField(
+                            maxLines: 2,
+                            initialValue: _data['name']?.toString(),
+                            decoration: InputDecoration(
+                              labelText: 'Nome Catálogo',
+                              border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      style: BorderStyle.solid,
-                                      width: 1,
-                                      color: Colors.grey),
-                                ),
-                                child: Row(children: [
-                                  const SizedBox(
-                                      width: 70, child: Text('Vendedor:')),
-                                  DropdownButtonHideUnderline(
-                                    child: Expanded(
-                                      child: DropdownButton2(
-                                        focusNode: _discountFocus,
-                                        dropdownElevation: 12,
-                                        hint: Text('Selecione',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .hintColor)),
-                                        items: users
-                                            .where(
-                                                (element) => element.level == 1)
-                                            .toList()
-                                            .map((item) =>
-                                                DropdownMenuItem<String>(
-                                                    value: item.name,
-                                                    child: Text(item.name,
-                                                        style: const TextStyle(
-                                                            fontSize: 14))))
-                                            .toList(),
-                                        value: _data['seller'],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _data['seller'] = value as String;
-                                          });
-                                        },
-                                        buttonHeight: 30,
-                                        buttonWidth: 10,
-                                        itemHeight: 30,
-                                        autofocus: true,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                              ),
+                                  gapPadding: 20),
+                            ),
+                            textInputAction: TextInputAction.next,
+                            focusNode: _nameFocus,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context).requestFocus(_sellerFocus);
+                            },
+                            onSaved: (name) => _data['name'] = name ?? '',
+                            validator: (e) {
+                              final name = e ?? '';
 
-                              //DESCONTO
-                              TextFormField(
-                                maxLines: 2,
-                                initialValue:
-                                    _data['discount']?.toString() ?? '0.0',
-                                decoration: InputDecoration(
-                                  labelText: 'Desconto',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      gapPadding: 20),
+                              if (name.trim().isEmpty) {
+                                return 'Nome é obrigatório';
+                              }
+
+                              return null;
+                            }),
+
+                        //VENDEDOR
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.grey),
+                          ),
+                          child: Row(children: [
+                            const SizedBox(width: 70, child: Text('Vendedor:')),
+                            DropdownButtonHideUnderline(
+                              child: Expanded(
+                                child: DropdownButton2(
+                                  focusNode: _discountFocus,
+                                  dropdownElevation: 12,
+                                  hint: Text('Selecione',
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor)),
+                                  items: users
+                                      .where((element) => element.level == 1)
+                                      .toList()
+                                      .map((item) => DropdownMenuItem<String>(
+                                          value: item.name,
+                                          child: Text(item.name,
+                                              style: const TextStyle(
+                                                  fontSize: 14))))
+                                      .toList(),
+                                  value: _data['seller'],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _data['seller'] = value as String;
+                                    });
+                                  },
+                                  buttonHeight: 30,
+                                  buttonWidth: 10,
+                                  itemHeight: 30,
+                                  autofocus: true,
                                 ),
-                                textInputAction: TextInputAction.next,
-                                focusNode: _discountFocus,
-                                onFieldSubmitted: (_) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_sellerFocus);
-                                },
-                                onSaved: (discount) => _data['discount'] =
-                                    double.parse(discount ?? '0.0'),
-                                validator: (e) {
-                                  return null;
-                                },
                               ),
-                            ]),
-                      ),
-              ),
-            )
-          ]),
+                            ),
+                          ]),
+                        ),
+
+                        //DESCONTO
+                        TextFormField(
+                          maxLines: 2,
+                          initialValue: _data['discount']?.toString() ?? '0.0',
+                          decoration: InputDecoration(
+                            labelText: 'Desconto',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                gapPadding: 20),
+                          ),
+                          textInputAction: TextInputAction.next,
+                          focusNode: _discountFocus,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_sellerFocus);
+                          },
+                          onSaved: (discount) => _data['discount'] =
+                              double.parse(discount ?? '0.0'),
+                          validator: (e) {
+                            return null;
+                          },
+                        ),
+                      ]),
+                ),
         ),
       ),
     );

@@ -10,6 +10,7 @@ class AppRoutes {
   static const categoryPage = '/category-page';
   static const subCategoryPage = '/sub-category-page';
   static const catalogTab = '/catalog-tab';
-  static const catalogProductsForm = '/catalog-form';
+  static const catalogForm = '/catalog-form';
+  static const catalogProductsForm = '/catalog-product-form';
   static const catalogProductsEditForm = '/catalog-edit-form';
 }

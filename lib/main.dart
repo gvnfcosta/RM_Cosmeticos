@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
+import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
 import 'src/models/catalog_products_list.dart';
@@ -112,6 +113,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
           AppRoutes.catalogProductsForm: (ctx) =>
               const CatalogProductsFormPage(seller: '', catalog: ''),
+          AppRoutes.catalogForm: (ctx) => const CatalogFormPage(),
           AppRoutes.catalogProductsEditForm: (ctx) =>
               const CatalogProductsFormEditPage(),
           AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),

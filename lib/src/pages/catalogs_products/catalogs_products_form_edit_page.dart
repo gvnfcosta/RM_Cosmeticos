@@ -88,7 +88,7 @@ class _CatalogProductsFormEditPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(240),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('$seller $catalog', style: const TextStyle(fontSize: 16)),
         actions: [
@@ -97,67 +97,50 @@ class _CatalogProductsFormEditPageState
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('$selectedProduct',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Colors.red)),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 120,
-                              child: TextFormField(
-                                  textAlign: TextAlign.end,
-                                  style: const TextStyle(fontSize: 14),
-                                  initialValue:
-                                      _formData['price']?.toString() ?? '0',
-                                  decoration: InputDecoration(
-                                      labelText: 'Preço',
-                                      labelStyle: const TextStyle(fontSize: 12),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8))),
-                                  textInputAction: TextInputAction.next,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                    signed: true,
-                                  ),
-                                  onSaved: (price) => _formData['price'] =
-                                      double.parse(price ?? '0'),
-                                  validator: (price_) {
-                                    final priceString = price_ ?? '';
-                                    final price =
-                                        double.tryParse(priceString) ?? -1;
+          : Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Text('$selectedProduct',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.red)),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 120,
+                      child: TextFormField(
+                          textAlign: TextAlign.end,
+                          style: const TextStyle(fontSize: 14),
+                          initialValue: _formData['price']?.toString() ?? '0',
+                          decoration: InputDecoration(
+                              labelText: 'Preço',
+                              labelStyle: const TextStyle(fontSize: 12),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8))),
+                          textInputAction: TextInputAction.next,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: true,
+                          ),
+                          onSaved: (price) =>
+                              _formData['price'] = double.parse(price ?? '0'),
+                          validator: (price_) {
+                            final priceString = price_ ?? '';
+                            final price = double.tryParse(priceString) ?? -1;
 
-                                    if (price <= 0) {
-                                      return 'Informe um preço válido';
-                                    }
+                            if (price <= 0) {
+                              return 'Informe um preço válido';
+                            }
 
-                                    return null;
-                                  }),
-                            ),
-                          ],
-                        ),
-                      ],
+                            return null;
+                          }),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
     );
   }

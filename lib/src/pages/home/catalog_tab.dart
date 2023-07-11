@@ -85,7 +85,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                 productsFiltered.isNotEmpty
                                     ? Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 10, bottom: 8),
+                                            top: 8, bottom: 5),
                                         child: Row(
                                           children: [
                                             Container(
@@ -124,7 +124,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 120,
-                                    childAspectRatio: 3 / 5,
+                                    childAspectRatio: 3 / 6,
                                   ),
                                   itemCount: productsFiltered.length,
                                   itemBuilder: (_, index) {
