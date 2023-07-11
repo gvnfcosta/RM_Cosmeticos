@@ -54,33 +54,30 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
           const Text('SubCategorias'),
         ]),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: !_isLoading
-            ? Column(
-                children: [
-                  // Grid
-                  Expanded(
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 180,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 15 / 5,
-                      ),
-                      itemCount: subCategories.length,
-                      itemBuilder: (_, index) {
-                        return SubCategoryTile(
-                            subCategory: subCategories[index]);
-                      },
+      body: !_isLoading
+          ? Column(
+              children: [
+                // Grid
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.only(top: 8),
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 150,
+                      mainAxisSpacing: 1,
+                      crossAxisSpacing: 1,
+                      childAspectRatio: 15 / 5,
                     ),
-                  )
-                ],
-              )
-            : const Center(child: CircularProgressIndicator()),
-      ),
+                    itemCount: subCategories.length,
+                    itemBuilder: (_, index) {
+                      return SubCategoryTile(subCategory: subCategories[index]);
+                    },
+                  ),
+                )
+              ],
+            )
+          : const Center(child: CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.subCategoryForm);

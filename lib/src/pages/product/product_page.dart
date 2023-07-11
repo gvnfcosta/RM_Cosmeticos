@@ -4,7 +4,7 @@ import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
-import '../../components/product_item.dart';
+import '../../components/product_tile.dart';
 import '../../models/product_list.dart';
 import '../../models/product_model.dart';
 import '../../utils/app_routes.dart';
@@ -106,47 +106,47 @@ class _ProductPageState extends State<ProductPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Container(
-                //     height: 40,
-                //     color: Colors.pink,
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           selectedCategory,
-                //           style: const TextStyle(
-                //               fontSize: 26,
-                //               fontWeight: FontWeight.w300,
-                //               color: Colors.white),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 30,
+                    color: Colors.pink,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          selectedCategory,
+                          style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
                 // Categories
 
                 RefreshIndicator(
-                    onRefresh: () => _refreshProduct(context),
-                    child: GridView.builder(
-                      //  padding: const EdgeInsets.all(8),
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 140,
-                        mainAxisSpacing: 1,
-                        crossAxisSpacing: 1,
-                        childAspectRatio: 8 / 14,
-                      ),
-                      itemCount: selectedCategory == "Todos"
-                          ? products.length
-                          : productsFiltered.length,
-                      itemBuilder: (ctx, index) => selectedCategory == "Todos"
-                          ? ProductItem(products[index])
-                          : ProductItem(productsFiltered[index]),
-                    )),
+                  onRefresh: () => _refreshProduct(context),
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 100,
+                      childAspectRatio: 0.5,
+                    ),
+                    itemCount: selectedCategory == "Todos"
+                        ? products.length
+                        : productsFiltered.length,
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (ctx, index) => selectedCategory == "Todos"
+                        ? ProductTile(products[index])
+                        : ProductTile(productsFiltered[index]),
+                  ),
+                ),
               ],
             ),
     );

@@ -58,7 +58,7 @@ class _BaseScreenState extends State<BaseScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.pink.shade600,
+        backgroundColor: const Color.fromARGB(255, 140, 0, 110),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white.withAlpha(100),
         items: isAdmin ? adminNavigationItens : userNavigationItens,

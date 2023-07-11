@@ -56,7 +56,7 @@ class _UsersScreenState extends State<UsersScreen> {
                         maxCrossAxisExtent: 200,
                         mainAxisSpacing: 5,
                         crossAxisSpacing: 5,
-                        childAspectRatio: 6 / 4,
+                        childAspectRatio: 6 / 5,
                       ),
                     ),
                   ),

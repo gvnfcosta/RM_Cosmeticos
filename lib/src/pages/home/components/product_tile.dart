@@ -12,7 +12,7 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         GestureDetector(
           onTap: () {

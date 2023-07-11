@@ -215,7 +215,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 ? Form(
                     key: _formKey,
                     child: SizedBox(
-                      height: 330,
+                      height: 340,
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [

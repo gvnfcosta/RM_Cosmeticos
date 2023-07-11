@@ -14,7 +14,6 @@ import 'src/pages/auth/auth_home_page.dart';
 import 'src/pages/category/category_form_page.dart';
 import 'src/pages/category/category_page.dart';
 import 'src/pages/category/sub_category_form_page.dart';
-import 'src/pages/category/sub_category_page.dart';
 import 'src/pages/initial/base_screen.dart';
 import 'src/pages/product/product_page.dart';
 import 'src/pages/product/products_form_page.dart';
@@ -116,7 +115,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.catalogProductsEditForm: (ctx) =>
               const CatalogProductsFormEditPage(),
           AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
-          AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
+          // AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
         },
       ),
     );

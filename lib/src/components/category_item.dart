@@ -23,13 +23,17 @@ class _CategoryItemState extends State<CategoryItem> {
       child: Card(
         elevation: 2,
         child: Container(
-          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(5),
           child: Column(children: [
-            Image.network(
-              widget.category.imageUrl,
-              fit: BoxFit.contain,
+            SizedBox(
+              height: 55,
+              width: 60,
+              child: Image.network(
+                widget.category.imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
-            Text(widget.category.nome, style: const TextStyle(fontSize: 12)),
+            Text(widget.category.nome, style: const TextStyle(fontSize: 10)),
           ]),
         ),
       ),

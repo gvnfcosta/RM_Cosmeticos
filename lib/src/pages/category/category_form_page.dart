@@ -142,7 +142,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
           ]),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: deviceSize.height,
+          height: deviceSize.height * 0.9,
           width: deviceSize.width,
           child: Column(
             children: [
@@ -165,7 +165,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                 ),
               ),
               Container(
-                height: 330,
+                height: 320,
                 padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -226,7 +226,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: TextFormField(
-                                maxLines: 3,
+                                maxLines: 5,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: InputDecoration(
                                     labelText: 'Url da Imagem',

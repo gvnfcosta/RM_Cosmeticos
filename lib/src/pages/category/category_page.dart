@@ -32,7 +32,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
     return !_isLoading
         ? Scaffold(
-            backgroundColor: Colors.white.withAlpha(220),
+            backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.pink.shade200,
               title: Stack(alignment: Alignment.center, children: [
@@ -46,13 +46,13 @@ class _CategoryPageState extends State<CategoryPage> {
             body: RefreshIndicator(
               onRefresh: () => _refreshCategory(context),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 150,
-                    mainAxisSpacing: 1,
-                    crossAxisSpacing: 1,
-                    childAspectRatio: 5 / 6,
+                    maxCrossAxisExtent: 85,
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 0,
+                    childAspectRatio: 4 / 4.5,
                   ),
                   itemCount: categories.length,
                   physics: const BouncingScrollPhysics(),
