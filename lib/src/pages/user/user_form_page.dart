@@ -1,7 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/config/custom_colors.dart';
 
 import '../../config/app_data.dart';
 import '../../models/auth.dart';
@@ -21,10 +20,8 @@ class _UserFormPageState extends State<UserFormPage> {
 
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
-  final _passwordFocus = FocusNode();
   final _levelFocus = FocusNode();
   final _discountFocus = FocusNode();
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _data = <String, Object>{};
 
@@ -54,6 +51,7 @@ class _UserFormPageState extends State<UserFormPage> {
 
   @override
   void dispose() {
+    super.dispose();
     _nameFocus.dispose();
     _emailFocus.dispose();
     _levelFocus.dispose();
@@ -107,7 +105,7 @@ class _UserFormPageState extends State<UserFormPage> {
     final Size deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: CustomColors.customSwatchColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(_novoUsuario ? 'Novo Usuário' : 'Editar Usuário'),
         elevation: 0,
@@ -116,37 +114,47 @@ class _UserFormPageState extends State<UserFormPage> {
             onPressed: _submitForm,
             icon: const Icon(Icons.check),
           ),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Usuário'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                          child: const Text('SIM'),
+                          onPressed: () {
+                            Provider.of<UserList>(context, listen: false)
+                                .removeData(ModalRoute.of(context)
+                                    ?.settings
+                                    .arguments as UserModel);
+                            Navigator.of(ctx).pop();
+                            Navigator.of(ctx).pop();
+                          }),
+                    ]),
+              );
+            },
+            icon: const Icon(Icons.delete_outline),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: SizedBox(
           height: deviceSize.height * 0.8,
-          child: Column(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                height: 100,
-                child: Text(
-                  'Dados do Usuário',
-                  style: Theme.of(context).textTheme.displaySmall,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(15),
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(color: Colors.white30, offset: Offset(5, 5)),
-                    ],
-                  ),
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : Form(
-                          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Form(
+                        key: _formKey,
+                        child: SizedBox(
+                          height: 330,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -340,9 +348,9 @@ class _UserFormPageState extends State<UserFormPage> {
                             ],
                           ),
                         ),
-                ),
-              ),
-            ],
+                      ),
+              ],
+            ),
           ),
         ),
       ),

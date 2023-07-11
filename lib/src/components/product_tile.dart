@@ -34,7 +34,9 @@ class ProductTile extends StatelessWidget {
                   child: Text(
                     'RM ${product.code}',
                     style: const TextStyle(
-                        fontSize: 8, fontStyle: FontStyle.italic),
+                        fontSize: 8,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.red),
                     textAlign: TextAlign.center,
                   ),
                 ),

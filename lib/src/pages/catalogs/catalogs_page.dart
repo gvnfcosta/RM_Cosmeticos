@@ -50,24 +50,15 @@ class _CatalogsPageState extends State<CatalogsPage> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
-
         title: Stack(alignment: Alignment.center, children: [
           Image.asset('assets/images/LogoRM.png'),
-          Text('Catálogos ${userName == "Admin" ? "Gerais" : userName}'),
+          Text(
+            'Catálogos ${userName == "Admin" ? "Vendedores" : userName}',
+            style: const TextStyle(color: Colors.white),
+          ),
         ]),
         centerTitle: true,
         elevation: 0,
-        // actions: isAdmin
-        //     ? [
-        //         IconButton(
-        //           onPressed: () {
-        //             Navigator.of(context).push(MaterialPageRoute(
-        //                 builder: (c) => const CatalogFormPage()));
-        //           },
-        //           icon: const Icon(Icons.add, color: Colors.amber),
-        //         ),
-        //       ]
-        //     : null,
       ),
 
       // Campo Pesquisa

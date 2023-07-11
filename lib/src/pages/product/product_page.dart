@@ -92,12 +92,12 @@ class _ProductPageState extends State<ProductPage> {
               },
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.productForm);
-            },
-            icon: const Icon(Icons.add),
-          ),
+          // IconButton(
+          //   onPressed: () {
+          //     Navigator.of(context).pushNamed(AppRoutes.productForm);
+          //   },
+          //   icon: const Icon(Icons.add),
+          // ),
         ],
       ),
 
@@ -110,7 +110,7 @@ class _ProductPageState extends State<ProductPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 30,
-                    color: Colors.pink,
+                    color: Colors.pink[50],
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -119,7 +119,7 @@ class _ProductPageState extends State<ProductPage> {
                           style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w300,
-                              color: Colors.white),
+                              color: Colors.pink),
                         ),
                       ],
                     ),
@@ -134,7 +134,7 @@ class _ProductPageState extends State<ProductPage> {
                     padding: const EdgeInsets.all(8),
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 100,
+                      maxCrossAxisExtent: 80,
                       childAspectRatio: 0.5,
                     ),
                     itemCount: selectedCategory == "Todos"
@@ -149,6 +149,15 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               ],
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRoutes.productForm);
+          },
+          icon: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }

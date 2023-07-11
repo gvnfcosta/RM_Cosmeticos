@@ -53,10 +53,10 @@ class _UsersScreenState extends State<UsersScreen> {
                       },
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 6 / 5,
+                        maxCrossAxisExtent: 150,
+                        mainAxisSpacing: 1,
+                        crossAxisSpacing: 1,
+                        childAspectRatio: 3 / 2,
                       ),
                     ),
                   ),
@@ -70,9 +70,7 @@ class _UsersScreenState extends State<UsersScreen> {
             MaterialPageRoute(builder: (c) => const UserFormPage()),
           );
         },
-        child: const Icon(
-          Icons.add,
-        ),
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -36,21 +36,27 @@ class CatalogTile extends StatelessWidget {
           );
         },
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: isAdmin
-                    ? [
-                        Text(
-                          catalog.seller,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.deepOrange),
-                        ),
-                      ]
-                    : []),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5),
+                topRight: Radius.circular(5),
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                color: Colors.deepOrange,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(
+                    catalog.seller,
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                  ),
+                ]),
+              ),
+            ),
             const SizedBox(height: 5),
             Expanded(
               child: SizedBox(
@@ -67,13 +73,13 @@ class CatalogTile extends StatelessWidget {
                     bottomRight: Radius.circular(5),
                   ),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 2),
                     color: Colors.pink[400],
                     child: Text(
                       catalog.name,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.w200,
                           color: Colors.white),
                     ),
