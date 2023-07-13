@@ -174,6 +174,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           .removeData(ModalRoute.of(context)?.settings.arguments
                               as Product);
                       Navigator.of(ctx).pop();
+                      Navigator.of(ctx).pop();
                     },
                   ),
                 ],
@@ -482,7 +483,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                               child: SizedBox(
                                 height: 40,
                                 child: TextFormField(
-                                    style: const TextStyle(fontSize: 14),
+                                    style: const TextStyle(fontSize: 12),
                                     initialValue: _formData['name']?.toString(),
                                     decoration: InputDecoration(
                                         labelText: 'Nome',
@@ -546,7 +547,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: TextFormField(
                                   maxLines: 2,
-                                  style: const TextStyle(fontSize: 14),
+                                  style: const TextStyle(fontSize: 12),
                                   initialValue:
                                       _formData['description']?.toString(),
                                   decoration: InputDecoration(

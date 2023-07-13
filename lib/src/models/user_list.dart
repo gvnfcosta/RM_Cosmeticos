@@ -18,16 +18,11 @@ class UserList with ChangeNotifier {
 
   int get itemsCount => items_.length;
 
-  // UserModel get user =>
-  //     items.where((element) => element.email == _email).toList().first;
+  UserModel get firstUser =>
+      items_.firstWhere((element) => element.email == _email);
 
   List<UserModel> get user =>
       items_.where((element) => element.email == _email).toList();
-
-  //UserModel get user => users.first;
-
-  //String get userName => users.first.name;
-  //bool get isAdmin => users.first.level == 0;
 
   Future<void> loadData() async {
     items_.clear();

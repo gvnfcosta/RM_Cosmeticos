@@ -28,7 +28,10 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //Imagem
-          SizedBox(height: 70, child: Image.network(widget.item.imageUrl)),
+          SizedBox(
+              height: 70,
+              width: 80,
+              child: Image.network(widget.item.imageUrl)),
 
           //Nome
           Expanded(

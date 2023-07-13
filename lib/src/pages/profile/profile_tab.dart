@@ -1,10 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/user_model.dart';
 import '/src/components/app_drawer.dart';
 import '../../models/auth.dart';
 import '../../models/user_list.dart';
-import '../../models/user_model.dart';
 import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
 
@@ -15,8 +15,12 @@ class ProfileTab extends StatefulWidget {
 }
 
 bool _isLoading = true;
+bool _userEmpty = true;
 String userName = '';
+int userLevel = 0;
 bool isAdmin = false;
+
+final Map<int, String> funcao = {0: 'Administrador', 1: 'Vendedor'};
 
 class _ProfileTabState extends State<ProfileTab> {
   @override
@@ -30,11 +34,14 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     Auth auth = Provider.of(context);
-    List<UserModel> user = Provider.of<UserList>(context).user;
 
-    if (user.isNotEmpty) {
-      userName = user.first.name;
-      isAdmin = user.first.level == 0;
+    List<UserModel> users = Provider.of<UserList>(context, listen: false).user;
+
+    if (users.isNotEmpty) {
+      userName = users.first.name;
+      userLevel = users.first.level;
+      isAdmin = userLevel == 0;
+      _userEmpty = false;
     }
 
     return Scaffold(
@@ -55,7 +62,7 @@ class _ProfileTabState extends State<ProfileTab> {
           )
         ],
       ),
-      body: _isLoading
+      body: _isLoading && !_userEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -92,7 +99,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 // Nome
                 CustomTextField(
                   readOnly: true,
-                  initialValue: user.first.level.toString(),
+                  initialValue: funcao[userLevel],
                   icon: Icons.person,
                   label: 'Nível',
                 ),

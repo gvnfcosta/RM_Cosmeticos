@@ -74,7 +74,7 @@ class _ProductsTabState extends State<ProductsTab> {
                       crossAxisCount: quantidadeItemsTela,
                       mainAxisSpacing: 2,
                       crossAxisSpacing: 2,
-                      childAspectRatio: 8 / 14,
+                      childAspectRatio: 9 / 14,
                     ),
                     itemCount: products.length,
                     itemBuilder: (_, index) {

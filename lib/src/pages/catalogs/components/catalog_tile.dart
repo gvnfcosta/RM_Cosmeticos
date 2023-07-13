@@ -97,20 +97,22 @@ class CatalogTile extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          right: 0,
-          child: IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.orangeAccent,
-              size: 20,
-            ),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(AppRoutes.catalogForm, arguments: catalog);
-            },
-          ),
-        ),
+        isAdmin
+            ? Positioned(
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.orangeAccent,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.catalogForm, arguments: catalog);
+                  },
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }
