@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/app_data.dart';
-import '../../models/auth.dart';
 import '../../models/user_list.dart';
 import '../../models/user_model.dart';
 
@@ -58,14 +57,14 @@ class _UserFormPageState extends State<UserFormPage> {
     _discountFocus.dispose();
   }
 
-  Future<void> _saveNewUser() async {
-    Auth auth = Provider.of(context, listen: false);
+  // Future<void> _saveNewUser() async {
+  //   Auth auth = Provider.of(context, listen: false);
 
-    await auth.signup(
-      _data['email']!.toString(),
-      _data['password']!.toString(),
-    );
-  }
+  //   await auth.signup(
+  //     _data['email']!.toString(),
+  //     _data['password']!.toString(),
+  //   );
+  // }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -74,9 +73,9 @@ class _UserFormPageState extends State<UserFormPage> {
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
-    if (_novoUsuario) {
-      _saveNewUser();
-    }
+    // if (_novoUsuario) {
+    //   _saveNewUser();
+    // }
 
     try {
       await Provider.of<UserList>(context, listen: false).saveData(_data);

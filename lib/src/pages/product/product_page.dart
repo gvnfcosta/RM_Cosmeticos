@@ -20,7 +20,7 @@ bool isAdmin = false;
 
 class _ProductPageState extends State<ProductPage> {
   bool _isLoading = true;
-  String selectedCategory = 'Todos';
+  String selectedCategory = 'Todos os Produtos';
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _ProductPageState extends State<ProductPage> {
         .then((value) => setState(() => _isLoading = false));
   }
 
-  List<String> allCategories = ["Todos"];
+  List<String> allCategories = ["Todos os Produtos"];
   bool _isSecret = false;
 
   @override
@@ -137,14 +137,15 @@ class _ProductPageState extends State<ProductPage> {
                       maxCrossAxisExtent: 80,
                       childAspectRatio: 0.5,
                     ),
-                    itemCount: selectedCategory == "Todos"
+                    itemCount: selectedCategory == "Todos os Produtos"
                         ? products.length
                         : productsFiltered.length,
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder: (ctx, index) => selectedCategory == "Todos"
-                        ? ProductTile(products[index])
-                        : ProductTile(productsFiltered[index]),
+                    itemBuilder: (ctx, index) =>
+                        selectedCategory == "Todos os Produtos"
+                            ? ProductTile(products[index])
+                            : ProductTile(productsFiltered[index]),
                   ),
                 ),
               ],

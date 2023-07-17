@@ -44,20 +44,14 @@ class _UsersScreenState extends State<UsersScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: GridView.builder(
+                    child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: users.length,
+                      separatorBuilder: (_, index) => const Divider(),
                       itemBuilder: (_, i) {
                         return UserTile(user: users[i]);
                       },
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 150,
-                        mainAxisSpacing: 1,
-                        crossAxisSpacing: 1,
-                        childAspectRatio: 3 / 2,
-                      ),
                     ),
                   ),
                 ],

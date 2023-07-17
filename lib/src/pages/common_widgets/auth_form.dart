@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/components/shared_pref.dart';
+import 'package:rm/src/models/user_model.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
@@ -17,6 +19,7 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   final AuthMode _authMode = AuthMode.login;
+  User userLoad = User();
 
   final Map<String, String> _authData = {
     'email': '',
@@ -59,6 +62,19 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
+  loadSharedPrefs() async {
+    SharedPref sharedPref = SharedPref();
+    try {
+      User user = User.fromJson(await sharedPref.read("user"));
+      setState(() {
+        userLoad = user;
+      });
+    } catch (Excepetion) {
+      return;
+      // do something
+    }
+  }
+
   Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -80,10 +96,10 @@ class _AuthFormState extends State<AuthForm> {
         );
       } else {
         // Registrar
-        await auth.signup(
-          _authData['email']!,
-          _authData['password']!,
-        );
+        // await auth.signup(
+        //   _authData['email']!,
+        //   _authData['password']!,
+        // );
       }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
@@ -96,6 +112,8 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    loadSharedPrefs();
+    String? eml = userLoad.email;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -121,6 +139,7 @@ class _AuthFormState extends State<AuthForm> {
               ),
               keyboardType: TextInputType.emailAddress,
               onSaved: (email) => _authData['email'] = email ?? '',
+              initialValue: eml ?? '',
               validator: (email_) {
                 final email = email_ ?? '';
                 if (email.trim().isEmpty || !email.contains('@')) {

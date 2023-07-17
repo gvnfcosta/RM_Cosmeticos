@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:rm/src/components/shared_pref.dart';
 import '../data/store.dart';
 import '../exceptions/auth_exception.dart';
 
@@ -65,12 +66,20 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password) async {
-    return _authenticate(email, password,
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
-  }
+  // Future<void> signup(String email, String password) async {
+  //   return _authenticate(email, password,
+  //       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
+  // }
 
   Future<void> login(String email, String password) async {
+    Map<String, dynamic> toJson = {
+      'email': email,
+      'password': password,
+    };
+
+    SharedPref sharedPref = SharedPref();
+    sharedPref.save("user", toJson);
+
     return _authenticate(email, password,
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
   }
