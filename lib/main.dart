@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/config/hive_config.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
@@ -21,7 +23,10 @@ import 'src/pages/product/products_form_page.dart';
 import 'src/pages/user/user_form_page.dart';
 import 'src/utils/app_routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveConfig.start();
+  var box = await Hive.openBox('UserData');
   runApp(const MyApp());
 }
 

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/components/shared_pref.dart';
+import 'package:rm/src/config/hive_config.dart';
 import 'package:rm/src/models/user_model.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
 enum AuthMode { signup, login }
+
+String userEmail = '';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
@@ -33,6 +36,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   void initState() {
     super.initState();
+    final box = Hive.openBox('UserData');
     _isObscure = true;
   }
 
@@ -62,17 +66,35 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  loadSharedPrefs() async {
-    SharedPref sharedPref = SharedPref();
-    try {
-      User user = User.fromJson(await sharedPref.read("user"));
-      setState(() {
-        userLoad = user;
-      });
-    } catch (Excepetion) {
-      return;
-      // do something
-    }
+  // loadSharedPrefs() async {
+  //   SharedPref sharedPref = SharedPref();
+  //   try {
+  //     User user = User.fromJson(await sharedPref.read("user"));
+  //     setState(() {
+  //       userLoad = user;
+  //     });
+  //   } catch (Excepetion) {
+  //     return;
+  //     // do something
+  //   }
+  // }
+
+  Future<String> loadEmail() async {
+    await HiveConfig.start();
+
+    var box = await Hive.openBox('userdata');
+
+    Future<String> userEmail = box.get('email') ?? '';
+
+    return userEmail;
+  }
+
+  void saveEmail(email) async {
+    await HiveConfig.start();
+
+    var box = await Hive.openBox('userdata');
+
+    await box.put('email', email);
   }
 
   Future<void> _submit() async {
@@ -90,10 +112,11 @@ class _AuthFormState extends State<AuthForm> {
     try {
       if (_isLogin()) {
         // Login
-        await auth.login(
+        await auth.newLogin(
           _authData['email']!,
           _authData['password']!,
         );
+        saveEmail(_authData['email']);
       } else {
         // Registrar
         // await auth.signup(
@@ -112,8 +135,8 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    loadSharedPrefs();
-    String? eml = userLoad.email;
+    //_authData['email'] = loadEmail() as String;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -139,7 +162,6 @@ class _AuthFormState extends State<AuthForm> {
               ),
               keyboardType: TextInputType.emailAddress,
               onSaved: (email) => _authData['email'] = email ?? '',
-              initialValue: eml ?? '',
               validator: (email_) {
                 final email = email_ ?? '';
                 if (email.trim().isEmpty || !email.contains('@')) {
