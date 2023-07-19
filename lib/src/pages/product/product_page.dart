@@ -128,8 +128,7 @@ class _ProductPageState extends State<ProductPage> {
 
                 // Categories
 
-                RefreshIndicator(
-                  onRefresh: () => _refreshProduct(context),
+                Expanded(
                   child: GridView.builder(
                     padding: const EdgeInsets.all(8),
                     gridDelegate:
