@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../exceptions/http_exception.dart';
 import 'package:http/http.dart' as http;
 import '../config/app_data.dart';
 import 'catalog_model.dart';
@@ -105,6 +105,7 @@ class CatalogList with ChangeNotifier {
     int index = items_.indexWhere((e) => e.id == catalog.id);
 
     if (index >= 0) {
+      final catalog = items_[index];
       items_.remove(catalog);
       notifyListeners();
 
@@ -116,8 +117,10 @@ class CatalogList with ChangeNotifier {
       if (response.statusCode >= 400) {
         items_.insert(index, catalog);
         notifyListeners();
-
-        throw const HttpException('Não foi possível excluir o Catálogo}.');
+        throw HttpException(
+          msg: 'Não foi possível excluir esta categoria.',
+          statusCode: response.statusCode,
+        );
       }
     }
   }

@@ -48,16 +48,16 @@ class CatalogTile extends StatelessWidget {
                   child: Container(
                     height: 30,
                     padding: const EdgeInsets.symmetric(vertical: 2),
-                    color: Colors.deepOrange,
+                    color: Colors.white,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             catalog.seller,
                             style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red),
                             textAlign: TextAlign.center,
                           ),
                         ]),
@@ -69,7 +69,6 @@ class CatalogTile extends StatelessWidget {
                     child: Image.asset('assets/images/CatalogoFace.png'),
                   ),
                 ),
-                const SizedBox(height: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -80,13 +79,13 @@ class CatalogTile extends StatelessWidget {
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 2),
-                        color: Colors.pink[400],
+                        color: Colors.pink,
                         child: Text(
                           catalog.name,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
                               color: Colors.white),
                         ),
                       ),
@@ -101,10 +100,10 @@ class CatalogTile extends StatelessWidget {
             ? Positioned(
                 right: 0,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.edit,
-                    color: Colors.orangeAccent,
-                    size: 20,
+                    color: Colors.orangeAccent[200],
+                    size: 25,
                   ),
                   onPressed: () {
                     Navigator.of(context)
