@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_model.dart';
 import '/src/components/app_drawer.dart';
+import '/src/config/app_data.dart' as appData;
 import '../../models/auth.dart';
 import '../../models/user_list.dart';
 import '../../utils/app_routes.dart';
@@ -20,7 +21,7 @@ String userName = '';
 int userLevel = 0;
 bool isAdmin = false;
 
-final Map<int, String> funcao = {0: 'Administrador', 1: 'Vendedor'};
+// final Map<int, String> funcao = {0: 'Administrador', 1: 'Vendedor'};
 
 class _ProfileTabState extends State<ProfileTab> {
   @override
@@ -99,7 +100,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 // Nome
                 CustomTextField(
                   readOnly: true,
-                  initialValue: funcao[userLevel],
+                  initialValue: appData.Constants.levels[userLevel],
                   icon: Icons.person,
                   label: 'Nível',
                 ),

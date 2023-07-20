@@ -45,31 +45,31 @@ class CatalogTile extends StatelessWidget {
                     topLeft: Radius.circular(5),
                     topRight: Radius.circular(5),
                   ),
-                  child: Container(
-                    height: 30,
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    color: Colors.deepOrange,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            catalog.seller,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                            textAlign: TextAlign.center,
+                  child: isAdmin
+                      ? Container(
+                          height: 22,
+                          color: Colors.pink[100],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                catalog.seller,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.deepOrange),
+                              ),
+                            ],
                           ),
-                        ]),
-                  ),
+                        )
+                      : null,
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
                 Expanded(
                   child: SizedBox(
                     child: Image.asset('assets/images/CatalogoFace.png'),
                   ),
                 ),
-                const SizedBox(height: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -80,13 +80,13 @@ class CatalogTile extends StatelessWidget {
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 2),
-                        color: Colors.pink[400],
+                        color: Colors.pink,
                         child: Text(
                           catalog.name,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w200,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
                               color: Colors.white),
                         ),
                       ),
@@ -101,15 +101,13 @@ class CatalogTile extends StatelessWidget {
             ? Positioned(
                 right: 0,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.edit,
-                    color: Colors.orangeAccent,
-                    size: 20,
+                    color: Colors.orangeAccent[200],
+                    size: 30,
                   ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.catalogForm, arguments: catalog);
-                  },
+                  onPressed: () => Navigator.of(context)
+                      .pushNamed(AppRoutes.catalogForm, arguments: catalog),
                 ),
               )
             : const SizedBox(),

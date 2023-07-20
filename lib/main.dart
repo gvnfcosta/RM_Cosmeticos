@@ -21,7 +21,9 @@ import 'src/pages/product/products_form_page.dart';
 import 'src/pages/user/user_form_page.dart';
 import 'src/utils/app_routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await HiveConfig.start();
   runApp(const MyApp());
 }
 

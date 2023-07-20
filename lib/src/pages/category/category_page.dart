@@ -45,21 +45,18 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             body: RefreshIndicator(
               onRefresh: () => _refreshCategory(context),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 85,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 0,
-                    childAspectRatio: 4 / 4.5,
-                  ),
-                  itemCount: categories.length,
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, i) => Column(
-                    children: [CategoryItem(categories[i])],
-                  ),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 150,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                  childAspectRatio: 4 / 4.5,
+                ),
+                itemCount: categories.length,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (ctx, i) => Column(
+                  children: [CategoryItem(categories[i])],
                 ),
               ),
             ),

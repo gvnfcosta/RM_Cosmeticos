@@ -129,22 +129,25 @@ class _ProductPageState extends State<ProductPage> {
                 // Categories
 
                 Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(8),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 80,
-                      childAspectRatio: 0.5,
+                  child: RefreshIndicator(
+                    onRefresh: () => _refreshProduct(context),
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(8),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 80,
+                        childAspectRatio: 0.5,
+                      ),
+                      itemCount: selectedCategory == "Todos os Produtos"
+                          ? products.length
+                          : productsFiltered.length,
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (ctx, index) =>
+                          selectedCategory == "Todos os Produtos"
+                              ? ProductTile(products[index])
+                              : ProductTile(productsFiltered[index]),
                     ),
-                    itemCount: selectedCategory == "Todos os Produtos"
-                        ? products.length
-                        : productsFiltered.length,
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, index) =>
-                        selectedCategory == "Todos os Produtos"
-                            ? ProductTile(products[index])
-                            : ProductTile(productsFiltered[index]),
                   ),
                 ),
               ],

@@ -49,7 +49,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.pink.shade200,
+        backgroundColor: const Color.fromARGB(255, 140, 0, 110).withAlpha(150),
         title: Stack(alignment: Alignment.center, children: [
           Image.asset('assets/images/LogoRM.png'),
           Text(
@@ -68,20 +68,23 @@ class _CatalogsPageState extends State<CatalogsPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 150,
-                        mainAxisSpacing: 3,
-                        crossAxisSpacing: 3,
-                        childAspectRatio: 8 / 12,
+                    child: RefreshIndicator(
+                      onRefresh: () => _refreshData(context),
+                      child: GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 150,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 8 / 12,
+                        ),
+                        itemCount: catalogs.length,
+                        itemBuilder: (_, i) {
+                          return CatalogTile(catalog: catalogs[i]);
+                        },
                       ),
-                      itemCount: catalogs.length,
-                      itemBuilder: (_, i) {
-                        return CatalogTile(catalog: catalogs[i]);
-                      },
                     ),
                   ),
                 ],
@@ -92,11 +95,16 @@ class _CatalogsPageState extends State<CatalogsPage> {
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (c) => const CatalogFormPage()));
+                  MaterialPageRoute(builder: (c) => const CatalogFormPage()),
+                );
               },
               child: const Icon(Icons.add),
             )
           : null,
     );
   }
+}
+
+Future<void> _refreshData(BuildContext context) {
+  return Provider.of<CatalogList>(context, listen: false).loadData();
 }

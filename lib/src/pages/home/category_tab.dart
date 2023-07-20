@@ -35,7 +35,7 @@ class _CategoryTabState extends State<CategoryTab> {
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(220),
+      backgroundColor: Colors.white,
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
@@ -65,9 +65,9 @@ class _CategoryTabState extends State<CategoryTab> {
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 180,
-                        mainAxisSpacing: 3,
-                        crossAxisSpacing: 3,
-                        childAspectRatio: 10 / 13,
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 5,
+                        childAspectRatio: 12 / 16,
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {

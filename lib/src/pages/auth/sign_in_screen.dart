@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../common_widgets/auth_form.dart';
+import 'package:rm/src/pages/common_widgets/auth_auto.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:rm/src/pages/common_widgets/auth_form.dart';
+
+bool isSite = false;
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -95,7 +98,7 @@ class SignInScreen extends StatelessWidget {
               ),
 
               //Formulário
-              const AuthForm(),
+              !isSite ? const AuthForm() : const AuthAuto(),
             ],
           ),
         ),

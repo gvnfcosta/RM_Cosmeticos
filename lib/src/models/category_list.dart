@@ -35,6 +35,7 @@ class CategoryList with ChangeNotifier {
         ),
       );
     });
+    notifyListeners();
   }
 
   Future<void> saveCategories(Map<String, Object> data) {

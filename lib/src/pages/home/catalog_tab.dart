@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/models/catalog_list.dart';
 import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
@@ -54,8 +55,8 @@ class _CatalogTabState extends State<CatalogTab> {
                 alignment: Alignment.center,
                 child: Text(catalogoName,
                     style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w200,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w300,
                     )),
               ),
             )
@@ -118,19 +119,22 @@ class _CatalogTabState extends State<CatalogTab> {
                                         ),
                                       )
                                     : const Center(),
-                                GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 120,
-                                    childAspectRatio: 3 / 6,
+                                RefreshIndicator(
+                                  onRefresh: () => _refreshData(context),
+                                  child: GridView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 120,
+                                      childAspectRatio: 3 / 6,
+                                    ),
+                                    itemCount: productsFiltered.length,
+                                    itemBuilder: (_, index) {
+                                      return ProductTile(
+                                          products: productsFiltered[index]);
+                                    },
                                   ),
-                                  itemCount: productsFiltered.length,
-                                  itemBuilder: (_, index) {
-                                    return ProductTile(
-                                        products: productsFiltered[index]);
-                                  },
                                 )
                               ],
                             );
@@ -144,4 +148,8 @@ class _CatalogTabState extends State<CatalogTab> {
             ),
     );
   }
+}
+
+Future<void> _refreshData(BuildContext context) {
+  return Provider.of<CatalogList>(context, listen: false).loadData();
 }

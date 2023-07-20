@@ -94,7 +94,7 @@ class _BaseScreenState extends State<BaseScreen> {
   final List<BottomNavigationBarItem> userNavigationItens = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.menu_book),
-      label: 'Catálogos',
+      label: 'Catálogo',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_outline),
