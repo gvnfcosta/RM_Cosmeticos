@@ -38,10 +38,15 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
-    if (user.isNotEmpty) {
-      isAdmin = user.first.level == 0;
-    }
+    // List<UserModel> user = Provider.of<UserList>(context).user;
+    // if (user.isNotEmpty) {
+    //   isAdmin = user.first.level == 0;
+    // }
+
+    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+
+    int userLevel = users?.level ?? 1;
+    isAdmin = userLevel == 0;
 
     final List<Product> products = Provider.of<ProductList>(context)
         .items

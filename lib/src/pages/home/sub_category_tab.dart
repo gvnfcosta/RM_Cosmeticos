@@ -30,10 +30,17 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
-    if (user.isNotEmpty) {
-      isAdmin = user.first.level == 0;
-    }
+    // List<UserModel> user = Provider.of<UserList>(context).user;
+    // if (user.isNotEmpty) {
+    //   isAdmin = user.first.level == 0;
+    // }
+
+    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+
+    String userName = users?.name ?? '';
+    int userLevel = users?.level ?? 1;
+    isAdmin = userLevel == 0;
+
     final List<SubCategory> subCategories =
         Provider.of<SubCategoryList>(context).subCategories.toList()
           ..sort((a, b) => a.nome.compareTo(b.nome));

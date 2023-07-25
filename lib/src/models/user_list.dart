@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import '../config/app_data.dart';
 import 'user_model.dart';
 
+import 'package:collection/collection.dart';
+
 class UserList with ChangeNotifier {
   final String _token;
   final String _email;
@@ -18,11 +20,12 @@ class UserList with ChangeNotifier {
 
   int get itemsCount => items_.length;
 
-  UserModel get firstUser =>
-      items_.firstWhere((element) => element.email == _email);
+  UserModel? get firstUser =>
+      items_.firstWhereOrNull((element) => element.email == _email);
 
-  List<UserModel> get user =>
-      items_.where((element) => element.email == _email).toList();
+  int? get userLevel => firstUser?.level;
+  bool get isAdmin => userLevel == 0;
+  String? get userName => firstUser?.name;
 
   Future<void> loadData() async {
     items_.clear();

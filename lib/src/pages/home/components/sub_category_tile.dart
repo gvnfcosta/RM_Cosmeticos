@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rm/src/models/user_list.dart';
-import 'package:rm/src/models/user_model.dart';
 import '../../../models/sub_category_model.dart';
 import '../../../utils/app_routes.dart';
 import '/src/config/custom_colors.dart';
@@ -14,10 +11,6 @@ class SubCategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
-    if (user.isNotEmpty) {
-      isAdmin = user.first.level == 0;
-    }
     return SizedBox(
       height: 100,
       child: GestureDetector(

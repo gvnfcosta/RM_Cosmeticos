@@ -30,11 +30,17 @@ class _CatalogsPageState extends State<CatalogsPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
-    if (user.isNotEmpty) {
-      userName = user.first.name;
-      isAdmin = user.first.level == 0;
-    }
+    // List<UserModel> user = Provider.of<UserList>(context).user;
+    // if (user.isNotEmpty) {
+    //   userName = user.first.name;
+    //   isAdmin = user.first.level == 0;
+    // }
+
+    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+
+    String userName = users?.name ?? '';
+    int userLevel = users?.level ?? 1;
+    isAdmin = userLevel == 0;
 
     final List<CatalogModel> allCatalogs =
         Provider.of<CatalogList>(context).items;
@@ -93,11 +99,8 @@ class _CatalogsPageState extends State<CatalogsPage> {
           : null,
       floatingActionButton: isAdmin
           ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (c) => const CatalogFormPage()),
-                );
-              },
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (c) => const CatalogFormPage())),
               child: const Icon(Icons.add),
             )
           : null,

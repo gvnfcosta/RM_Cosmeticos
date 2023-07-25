@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/user_model.dart';
 import '/src/components/app_drawer.dart';
 import '/src/config/app_data.dart' as appData;
 import '../../models/auth.dart';
@@ -16,12 +17,6 @@ class ProfileTab extends StatefulWidget {
 }
 
 bool _isLoading = true;
-bool _userEmpty = true;
-String userName = '';
-int userLevel = 0;
-bool isAdmin = false;
-
-// final Map<int, String> funcao = {0: 'Administrador', 1: 'Vendedor'};
 
 class _ProfileTabState extends State<ProfileTab> {
   @override
@@ -34,16 +29,13 @@ class _ProfileTabState extends State<ProfileTab> {
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
+    Auth auth = Provider.of(context, listen: false);
 
-    List<UserModel> users = Provider.of<UserList>(context, listen: false).user;
+    UserList userProvider = Provider.of<UserList>(context);
 
-    if (users.isNotEmpty) {
-      userName = users.first.name;
-      userLevel = users.first.level;
-      isAdmin = userLevel == 0;
-      _userEmpty = false;
-    }
+    String? userName = userProvider.userName;
+    bool isAdmin = userProvider.isAdmin;
+    int? userLevel = userProvider.userLevel;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,10 +43,7 @@ class _ProfileTabState extends State<ProfileTab> {
         actions: [
           IconButton(
             onPressed: () {
-              Provider.of<Auth>(
-                context,
-                listen: false,
-              ).logout();
+              Provider.of<Auth>(context, listen: false).logout();
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.authOrHome,
               );
@@ -63,7 +52,7 @@ class _ProfileTabState extends State<ProfileTab> {
           )
         ],
       ),
-      body: _isLoading && !_userEmpty
+      body: _isLoading
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

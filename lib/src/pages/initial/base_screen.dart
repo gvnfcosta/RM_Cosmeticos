@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/user_model.dart';
+import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import 'package:rm/src/pages/category/category_page.dart';
 import 'package:rm/src/pages/home/components/admin_tab.dart';
@@ -34,12 +34,10 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> user = Provider.of<UserList>(context).user;
+    Auth auth = Provider.of(context, listen: false);
+    auth.keepLogged();
 
-    if (user.isNotEmpty) {
-      userName = user.first.name;
-      isAdmin = user.first.level == 0;
-    }
+    int? userLevel = Provider.of<UserList>(context).userLevel;
 
     return Scaffold(
       body: _isLoading
@@ -47,22 +45,25 @@ class _BaseScreenState extends State<BaseScreen> {
           : PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController, //indica qual a tela aberta
-              children: isAdmin ? adminPageViews : userPageViews,
+              children: userLevel == 0 ? adminPageViews : userPageViews,
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (indice) {
-          setState(() {
-            currentIndex = indice;
-            pageController.jumpToPage(indice); //muda a tela pelo indice
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color.fromARGB(255, 140, 0, 110),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white.withAlpha(100),
-        items: isAdmin ? adminNavigationItens : userNavigationItens,
-      ),
+      bottomNavigationBar: userLevel == 2
+          ? null
+          : BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (indice) {
+                setState(() {
+                  currentIndex = indice;
+                  pageController.jumpToPage(indice); //muda a tela pelo indice
+                });
+              },
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: const Color.fromARGB(255, 140, 0, 110),
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white.withAlpha(100),
+              items:
+                  userLevel == 0 ? adminNavigationItens : userNavigationItens,
+            ),
     );
   }
 
@@ -99,6 +100,13 @@ class _BaseScreenState extends State<BaseScreen> {
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_outline),
       label: 'Perfil',
+    )
+  ];
+
+  final List<BottomNavigationBarItem> lojaNavigationItens = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.menu_book),
+      label: 'Catálogo',
     ),
   ];
 }

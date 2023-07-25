@@ -86,7 +86,7 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
 
   final List<BottomNavigationBarItem> navigationItems = [
     const BottomNavigationBarItem(
-        icon: Icon(Icons.menu_book), label: 'Catálogos'),
+        icon: Icon(Icons.menu_book), label: 'Produtos'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.category), label: 'Categorias'),
   ];

@@ -17,10 +17,12 @@ class CatalogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isAdmin = false;
-    List<UserModel> user = Provider.of<UserList>(context).user;
-    if (user.isNotEmpty) {
-      isAdmin = user.first.level == 0;
-    }
+    //List<UserModel> user = Provider.of<UserList>(context).user;
+    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+
+    int userLevel = users?.level ?? 1;
+    isAdmin = userLevel == 0;
+
     return Stack(
       children: [
         Card(
