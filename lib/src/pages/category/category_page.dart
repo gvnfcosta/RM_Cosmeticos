@@ -20,11 +20,7 @@ class _CategoryPageState extends State<CategoryPage> {
     super.initState();
     Provider.of<CategoryList>(context, listen: false)
         .loadCategories()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -35,35 +31,42 @@ class _CategoryPageState extends State<CategoryPage> {
       ..sort(((a, b) => a.nome.compareTo(b.nome)));
 
     return !_isLoading
-        ? GestureDetector(
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                  title: const Text('Categorias',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15)),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(AppRoutes.categoryForm);
-                        },
-                        icon: const Icon(Icons.add)),
-                  ]),
-              body: RefreshIndicator(
-                onRefresh: () => _refreshCategory(context),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: categories.length,
-                    itemBuilder: (ctx, i) => Column(
-                      children: [CategoryItem(categories[i])],
-                    ),
-                  ),
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.pink.shade200,
+              title: Stack(alignment: Alignment.center, children: [
+                Image.asset('assets/images/LogoRM.png'),
+                const Text(
+                  'Categorias',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ]),
+            ),
+            body: RefreshIndicator(
+              onRefresh: () => _refreshCategory(context),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 150,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                  childAspectRatio: 4 / 4.5,
+                ),
+                itemCount: categories.length,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (ctx, i) => Column(
+                  children: [CategoryItem(categories[i])],
                 ),
               ),
             ),
-            onTap: () {})
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.categoryForm);
+              },
+              child: const Icon(Icons.add),
+            ),
+          )
         : const Center(child: CircularProgressIndicator());
   }
 }

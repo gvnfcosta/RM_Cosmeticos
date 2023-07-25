@@ -1,86 +1,86 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/catalog_products_list.dart';
-import '../../models/catalog_products_model.dart';
-import '../../models/product_list.dart';
+import '../../models/catalog_list.dart';
+import '../../models/catalog_model.dart';
+import '../../models/user_list.dart';
+import '../../models/user_model.dart';
 
 class CatalogFormPage extends StatefulWidget {
   const CatalogFormPage({super.key});
-  //const CatalogFormPage(this.catalog, {super.key});
-
-  //final CatalogModel catalog;
 
   @override
   State<CatalogFormPage> createState() => _CatalogFormPageState();
 }
 
-bool _isLoading = true;
-
-final _formKey = GlobalKey<FormState>();
-final _formData = <String, Object>{};
-
-bool? selectedShow = false;
-String? selectedProduto;
-
 class _CatalogFormPageState extends State<CatalogFormPage> {
+  final _nameFocus = FocusNode();
+  final _sellerFocus = FocusNode();
+  final _discountFocus = FocusNode();
+  final _formKey = GlobalKey<FormState>();
+  final _data = <String, Object>{};
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<CatalogProductsList>(context, listen: false)
-        .loadProducts('Mauricio/Principal')
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<CatalogList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_formData.isEmpty) {
+    if (_data.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
-      _formData['show'] = false;
-
       if (arg != null) {
-        final catalog = arg as CatalogProducts;
-        _formData['id'] = catalog.id;
-        _formData['produtoId'] = catalog.productId;
-        _formData['price'] = catalog.price;
-        _formData['show'] = catalog.show;
-
-        selectedShow = _formData['show'] as bool;
-        selectedProduto = _formData['ProdutoId'].toString();
+        final catalog = arg as CatalogModel;
+        _data['id'] = catalog.id;
+        _data['name'] = catalog.name;
+        _data['seller'] = catalog.seller;
+        _data['discount'] = catalog.discount;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameFocus.dispose();
+    _sellerFocus.dispose();
+    _discountFocus.dispose();
   }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) return;
-
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
 
     try {
-      await Provider.of<CatalogProductsList>(context, listen: false)
-          .saveProduct(_formData, 'Mauricio/Principal');
+      await Provider.of<CatalogList>(context, listen: false).saveData(_data);
     } catch (error) {
       await showDialog<void>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                  title: const Text('ERRO!'),
-                  content: const Text('Erro na gravação dos dados'),
-                  actions: [
-                    TextButton(
-                        child: const Text('Ok'),
-                        onPressed: () => Navigator.of(context).pop())
-                  ]));
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('ERRO!'),
+          content: const Text('Erro na gravação dos dados'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     } finally {
       setState(() => _isLoading = false);
       Navigator.of(context).pop();
@@ -89,175 +89,152 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ProductList product = Provider.of(context);
-    final Size deviceSize = MediaQuery.of(context).size;
+    final UserList user = Provider.of(context);
+    List<UserModel> users = user.items.toList();
 
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(240),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Catálogo {widget.catalog.name} {widget.catalog.seller}',
-          style: TextStyle(fontSize: 16),
-        ),
+        title: const Text('CATÁLOGOS'),
+        elevation: 0,
         actions: [
-          IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
+          IconButton(
+            onPressed: _submitForm,
+            icon: const Icon(Icons.check),
+          ),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Catálogo'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                          child: const Text('SIM'),
+                          onPressed: () {
+                            Provider.of<CatalogList>(context, listen: false)
+                                .removeData(ModalRoute.of(context)
+                                    ?.settings
+                                    .arguments as CatalogModel);
+                            Navigator.of(ctx).pop();
+                            Navigator.of(ctx).pop();
+                          }),
+                    ]),
+              );
+            },
+            icon: const Icon(Icons.delete_outline),
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(50),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.shade600, offset: const Offset(0, 2)),
-                ],
-              ),
-              child: !_isLoading
-                  ? Form(
-                      key: _formKey,
-                      child: SizedBox(
-                        height: deviceSize.height * 0.9,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: 400,
-                              child: Container(
-                                width: 300,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Container(
-                                    height: 40,
-                                    width: 120,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.grey,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: DropdownButtonHideUnderline(
-                                      child: SizedBox(
-                                        width: 100,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8),
-                                          child: DropdownButton2(
-                                            dropdownElevation: 12,
-                                            hint: Text('Produto',
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .hintColor)),
-                                            items: product.items
-                                                .map((item) =>
-                                                    DropdownMenuItem<String>(
-                                                        value: item.name,
-                                                        child: Text(item.name,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        14))))
-                                                .toList(),
-                                            value: _formData['productId'],
-                                            onChanged: (value) {
-                                              setState(
-                                                () {
-                                                  _formData['productId'] =
-                                                      value as String;
-                                                },
-                                              );
-                                            },
-                                            buttonHeight: 30,
-                                            buttonWidth: 10,
-                                            itemHeight: 30,
-                                            autofocus: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          height: 300,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // NOME DO CATÁLOGO
+                        TextFormField(
+                            maxLines: 2,
+                            initialValue: _data['name']?.toString(),
+                            decoration: InputDecoration(
+                              labelText: 'Nome Catálogo',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  gapPadding: 20),
+                            ),
+                            textInputAction: TextInputAction.next,
+                            focusNode: _nameFocus,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context).requestFocus(_sellerFocus);
+                            },
+                            onSaved: (name) => _data['name'] = name ?? '',
+                            validator: (e) {
+                              final name = e ?? '';
+
+                              if (name.trim().isEmpty) {
+                                return 'Nome é obrigatório';
+                              }
+
+                              return null;
+                            }),
+
+                        //VENDEDOR
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: Colors.grey),
+                          ),
+                          child: Row(children: [
+                            const SizedBox(width: 70, child: Text('Vendedor:')),
+                            DropdownButtonHideUnderline(
+                              child: Expanded(
+                                child: DropdownButton2(
+                                  focusNode: _discountFocus,
+                                  dropdownElevation: 12,
+                                  hint: Text('Selecione',
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor)),
+                                  items: users
+                                      .where((element) => element.level == 1)
+                                      .toList()
+                                      .map((item) => DropdownMenuItem<String>(
+                                          value: item.name,
+                                          child: Text(item.name,
+                                              style: const TextStyle(
+                                                  fontSize: 14))))
+                                      .toList(),
+                                  value: _data['seller'],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _data['seller'] = value as String;
+                                    });
+                                  },
+                                  buttonHeight: 30,
+                                  buttonWidth: 10,
+                                  itemHeight: 30,
+                                  autofocus: true,
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 5.0, right: 5.0),
-                                    child: SizedBox(
-                                      height: 40,
-                                      child: TextFormField(
-                                          style: const TextStyle(fontSize: 14),
-                                          initialValue:
-                                              _formData['price']?.toString(),
-                                          decoration: InputDecoration(
-                                              labelText: 'Preço',
-                                              labelStyle:
-                                                  const TextStyle(fontSize: 12),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8))),
-                                          textInputAction: TextInputAction.next,
-                                          keyboardType: const TextInputType
-                                              .numberWithOptions(
-                                            decimal: true,
-                                            signed: true,
-                                          ),
-                                          onSaved: (price) =>
-                                              _formData['price'] =
-                                                  double.parse(price ?? '0'),
-                                          validator: (pric) {
-                                            final priceString = pric ?? '';
-                                            final price =
-                                                double.tryParse(priceString) ??
-                                                    -1;
-
-                                            if (price <= 0) {
-                                              return 'Informe um preço válido';
-                                            }
-
-                                            return null;
-                                          }),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.visibility,
-                                        color: Colors.indigo,
-                                      ),
-                                      Switch(
-                                          value: selectedShow as bool,
-                                          activeColor: Colors.blue,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              selectedShow = value;
-                                              _formData['show'] = value;
-                                            });
-                                          }),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ]),
                         ),
-                      ),
-                    )
-                  : const Center(child: CircularProgressIndicator()),
-            ),
-          ],
+
+                        //DESCONTO
+                        TextFormField(
+                          maxLines: 2,
+                          initialValue: _data['discount']?.toString() ?? '0.0',
+                          decoration: InputDecoration(
+                            labelText: 'Desconto',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                gapPadding: 20),
+                          ),
+                          textInputAction: TextInputAction.next,
+                          focusNode: _discountFocus,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_sellerFocus);
+                          },
+                          onSaved: (discount) => _data['discount'] =
+                              double.parse(discount ?? '0.0'),
+                          validator: (e) {
+                            return null;
+                          },
+                        ),
+                      ]),
+                ),
         ),
       ),
     );

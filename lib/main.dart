@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
+import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
 import 'src/models/catalog_products_list.dart';
-import 'src/pages/catalogs/catalog_form_page.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
 import 'src/models/product_list.dart';
@@ -13,15 +15,15 @@ import 'src/pages/auth/auth_home_page.dart';
 import 'src/pages/category/category_form_page.dart';
 import 'src/pages/category/category_page.dart';
 import 'src/pages/category/sub_category_form_page.dart';
-import 'src/pages/category/sub_category_page.dart';
-import 'src/pages/home/catalog_tab.dart';
 import 'src/pages/initial/base_screen.dart';
 import 'src/pages/product/product_page.dart';
 import 'src/pages/product/products_form_page.dart';
 import 'src/pages/user/user_form_page.dart';
 import 'src/utils/app_routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await HiveConfig.start();
   runApp(const MyApp());
 }
 
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        // ChangeNotifierProvider(create: (_) => AdminController()),
+        //ChangeNotifierProvider(create: (_) => AdminController()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {
@@ -111,11 +113,13 @@ class MyApp extends StatelessWidget {
           AppRoutes.productForm: (ctx) => const ProductFormPage(),
           AppRoutes.categoryForm: (ctx) => const CategoryFormPage(),
           AppRoutes.categoryPage: (ctx) => const CategoryPage(),
+          AppRoutes.catalogProductsForm: (ctx) =>
+              const CatalogProductsFormPage(seller: '', catalog: ''),
           AppRoutes.catalogForm: (ctx) => const CatalogFormPage(),
-          AppRoutes.catalogTab: (ctx) =>
-              const CatalogTab(selectedCategory: 'Kits'),
+          AppRoutes.catalogProductsEditForm: (ctx) =>
+              const CatalogProductsFormEditPage(),
           AppRoutes.subCategoryForm: (ctx) => const SubCategoryFormPage(),
-          AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
+          // AppRoutes.subCategoryPage: (ctx) => const SubCategoryPage(),
         },
       ),
     );

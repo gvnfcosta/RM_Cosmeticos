@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../common_widgets/auth_form.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:rm/src/pages/common_widgets/auth_form.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -16,29 +16,42 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: SizedBox(
+        child: Container(
           height: deviceSize.height,
           width: deviceSize.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(255, 255, 255, 1),
+                Color.fromRGBO(255, 255, 255, 0.1),
+                Color.fromRGBO(215, 117, 255, 0.8),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
           child: Column(
             children: [
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                      height: 300,
-                      child: Image.asset('assets/images/TelaInicial.png'),
+                    Expanded(
+                      child: SizedBox(
+                        //height: 300,
+                        child: Image.asset('assets/images/TelaInicial.png'),
+                      ),
                     ),
                     Column(
                       children: [
                         Stack(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 2, top: 1),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 2, top: 1),
                               child: Text(
                                 'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.pink.shade200, fontSize: 32),
+                                    color: Colors.black87, fontSize: 50),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -47,7 +60,7 @@ class SignInScreen extends StatelessWidget {
                               child: Text(
                                 'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.pink.shade400, fontSize: 32),
+                                    color: Colors.pink.shade600, fontSize: 50),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -56,10 +69,10 @@ class SignInScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 38,
+                      height: 50,
                       child: DefaultTextStyle(
                         style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 36,
                             fontWeight: FontWeight.w200,
                             color: Colors.pink.shade700),
                         child: AnimatedTextKit(
@@ -76,6 +89,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),

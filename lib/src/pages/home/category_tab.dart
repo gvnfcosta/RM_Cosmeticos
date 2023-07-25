@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/auth.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '../../models/category_list.dart';
 import '../../models/category_model.dart';
 import '../../utils/app_routes.dart';
 import 'components/category_tile.dart';
 
 class CategoryTab extends StatefulWidget {
-  const CategoryTab({super.key});
+  const CategoryTab({super.key, required this.items});
+
+  final List<ProductFiltered> items;
 
   @override
   State<CategoryTab> createState() => _CategoryTabState();
@@ -15,52 +17,44 @@ class CategoryTab extends StatefulWidget {
 
 class _CategoryTabState extends State<CategoryTab> {
   bool _isLoading = true;
+  bool isAdmin = false;
 
   @override
   void initState() {
     super.initState();
-
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<CategoryList>(context);
-    Auth auth = Provider.of(context);
-    String? isEmail = auth.email;
-    bool isAdmin = true;
-
-    final List<Category> categories = provider.categories.toList()
+    final List<Category> categories = Provider.of<CategoryList>(context)
+        .categories
+        .toList()
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    double tamanhoTela = MediaQuery.of(context).size.width;
-    int quantidadeItemsTela = tamanhoTela ~/ 130; // divisão por inteir
-
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(220),
+      backgroundColor: Colors.white,
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: Image.asset('assets/images/LogoRM.png'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.categoryForm);
-              },
-              icon: isAdmin ? const Icon(Icons.add) : const SizedBox()),
-        ],
+        title: const Text('Categorias'),
+        actions: isAdmin
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.categoryForm);
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+              ]
+            : null,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(15.0),
         child: !_isLoading
             ? Column(
                 children: [
@@ -70,16 +64,16 @@ class _CategoryTabState extends State<CategoryTab> {
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 150,
-                        mainAxisSpacing: 4,
+                        maxCrossAxisExtent: 180,
+                        mainAxisSpacing: 5,
                         crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 14,
+                        childAspectRatio: 12 / 16,
                       ),
                       itemCount: categories.length,
                       itemBuilder: (_, index) {
                         return CategoryTile(
                           category: categories[index],
-                          isAdmin: isAdmin,
+                          items: widget.items,
                         );
                       },
                     ),

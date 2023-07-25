@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../data/store.dart';
@@ -11,6 +12,10 @@ class Auth with ChangeNotifier {
   String? _userId;
   DateTime? _expiryDate;
   Timer? _logoutTimer;
+  final String _userEmail = '';
+  final String _userPassword = '';
+
+  late Box box;
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -28,6 +33,10 @@ class Auth with ChangeNotifier {
   String? get userId {
     return isAuth ? _userId : null;
   }
+
+  // Future<void> startUser() async {
+  //   box = await Hive.openBox('userData');
+  // }
 
   Future<void> _authenticate(String email, String password, String url) async {
     final response = await http.post(
@@ -50,7 +59,6 @@ class Auth with ChangeNotifier {
 
       _expiryDate = DateTime.now().add(
         Duration(seconds: (int.parse(body['expiresIn']))),
-        //     (int.parse(body['expiresIn']) + 3600)), // TEMPO DE ACESSO ???
       );
 
       Store.saveMap('userData', {
@@ -65,10 +73,11 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password) async {
-    return _authenticate(email, password,
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
-  }
+  // Future<void> newLogin(String email, String password) async {
+  //   _userEmail = email;
+  //   _userPassword = password;
+  //   login(_userEmail, _userPassword);
+  // }
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password,
@@ -83,7 +92,9 @@ class Auth with ChangeNotifier {
     if (userData.isEmpty) return;
 
     final expiryDate = DateTime.parse(userData['expiryDate']);
-    if (expiryDate.isBefore(DateTime.now())) return;
+    if (expiryDate.isBefore(DateTime.now())) {
+      return;
+    }
 
     _token = userData['token'];
     _email = userData['email'];
@@ -110,12 +121,17 @@ class Auth with ChangeNotifier {
     _logoutTimer = null;
   }
 
+  void keepLogged() async {
+    await login(_userEmail, _userPassword);
+  }
+
   void _autoLogout() {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
     _logoutTimer = Timer(
-      Duration(seconds: timeToLogout ?? 0),
-      logout,
+      Duration(seconds: timeToLogout! - 60),
+      //logout,
+      keepLogged,
     );
   }
 }

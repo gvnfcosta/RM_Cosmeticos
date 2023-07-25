@@ -8,17 +8,17 @@ import 'category_model.dart';
 
 class CategoryList with ChangeNotifier {
   final String _token;
-  List<Category> _items = [];
+  List<Category> items_ = [];
 
-  List<Category> get items => [..._items];
-  List<Category> get categories => _items.toList();
+  List<Category> get items => [...items_];
+  List<Category> get categories => items_.toList();
 
-  CategoryList(this._token, this._items);
+  CategoryList(this._token, this.items_);
 
-  int get itemsCount => _items.length;
+  int get itemsCount => items_.length;
 
   Future<void> loadCategories() async {
-    _items.clear();
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/categories.json?auth=$_token'));
@@ -27,7 +27,7 @@ class CategoryList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      _items.add(
+      items_.add(
         Category(
           id: dataId,
           nome: dataDados['nome'],
@@ -35,6 +35,7 @@ class CategoryList with ChangeNotifier {
         ),
       );
     });
+    notifyListeners();
   }
 
   Future<void> saveCategories(Map<String, Object> data) {
@@ -65,7 +66,7 @@ class CategoryList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
+    items_.add(
       Category(
         id: id,
         nome: category.nome,
@@ -76,7 +77,7 @@ class CategoryList with ChangeNotifier {
   }
 
   Future<void> updateCategories(Category category) async {
-    int index = _items.indexWhere((p) => p.id == category.id);
+    int index = items_.indexWhere((p) => p.id == category.id);
 
     if (index >= 0) {
       await http.patch(
@@ -88,17 +89,17 @@ class CategoryList with ChangeNotifier {
         }),
       );
 
-      _items[index] = category;
+      items_[index] = category;
       notifyListeners();
     }
   }
 
   Future<void> removeCategories(Category category) async {
-    int index = _items.indexWhere((p) => p.id == category.id);
+    int index = items_.indexWhere((p) => p.id == category.id);
 
     if (index >= 0) {
-      final category = _items[index];
-      _items.remove(category);
+      final category = items_[index];
+      items_.remove(category);
       notifyListeners();
 
       final response = await http.delete(
@@ -107,7 +108,7 @@ class CategoryList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, category);
+        items_.insert(index, category);
         notifyListeners();
         throw HttpException(
           msg: 'Não foi possível excluir esta categoria.',

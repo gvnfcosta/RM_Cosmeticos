@@ -8,17 +8,17 @@ import 'product_model.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
-  List<Product> _items = [];
+  List<Product> items_;
 
-  List<Product> get items => [..._items];
-  List<Product> get product => _items.toList();
+  List<Product> get items => [...items_];
+  List<Product> get products => items_.toList();
 
-  ProductList(this._token, this._items);
+  ProductList(this._token, this.items_);
 
-  int get itemsCount => _items.length;
+  int get itemsCount => items_.length;
 
-  Future<void> loadProducts() async {
-    _items.clear();
+  Future<void> loadData() async {
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'));
@@ -27,7 +27,7 @@ class ProductList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      _items.add(
+      items_.add(
         Product(
           id: dataId,
           code: dataDados['code'],
@@ -37,15 +37,14 @@ class ProductList with ChangeNotifier {
           subCategory: dataDados['subCategory'],
           unit: dataDados['unit'],
           imageUrl: dataDados['imageUrl'],
-          // offer: dataDados['offer'],
-          // price: dataDados['price'],
-          // show: dataDados['show'],
+          show: dataDados['show'],
         ),
       );
     });
+    notifyListeners();
   }
 
-  Future<void> saveProduct(Map<String, Object> dataDados) {
+  Future<void> saveData(Map<String, Object> dataDados) {
     bool hasId = dataDados['id'] != null;
     double idAleatorio = Random().nextDouble() * 100000;
 
@@ -58,19 +57,17 @@ class ProductList with ChangeNotifier {
       subCategory: dataDados['subCategory'] as String,
       unit: dataDados['unit'] as String,
       imageUrl: dataDados['imageUrl'] as String,
-      // offer: dataDados['offer'] as String,
-      // price: dataDados['price'] as double,
-      // show: dataDados['show'] as bool,
+      show: dataDados['show'] as bool,
     );
 
     if (hasId) {
-      return updateProduct(product);
+      return updateData(product);
     } else {
-      return addProduct(product);
+      return addData(product);
     }
   }
 
-  Future<void> addProduct(Product product) async {
+  Future<void> addData(Product product) async {
     final response = await http.post(
       Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
       body: jsonEncode({
@@ -82,14 +79,12 @@ class ProductList with ChangeNotifier {
         'subCategory': product.subCategory,
         'unit': product.unit,
         'imageUrl': product.imageUrl,
-        // 'offer': product.offer,
-        // 'price': product.price,
-        // 'show': product.show,
+        'show': product.show,
       }),
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
+    items_.add(
       Product(
         id: id,
         code: product.code,
@@ -99,20 +94,19 @@ class ProductList with ChangeNotifier {
         subCategory: product.subCategory,
         unit: product.unit,
         imageUrl: product.imageUrl,
-        // offer: product.offer,
-        // price: product.price,
-        // show: product.show,
+        show: product.show,
       ),
     );
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) async {
-    int index = _items.indexWhere((p) => p.id == product.id);
+  Future<void> updateData(Product product) async {
+    int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/products/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           'code': product.code,
           'name': product.name,
@@ -121,31 +115,30 @@ class ProductList with ChangeNotifier {
           'subCategory': product.subCategory,
           'unit': product.unit,
           'imageUrl': product.imageUrl,
-          // 'offer': product.offer,
-          // 'price': product.price,
-          // 'show': product.show,
+          'show': product.show,
         }),
       );
 
-      _items[index] = product;
+      items_[index] = product;
       notifyListeners();
     }
   }
 
-  Future<void> removeProduct(Product product) async {
-    int index = _items.indexWhere((p) => p.id == product.id);
+  Future<void> removeData(Product product) async {
+    int index = items_.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      final product = _items[index];
-      _items.remove(product);
+      final product = items_[index];
+      items_.remove(product);
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/products.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/products/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, product);
+        items_.insert(index, product);
         notifyListeners();
 
         throw HttpException('Não foi possível excluir ${product.name}.');

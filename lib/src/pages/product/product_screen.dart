@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../components/product_show.dart';
+import 'package:rm/src/models/product_filtered.dart';
 import '/src/config/custom_colors.dart';
-import '../../models/product_model.dart';
 import '/src/services/utils_services.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key, required this.product});
+  const ProductScreen({super.key, required this.products});
 
-  final Product product;
+  final ProductFiltered products;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -26,154 +25,100 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productUnit = widget.product;
+    final productUnit = widget.products;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Conteúdo
-          Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (c) {
-                          return ProductShow(product: widget.product);
-                        },
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Hero(
-                      tag: productUnit.imageUrl,
-                      child: InteractiveViewer(
-                        child: Image.network(productUnit.imageUrl),
-                      ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Hero(
+                    tag: productUnit.imageUrl,
+                    child: InteractiveViewer(
+                      child: Image.network(productUnit.imageUrl),
                     ),
                   ),
                 ),
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 52, horizontal: 32),
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(210),
-                  //color: Colors.white,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(50),
+                Container(
+                  height: 200,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(210),
+                    //color: Colors.white,
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.pink.shade300,
+                          offset: const Offset(0, 2)),
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        offset: const Offset(0, 2)),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    //Código
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Código RM ${productUnit.code}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      //Código
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'RM ${productUnit.code}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.italic),
+                            ),
+
+                            // Preço
+                          ),
+                          Text(
+                            utilsServices.priceToCurrency(productUnit.price),
+                            style: customPreco,
+                          ),
+                          Text(
+                            ' / ${productUnit.unit}',
                             style: const TextStyle(
-                                fontSize: 14,
+                              fontSize: 16,
+                              color: Colors.blueGrey,
+                            ),
+                          )
+                        ],
+                      ),
+
+                      //Nome
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Nome: ${productUnit.name}',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.blueGrey,
                                 fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic),
-                          ),
-
-                          // Preço
-                        ),
-                        // Text(
-                        //   utilsServices.priceToCurrency(productUnit.price),
-                        //   style: customPreco,
-                        // ),
-                        // Text(' / ${productUnit.unit}',
-                        //     style: const TextStyle(fontSize: 14)),
-                      ],
-                    ),
-
-                    //Nome
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Nome: ${productUnit.name}',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    //Categoria
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Subcategoria: ${productUnit.category}',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    //SubCategoria
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Subcategoria: ${productUnit.subCategory}',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    //Tipo
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: Text(
-                    //         'Tipo: ${productUnit.offer}',
-                    //         overflow: TextOverflow.ellipsis,
-                    //         style: const TextStyle(
-                    //           fontSize: 18,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-
-                    //Descrição
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        'Descrição: ${widget.product.description}',
-                        style: const TextStyle(
-                            fontSize: 15, height: 1.2, color: Colors.blueGrey),
-                        textAlign: TextAlign.justify,
+                        ],
                       ),
-                    ),
-                  ],
+
+                      //Descrição
+                      Text(
+                        widget.products.description,
+                        style: const TextStyle(
+                            fontSize: 15, color: Colors.blueGrey),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Positioned(
             left: 10,

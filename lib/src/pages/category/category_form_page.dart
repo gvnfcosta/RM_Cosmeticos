@@ -64,18 +64,14 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
   bool _isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-        url.toLowerCase().endsWith('.jpg') ||
-        url.toLowerCase().endsWith('.jpeg');
+
     return isValidUrl;
   }
 
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     _formKey.currentState?.save();
 
@@ -110,14 +106,43 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
       appBar: AppBar(
           title: const Text(
             'Editar Categorias',
-            style: TextStyle(fontSize: 13),
           ),
           actions: [
-            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
+            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              iconSize: 20,
+              color: Colors.white,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir SubCategoria'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                        child: const Text('SIM'),
+                        onPressed: () {
+                          Provider.of<CategoryList>(context, listen: false)
+                              .removeCategories(ModalRoute.of(context)
+                                  ?.settings
+                                  .arguments as Category);
+                          Navigator.of(ctx).pop();
+                          Navigator.of(ctx).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
           ]),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: deviceSize.height,
+          height: deviceSize.height * 0.9,
           width: deviceSize.width,
           child: Column(
             children: [
@@ -140,7 +165,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                 ),
               ),
               Container(
-                height: 250,
+                height: 320,
                 padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -183,10 +208,25 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                                     }),
                               ),
                             ),
+                            const Text(
+                              'CUIDADO',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red),
+                            ),
+                            const Text(
+                              'Se você já tiver cadastrado produtos com esta categoria e mudar o nome ou excluí-la deverá ter problemas. Você pode alterar a imagem.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: TextFormField(
-                                maxLines: 3,
+                                maxLines: 5,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: InputDecoration(
                                     labelText: 'Url da Imagem',

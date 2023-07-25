@@ -18,20 +18,15 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserList>(
-      context,
-      listen: false,
-    ).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserList>(context);
-    final List<UserModel> users = provider.user.toList();
+    final List<UserModel> users = provider.items.toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -39,49 +34,38 @@ class _UsersScreenState extends State<UsersScreen> {
         backgroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-        title: const Text('USUÁRIOS', style: TextStyle(color: Colors.red)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (c) => const UserFormPage()),
-              );
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.orange,
-            ),
-          ),
-        ],
+        // title: const Text('USUÁRIOS', style: TextStyle(color: Colors.red)),
       ),
 
       // Campo Pesquisa
       body: !_isLoading
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Expanded(
-                    child: GridView.builder(
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: users.length,
+                      separatorBuilder: (_, index) => const Divider(),
                       itemBuilder: (_, i) {
                         return UserTile(user: users[i]);
                       },
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 300,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 10 / 7,
-                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           : const Center(),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (c) => const UserFormPage()),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

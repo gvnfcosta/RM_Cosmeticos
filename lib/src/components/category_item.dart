@@ -1,68 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/category_list.dart';
 import '../models/category_model.dart';
 import '../utils/app_routes.dart';
 
-class CategoryItem extends StatelessWidget {
+class CategoryItem extends StatefulWidget {
   final Category category;
   const CategoryItem(this.category, {Key? key}) : super(key: key);
 
   @override
+  State<CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<CategoryItem> {
+  bool isHover = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: SizedBox(
-            width: 66,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(AppRoutes.categoryForm, arguments: widget.category);
+      },
+      child: Card(
+        elevation: 2,
+        child: Column(children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            height: 120,
+            width: 120,
             child: Image.network(
-              category.imageUrl,
+              widget.category.imageUrl,
               fit: BoxFit.contain,
-            )),
-        title: Container(
-            alignment: Alignment.center,
-            child: Text(category.nome, style: const TextStyle(fontSize: 13))),
-        trailing: SizedBox(
-          width: 96,
-          child: Row(
-            children: [
-              IconButton(
-                  icon: const Icon(Icons.edit),
-                  iconSize: 20,
-                  color: Colors.purple,
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.categoryForm, arguments: category);
-                  }),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                iconSize: 20,
-                color: Theme.of(context).colorScheme.error,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Excluir Categoria'),
-                      content: const Text('Tem certeza?'),
-                      actions: [
-                        TextButton(
-                            child: const Text('NÃO'),
-                            onPressed: () => Navigator.of(ctx).pop()),
-                        TextButton(
-                          child: const Text('SIM'),
-                          onPressed: () {
-                            Provider.of<CategoryList>(context, listen: false)
-                                .removeCategories(category);
-                            Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )
-            ],
+            ),
           ),
-        ),
+          Text(
+            widget.category.nome,
+            style: const TextStyle(fontSize: 10),
+          ),
+        ]),
       ),
     );
   }
