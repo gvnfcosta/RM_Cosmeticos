@@ -22,6 +22,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final utilsServices = UtilsServices();
 
   bool _isLoading = true;
+  bool _visibleIcon = true;
 
   final _codeFocus = FocusNode();
   final _nameFocus = FocusNode();
@@ -320,24 +321,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.visibility,
-                                          color: Colors.indigo,
-                                        ),
-                                        Switch(
-                                            value: _formData['show'] as bool,
-                                            activeColor: Colors.blue,
-                                            onChanged: (bool value) {
-                                              setState(() {
-                                                _formData['show'] = value;
-                                              });
-                                            }),
-                                      ],
-                                    ),
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 15,
+                                        child: _visibleIcon
+                                            ? const Icon(
+                                                Icons.visibility,
+                                                color: Colors.indigo,
+                                              )
+                                            : const Icon(
+                                                Icons.visibility_off,
+                                                color: Colors.red,
+                                              ),
+                                      ),
+                                      Switch(
+                                          value: _formData['show'] as bool,
+                                          activeColor: Colors.blue,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              _formData['show'] = value;
+                                              _visibleIcon = !_visibleIcon;
+                                            });
+                                          }),
+                                    ],
                                   ),
                                 ]),
                             Row(

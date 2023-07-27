@@ -78,55 +78,71 @@ class _CatalogTabState extends State<CatalogTab> {
                           itemBuilder: (_, index) {
                             List<ProductFiltered> productsFiltered = widget
                                 .items
-                                .where((element) =>
-                                    element.category == category[index].nome)
-                                .toList();
+                              ..sort((a, b) =>
+                                  a.pageNumber.compareTo(b.pageNumber))
+                              ..sort((a, b) =>
+                                  a.itemNumber.compareTo(b.itemNumber));
+
+                            // List<ProductFiltered> productsFiltered =
+                            //     widget.items
+                            //         //  -------> AQUI
+                            //         .where((element) => element.pageNumber == 1)
+                            //         .toList();
+
+                            // List<ProductFiltered> productsFiltered = widget
+                            //     .items
+                            //     .where((element) =>
+                            //         element.category == category[index].nome)
+                            //     .toList();
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8, bottom: 5),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 30,
-                                              width: 280,
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  stops: const [0.1, 0.5, 1],
-                                                  colors: [
-                                                    Colors.pink.shade800,
-                                                    Colors.pink.shade100,
-                                                    Colors.white,
-                                                  ],
-                                                ),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    ' ${category[index].nome}',
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w200,
-                                                        fontSize: 23,
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
+                                    ? const SizedBox.shrink()
+                                    // Padding(
+                                    //     padding: const EdgeInsets.only(
+                                    //         top: 8, bottom: 5),
+                                    //     child: Row(
+                                    //       children: [
+                                    //         Container(
+                                    //           height: 30,
+                                    //           width: 280,
+                                    //           decoration: BoxDecoration(
+                                    //             gradient: LinearGradient(
+                                    //               stops: const [0.1, 0.5, 1],
+                                    //               colors: [
+                                    //                 Colors.pink.shade800,
+                                    //                 Colors.pink.shade100,
+                                    //                 Colors.white,
+                                    //               ],
+                                    //             ),
+                                    //           ),
+                                    //           child:
+                                    //  Row(
+                                    //   children: [
+                                    //     Text(
+                                    //       ' ${category[index].nome}',
+                                    //       style: const TextStyle(
+                                    //           fontWeight:
+                                    //               FontWeight.w200,
+                                    //           fontSize: 23,
+                                    //           color: Colors.white),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // )
                                     : const Center(),
                                 RefreshIndicator(
                                   onRefresh: () => _refreshData(context),
                                   child: GridView.builder(
+                                    //scrollDirection: Axis.horizontal,
                                     physics: const BouncingScrollPhysics(),
                                     shrinkWrap: true,
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 120,
+                                      maxCrossAxisExtent: 320,
                                       childAspectRatio: 3 / 6,
                                     ),
                                     itemCount: productsFiltered.length,

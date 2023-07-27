@@ -8,7 +8,6 @@ import 'package:rm/src/models/product_list.dart';
 import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/pages/catalogs/components/filtra_catalogo.dart';
 import 'package:rm/src/pages/home/catalog_tab.dart';
-import 'package:rm/src/pages/home/category_tab.dart';
 
 class CatalogProductsPage extends StatefulWidget {
   const CatalogProductsPage(this.catalog, {super.key});
@@ -58,29 +57,31 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       // Campo Pesquisa
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController, //indica qual a tela aberta
-              children: [
-                CatalogTab(items: items),
-                CategoryTab(items: items),
-              ],
-            ),
+          : CatalogTab(items: items),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (indice) {
-          setState(() {
-            currentIndex = indice;
-            pageController.jumpToPage(indice); //muda a tela pelo indice
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.pink.shade600,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white.withAlpha(100),
-        items: navigationItems,
-      ),
+      // PageView(
+      //     physics: const NeverScrollableScrollPhysics(),
+      //     controller: pageController, //indica qual a tela aberta
+      //     children: [
+      //       CatalogTab(items: items),
+      //       CategoryTab(items: items),
+      //     ],
+      //   ),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: currentIndex,
+      //   onTap: (indice) {
+      //     setState(() {
+      //       currentIndex = indice;
+      //       pageController.jumpToPage(indice); //muda a tela pelo indice
+      //     });
+      //   },
+      //   type: BottomNavigationBarType.fixed,
+      //   backgroundColor: Colors.pink.shade600,
+      //   selectedItemColor: Colors.white,
+      //   unselectedItemColor: Colors.white.withAlpha(100),
+      //   items: navigationItems,
+      // ),
     );
   }
 

@@ -28,6 +28,10 @@ final _formData = <String, Object>{};
 String? selectedProduct;
 
 class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
+  final _priceFocus = FocusNode();
+  final _pageNumberFocus = FocusNode();
+  final _itemNumberFocus = FocusNode();
+
   @override
   void initState() {
     _formData.clear();
@@ -43,6 +47,14 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _priceFocus.dispose();
+    _pageNumberFocus.dispose();
+    _itemNumberFocus.dispose();
   }
 
   Future<void> _submitForm() async {
@@ -190,7 +202,9 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                                   ),
                                   onSaved: (price) => _formData['price'] =
                                       double.parse(price ?? '0.0'),
-                                  onFieldSubmitted: (_) => _submitForm(),
+                                  onFieldSubmitted: (_) =>
+                                      FocusScope.of(context)
+                                          .requestFocus(_pageNumberFocus),
                                   validator: (price_) {
                                     final priceString = price_ ?? '';
                                     final price =
@@ -202,6 +216,64 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
 
                                     return null;
                                   }),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  style: const TextStyle(fontSize: 14),
+                                  initialValue:
+                                      _formData['pageNumber']?.toString() ??
+                                          '0',
+                                  decoration: InputDecoration(
+                                      labelText: 'Página',
+                                      labelStyle: const TextStyle(fontSize: 12),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8))),
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: false,
+                                    signed: false,
+                                  ),
+                                  onSaved: (page) => _formData['pageNumber'] =
+                                      int.parse(page ?? '0'),
+                                  onFieldSubmitted: (_) =>
+                                      FocusScope.of(context)
+                                          .requestFocus(_itemNumberFocus),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  style: const TextStyle(fontSize: 14),
+                                  initialValue:
+                                      _formData['itemNumber']?.toString() ??
+                                          '0',
+                                  decoration: InputDecoration(
+                                      labelText: 'Sequência',
+                                      labelStyle: const TextStyle(fontSize: 12),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8))),
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: false,
+                                    signed: false,
+                                  ),
+                                  onSaved: (item) => _formData['itemNumber'] =
+                                      int.parse(item ?? '0'),
+                                  onFieldSubmitted: (_) => _submitForm(),
+                                ),
+                              ),
                             ),
                           ],
                         ),

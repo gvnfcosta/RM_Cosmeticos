@@ -35,6 +35,8 @@ class CatalogProductsList with ChangeNotifier {
           price: dataDados['price'],
           seller: dataDados['seller'],
           catalog: dataDados['catalog'],
+          pageNumber: dataDados['pageNumber'] ?? 0,
+          itemNumber: dataDados['itemNumber'] ?? 0,
         ),
       );
     });
@@ -49,7 +51,9 @@ class CatalogProductsList with ChangeNotifier {
         productId: dataDados['productId'] as String,
         price: dataDados['price'] as double,
         seller: dataDados['seller'] as String,
-        catalog: dataDados['catalog'] as String);
+        catalog: dataDados['catalog'] as String,
+        pageNumber: dataDados['pageNumber'] as int,
+        itemNumber: dataDados['itemNumber'] as int);
 
     if (hasId) {
       return updateData(product);
@@ -67,6 +71,8 @@ class CatalogProductsList with ChangeNotifier {
         'price': product.price,
         'seller': product.seller,
         'catalog': product.catalog,
+        'pageNumber': product.pageNumber,
+        'itemNumber': product.itemNumber,
       }),
     );
 
@@ -78,6 +84,8 @@ class CatalogProductsList with ChangeNotifier {
         price: product.price,
         seller: product.seller,
         catalog: product.catalog,
+        pageNumber: product.pageNumber,
+        itemNumber: product.itemNumber,
       ),
     );
     notifyListeners();
@@ -95,13 +103,15 @@ class CatalogProductsList with ChangeNotifier {
       final product = items_[index];
       await http.patch(
         Uri.parse(
-            '${Constants.baseUrl}/catalog_products/${item.id}.json?auth=$_token'),
+            '${Constants.baseUrl}/catalog_products/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           'id': item.id,
           'productId': item.productId,
           'price': item.price,
           'seller': item.seller,
           'catalog': item.catalog,
+          'pageNumber': item.pageNumber,
+          'itemNumber': item.itemNumber,
         }),
       );
 

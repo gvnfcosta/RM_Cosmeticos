@@ -11,6 +11,8 @@ class ProductFiltered {
   String unit;
   String imageUrl;
   double price;
+  int pageNumber;
+  int itemNumber;
 
   ProductFiltered({
     required this.id,
@@ -25,5 +27,7 @@ class ProductFiltered {
     required this.unit,
     required this.imageUrl,
     required this.price,
+    required this.pageNumber,
+    required this.itemNumber,
   });
 }

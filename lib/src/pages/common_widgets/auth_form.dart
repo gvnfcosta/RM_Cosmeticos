@@ -6,7 +6,6 @@ import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
 bool isWeb = false;
-// bool isWeb = false;
 
 enum AuthMode { signup, login }
 

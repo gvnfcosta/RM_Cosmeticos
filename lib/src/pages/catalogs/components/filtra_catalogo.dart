@@ -10,8 +10,13 @@ filtraCatalogo(products, catalogProduct) {
     List<CatalogProducts> catalog =
         (catalogProduct.where((t) => t.productId == productName)).toList();
 
+    // CatalogProducts? get catalog =>
+    //   catalogProduct.firstWhereOrNull((element) => element.productId == productName);
+
     String id;
     double price;
+    int pageNumber;
+    int itemNumber;
     String sellerName;
     String catalogName;
 
@@ -20,6 +25,8 @@ filtraCatalogo(products, catalogProduct) {
       catalogName = catalog.first.catalog;
       id = catalog.first.id;
       price = catalog.first.price;
+      pageNumber = catalog.first.pageNumber;
+      itemNumber = catalog.first.itemNumber;
 
       items.add(
         ProductFiltered(
@@ -34,6 +41,8 @@ filtraCatalogo(products, catalogProduct) {
           show: element.show,
           unit: element.unit,
           imageUrl: element.imageUrl,
+          pageNumber: pageNumber,
+          itemNumber: itemNumber,
           price: price,
         ),
       );

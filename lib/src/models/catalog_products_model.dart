@@ -5,6 +5,8 @@ class CatalogProducts with ChangeNotifier {
   String productId;
   String seller;
   String catalog;
+  int pageNumber;
+  int itemNumber;
   double price;
 
   CatalogProducts({
@@ -12,6 +14,8 @@ class CatalogProducts with ChangeNotifier {
     required this.productId,
     required this.seller,
     required this.catalog,
+    required this.pageNumber,
+    required this.itemNumber,
     required this.price,
   });
 }

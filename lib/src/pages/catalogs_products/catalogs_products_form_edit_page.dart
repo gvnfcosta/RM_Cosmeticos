@@ -21,6 +21,10 @@ String? selectedProduct;
 
 class _CatalogProductsFormEditPageState
     extends State<CatalogProductsFormEditPage> {
+  final _priceFocus = FocusNode();
+  final _pageNumberFocus = FocusNode();
+  final _itemNumberFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -51,10 +55,20 @@ class _CatalogProductsFormEditPageState
         _formData['seller'] = catalogProduct.seller;
         seller = catalogProduct.seller;
         _formData['catalog'] = catalogProduct.catalog;
+        _formData['pageNumber'] = catalogProduct.pageNumber;
+        _formData['itemNumber'] = catalogProduct.itemNumber;
         catalog = catalogProduct.catalog;
         selectedProduct = _formData['productId'].toString();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _priceFocus.dispose();
+    _pageNumberFocus.dispose();
+    _itemNumberFocus.dispose();
   }
 
   Future<void> _submitForm() async {
@@ -102,6 +116,7 @@ class _CatalogProductsFormEditPageState
               child: Form(
                 key: _formKey,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('$selectedProduct',
                         style: const TextStyle(
@@ -137,6 +152,58 @@ class _CatalogProductsFormEditPageState
 
                             return null;
                           }),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: TextFormField(
+                              style: const TextStyle(fontSize: 14),
+                              initialValue:
+                                  _formData['pageNumber']?.toString() ?? '0',
+                              decoration: InputDecoration(
+                                  labelText: 'Página',
+                                  labelStyle: const TextStyle(fontSize: 12),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8))),
+                              textInputAction: TextInputAction.next,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: false,
+                                signed: false,
+                              ),
+                              onSaved: (page) => _formData['pageNumber'] =
+                                  int.parse(page ?? '0'),
+                              onFieldSubmitted: (_) => FocusScope.of(context)
+                                  .requestFocus(_itemNumberFocus),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            style: const TextStyle(fontSize: 14),
+                            initialValue:
+                                _formData['itemNumber']?.toString() ?? '0',
+                            decoration: InputDecoration(
+                                labelText: 'Sequência',
+                                labelStyle: const TextStyle(fontSize: 12),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            textInputAction: TextInputAction.next,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false,
+                              signed: false,
+                            ),
+                            onSaved: (item) => _formData['itemNumber'] =
+                                int.parse(item ?? '0'),
+                            onFieldSubmitted: (_) => _submitForm(),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

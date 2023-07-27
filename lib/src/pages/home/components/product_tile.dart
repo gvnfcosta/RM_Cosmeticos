@@ -33,7 +33,7 @@ class ProductTile extends StatelessWidget {
               children: [
                 //Imagem
                 Container(
-                  height: 100,
+                  height: 250,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.network(products.imageUrl),
                 ),
@@ -44,7 +44,7 @@ class ProductTile extends StatelessWidget {
                   child: Text(
                     'RM ${products.code}',
                     style: const TextStyle(
-                        fontSize: 10, fontStyle: FontStyle.italic),
+                        fontSize: 13, fontStyle: FontStyle.italic),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -52,7 +52,7 @@ class ProductTile extends StatelessWidget {
                 //Nome
                 Text(
                   products.name,
-                  style: const TextStyle(fontSize: 11),
+                  style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
 
@@ -64,7 +64,7 @@ class ProductTile extends StatelessWidget {
                       utilsServices.priceToCurrency(products.price),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 13,
+                        fontSize: 18,
                         color: CustomColors.customSwatchColor,
                       ),
                     ),
