@@ -1,43 +1,41 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/src/components/app_drawer.dart';
+import '/src/config/app_data.dart' as appData;
 import '../../models/auth.dart';
 import '../../models/user_list.dart';
-import '../../models/user_model.dart';
 import '../../utils/app_routes.dart';
 import '/src/pages/common_widgets/custom_text_field.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
-
   @override
   State<ProfileTab> createState() => _ProfileTabState();
 }
 
 bool _isLoading = true;
-bool isAdmin = false;
 
 class _ProfileTabState extends State<ProfileTab> {
   @override
   void initState() {
     super.initState();
-
-    Provider.of<UserList>(context, listen: false).loadData().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<UserList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context);
+    Auth auth = Provider.of(context, listen: false);
 
-    List<UserModel> user = Provider.of<UserList>(context).usuario;
-    if (user.isNotEmpty) {
-      isAdmin = user.first.level == 5;
-    }
+    UserList userProvider = Provider.of<UserList>(context);
+
+    String? userName = userProvider.userName;
+    bool isAdmin = userProvider.isAdmin;
+    int? userLevel = userProvider.userLevel;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,10 +43,7 @@ class _ProfileTabState extends State<ProfileTab> {
         actions: [
           IconButton(
             onPressed: () {
-              Provider.of<Auth>(
-                context,
-                listen: false,
-              ).logout();
+              Provider.of<Auth>(context, listen: false).logout();
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.authOrHome,
               );
@@ -88,18 +83,16 @@ class _ProfileTabState extends State<ProfileTab> {
                 //Email
                 CustomTextField(
                     readOnly: true,
-                    initialValue: user.first.name,
+                    initialValue: userName,
                     icon: Icons.nature_people,
                     label: 'Usuário'),
-
                 // Nome
                 CustomTextField(
                   readOnly: true,
-                  initialValue: user.first.level.toString(),
+                  initialValue: appData.Constants.levels[userLevel],
                   icon: Icons.person,
                   label: 'Nível',
                 ),
-
                 // Nome
                 CustomTextField(
                   readOnly: true,
@@ -107,7 +100,6 @@ class _ProfileTabState extends State<ProfileTab> {
                   icon: Icons.person,
                   label: 'Email',
                 ),
-
                 //Botão para atualizar a senha
                 SizedBox(
                   height: 50,
@@ -147,35 +139,30 @@ class _ProfileTabState extends State<ProfileTab> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
-
                       // Título
                       child: Text('Atualização de Senha',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                     ),
-
                     // Senha atual
                     const CustomTextField(
                       isSecret: true,
                       icon: Icons.lock,
                       label: 'Senha atual',
                     ),
-
                     // Nova senha
                     const CustomTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Nova senha',
                     ),
-
                     //Confirmação nova senha
                     const CustomTextField(
                       isSecret: true,
                       icon: Icons.lock_outline,
                       label: 'Confirmar nova senha',
                     ),
-
                     // Botão de confirmação
                     SizedBox(
                       height: 45,
@@ -198,7 +185,6 @@ class _ProfileTabState extends State<ProfileTab> {
                 child: IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    ;
                   },
                   icon: const Icon(Icons.close),
                 ),

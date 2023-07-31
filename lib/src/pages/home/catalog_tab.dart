@@ -1,120 +1,73 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/category_list.dart';
-import '../../models/category_model.dart';
-import '../../models/product_list.dart';
-import '../../models/product_model.dart';
-import '../pdf/pdf_page.dart';
+import 'package:rm/src/models/catalog_list.dart';
+import 'package:rm/src/models/product_filtered.dart';
+import 'package:rm/src/models/product_list.dart';
 import 'components/product_tile.dart';
-import '../../config/app_data.dart' as appData;
 
 class CatalogTab extends StatefulWidget {
-  const CatalogTab({super.key, required this.selectedCategory});
+  const CatalogTab({super.key, required this.items});
 
-  final String selectedCategory;
+  final List<ProductFiltered> items;
+
   @override
   State<CatalogTab> createState() => _CatalogTabState();
 }
 
-class _CatalogTabState extends State<CatalogTab> {
-  bool _isLoading = true;
-  String selectedTipo = appData.ofertas[0];
+bool _isLoading = true;
 
+class _CatalogTabState extends State<CatalogTab> {
   @override
   void initState() {
     super.initState();
 
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadProducts().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    // Provider.of<CategoryList>(context, listen: false).loadCategories();
+    Provider.of<ProductList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductList>(context).product.toList()
-      // .where((element) => element.show)
-      // .toList()
-      // .where((element) => element.offer == selectedTipo)
-      // .toList()
-      ..sort((a, b) => a.name.compareTo(b.name));
+    // final List<Category> category = Provider.of<CategoryList>(context)
+    //     .categories
+    //     .toList()
+    //   ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    final List<Category> category = Provider.of<CategoryList>(context)
-        .categories
-        .toList()
-      ..sort((a, b) => a.nome.compareTo(b.nome));
+    List<ProductFiltered> items = widget.items
+      ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)))
+      ..sort(((a, b) => a.pageNumber.compareTo(b.pageNumber)));
 
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.pinkAccent,
-              title: Row(
-                children: [
-                  Container(
-                      width: 80,
-                      transform: Matrix4.rotationZ(-8 * pi / 150)
-                        ..translate(0.0, 6),
-                      child: Image.asset("assets/images/LogoRM.png")),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '  Produtos $selectedTipo',
-                          style: const TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+    String catalogoName = '';
+    widget.items.isNotEmpty ? catalogoName = widget.items.first.catalog : null;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent[100],
+        title: Row(
+          children: [
+            Container(
+                width: 80,
+                transform: Matrix4.rotationZ(-8 * pi / 150)..translate(0.0, 6),
+                child: Image.asset("assets/images/LogoRM.png")),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(catalogoName,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w300,
+                    )),
               ),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const PdfPage(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.picture_as_pdf)),
-                PopupMenuButton(
-                  icon: const Icon(Icons.more_vert),
-                  itemBuilder: (_) => List.generate(
-                    appData.ofertas.length,
-                    (i) => PopupMenuItem(
-                      value: appData.ofertas[i],
-                      height: 30,
-                      child: Text(appData.ofertas[i]),
-                    ),
-                  ),
-                  onSelected: (valor) => setState(
-                    () {
-                      setState(() {
-                        selectedTipo = valor.toString();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            body: SafeArea(
+            )
+          ],
+        ),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
               child: CustomScrollView(
                 slivers: [
                   SliverList(
@@ -123,18 +76,24 @@ class _CatalogTabState extends State<CatalogTab> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: category.length,
+                          itemCount: items.length + 1,
                           itemBuilder: (_, index) {
-                            List<Product> productsFiltered = products
-                                .where((element) =>
-                                    element.category == category[index].nome)
+                            List<ProductFiltered> productsFiltered = items
+                                .where((element) => element.pageNumber == index)
                                 .toList();
+
+                            // List<ProductFiltered> productsFiltered = widget
+                            //     .items
+                            //     .where((element) =>
+                            //         element.category == category[index].nome)
+                            //     .toList();
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty
-                                    ? Padding(
+                                    ? //const SizedBox.shrink()
+                                    Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 10, bottom: 8),
+                                            top: 5, left: 5),
                                         child: Row(
                                           children: [
                                             Container(
@@ -142,10 +101,10 @@ class _CatalogTabState extends State<CatalogTab> {
                                               width: 280,
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
-                                                  stops: const [0.1, 0.5, 1],
+                                                  stops: const [0.3, 0.6, 1],
                                                   colors: [
                                                     Colors.pink.shade800,
-                                                    Colors.pink.shade100,
+                                                    Colors.pink.shade200,
                                                     Colors.white,
                                                   ],
                                                 ),
@@ -153,11 +112,11 @@ class _CatalogTabState extends State<CatalogTab> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    ' ${category[index].nome}',
+                                                    '  Página $index',
                                                     style: const TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w200,
-                                                        fontSize: 23,
+                                                            FontWeight.w300,
+                                                        fontSize: 20,
                                                         color: Colors.white),
                                                   ),
                                                 ],
@@ -166,26 +125,25 @@ class _CatalogTabState extends State<CatalogTab> {
                                           ],
                                         ),
                                       )
-                                    : const SizedBox(),
-                                productsFiltered.isNotEmpty
-                                    ? GridView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 130,
-                                          mainAxisSpacing: 1,
-                                          crossAxisSpacing: 1,
-                                          childAspectRatio: 10 / 16,
-                                        ),
-                                        itemCount: productsFiltered.length,
-                                        itemBuilder: (_, index) {
-                                          return ProductTile(
-                                              product: productsFiltered[index]);
-                                        },
-                                      )
-                                    : const SizedBox(),
+                                    : const Center(),
+                                RefreshIndicator(
+                                  onRefresh: () => _refreshData(context),
+                                  child: GridView.builder(
+                                    //scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 250,
+                                      childAspectRatio: 0.75,
+                                    ),
+                                    itemCount: productsFiltered.length,
+                                    itemBuilder: (_, index) {
+                                      return ProductTile(
+                                          products: productsFiltered[index]);
+                                    },
+                                  ),
+                                )
                               ],
                             );
                           },
@@ -196,13 +154,10 @@ class _CatalogTabState extends State<CatalogTab> {
                 ],
               ),
             ),
-          );
+    );
   }
 }
 
-Future<void> _refreshProducts(BuildContext context) {
-  return Provider.of<ProductList>(
-    context,
-    listen: false,
-  ).loadProducts();
+Future<void> _refreshData(BuildContext context) {
+  return Provider.of<CatalogList>(context, listen: false).loadData();
 }

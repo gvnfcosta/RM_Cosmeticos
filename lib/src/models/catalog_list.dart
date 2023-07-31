@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../exceptions/http_exception.dart';
 import 'package:http/http.dart' as http;
 import '../config/app_data.dart';
 import 'catalog_model.dart';
@@ -10,16 +10,16 @@ class CatalogList with ChangeNotifier {
   final String _token;
   final String _seller;
 
-  List<CatalogModel> _items = [];
-  List<CatalogModel> get items => [..._items];
-  List<CatalogModel> get lista => _items.toList();
+  List<CatalogModel> items_ = [];
+  List<CatalogModel> get items => [...items_];
+  List<CatalogModel> get lista => items_.toList();
 
-  CatalogList(this._token, this._seller, this._items);
+  CatalogList(this._token, this._seller, this.items_);
 
-  int get itemsCount => _items.length;
+  int get itemsCount => items_.length;
 
   Future<void> loadData() async {
-    _items.clear();
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/catalogs.json?auth=$_token'));
@@ -28,7 +28,7 @@ class CatalogList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      _items.add(
+      items_.add(
         CatalogModel(
           id: dataId,
           name: dataDados['name'],
@@ -37,6 +37,7 @@ class CatalogList with ChangeNotifier {
         ),
       );
     });
+    notifyListeners();
   }
 
   Future<void> saveData(Map<String, Object> dataDados) {
@@ -69,7 +70,7 @@ class CatalogList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
+    items_.add(
       CatalogModel(
         id: id,
         name: catalog.name,
@@ -81,7 +82,7 @@ class CatalogList with ChangeNotifier {
   }
 
   Future<void> updateData(CatalogModel catalog) async {
-    int index = _items.indexWhere((e) => e.id == catalog.id);
+    int index = items_.indexWhere((e) => e.id == catalog.id);
 
     if (index >= 0) {
       await http.patch(
@@ -95,16 +96,17 @@ class CatalogList with ChangeNotifier {
         }),
       );
 
-      _items[index] = catalog;
+      items_[index] = catalog;
       notifyListeners();
     }
   }
 
   Future<void> removeData(CatalogModel catalog) async {
-    int index = _items.indexWhere((e) => e.id == catalog.id);
+    int index = items_.indexWhere((e) => e.id == catalog.id);
 
     if (index >= 0) {
-      _items.remove(catalog);
+      final catalog = items_[index];
+      items_.remove(catalog);
       notifyListeners();
 
       final response = await http.delete(
@@ -113,10 +115,12 @@ class CatalogList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, catalog);
+        items_.insert(index, catalog);
         notifyListeners();
-
-        throw const HttpException('Não foi possível excluir o Catálogo}.');
+        throw HttpException(
+          msg: 'Não foi possível excluir esta categoria.',
+          statusCode: response.statusCode,
+        );
       }
     }
   }

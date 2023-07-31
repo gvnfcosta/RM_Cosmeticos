@@ -6,24 +6,29 @@ import 'package:http/http.dart' as http;
 import '../config/app_data.dart';
 import 'user_model.dart';
 
+import 'package:collection/collection.dart';
+
 class UserList with ChangeNotifier {
   final String _token;
   final String _email;
 
-  List<UserModel> _items = [];
+  List<UserModel> items_;
 
-  List<UserModel> get items => [..._items];
-  List<UserModel> get user => _items.toList();
+  List<UserModel> get items => [...items_];
 
-  UserList(this._token, this._email, this._items);
+  UserList(this._token, this._email, this.items_);
 
-  int get itemsCount => _items.length;
+  int get itemsCount => items_.length;
 
-  List<UserModel> get usuario =>
-      items.where((element) => element.email == _email).toList();
+  UserModel? get firstUser =>
+      items_.firstWhereOrNull((element) => element.email == _email);
+
+  int? get userLevel => firstUser?.level;
+  bool get isAdmin => userLevel == 0;
+  String? get userName => firstUser?.name;
 
   Future<void> loadData() async {
-    _items.clear();
+    items_.clear();
 
     final response = await http
         .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
@@ -32,11 +37,12 @@ class UserList with ChangeNotifier {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((dataId, dataDados) {
-      _items.add(
+      items_.add(
         UserModel(
           id: dataId,
           name: dataDados['name'],
           email: dataDados['email'],
+          password: '123456',
           discount: dataDados['discount'],
           level: dataDados['level'],
         ),
@@ -52,6 +58,7 @@ class UserList with ChangeNotifier {
       id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
       name: dataDados['name'] as String,
       email: dataDados['email'] as String,
+      password: dataDados['password'] as String,
       discount: dataDados['discount'] as double,
       level: dataDados['level'] as int,
     );
@@ -70,17 +77,19 @@ class UserList with ChangeNotifier {
         'id': user.id,
         'name': user.name,
         'email': user.email,
+        'password': user.password,
         'discount': user.discount,
         'level': user.level,
       }),
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
+    items_.add(
       UserModel(
         id: id,
         name: user.name,
         email: user.email,
+        password: user.password,
         discount: user.discount,
         level: user.level,
       ),
@@ -89,7 +98,7 @@ class UserList with ChangeNotifier {
   }
 
   Future<void> updateData(UserModel user) async {
-    int index = _items.indexWhere((e) => e.id == user.id);
+    int index = items_.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
       await http.patch(
@@ -98,21 +107,22 @@ class UserList with ChangeNotifier {
           'id': user.id,
           'name': user.name,
           'email': user.email,
+          'password': user.password,
           'discount': user.discount,
           'level': user.level,
         }),
       );
 
-      _items[index] = user;
+      items_[index] = user;
       notifyListeners();
     }
   }
 
   Future<void> removeData(UserModel user) async {
-    int index = _items.indexWhere((e) => e.id == user.id);
+    int index = items_.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
-      _items.remove(user);
+      items_.remove(user);
       notifyListeners();
 
       final response = await http.delete(
@@ -120,10 +130,10 @@ class UserList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, user);
+        items_.insert(index, user);
         notifyListeners();
 
-        throw HttpException('Não foi possível excluir ${usuario.first.name}}.');
+        throw HttpException('Não foi possível excluir ${user.name}}.');
       }
     }
   }

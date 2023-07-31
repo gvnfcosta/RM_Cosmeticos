@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import '../../../utils/app_routes.dart';
+import 'package:rm/src/utils/app_routes.dart';
 import '/src/services/utils_services.dart';
 import '../../../models/user_model.dart';
 
@@ -20,56 +22,41 @@ class UserTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (user.level == 0) corCartao = Colors.red.shade50;
-    if (user.level == 1) corCartao = Colors.green.shade50;
+    if (user.level != 0) corCartao = Colors.green.shade50;
 
-    return Card(
-      color: corCartao,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Expanded(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(levels[user.level].toString()),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.userForm, arguments: user);
-                    },
-                    icon: const Icon(Icons.edit, color: Colors.red),
-                  ),
-                ],
-              ),
-              Text(
-                user.name,
-                style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                user.email,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w300, color: Colors.blue),
-              ),
-              const SizedBox(height: 10),
-              user.level == 1
-                  ? ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AppRoutes.baseScreen, arguments: user);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text('Catálogos '),
-                          Icon(Icons.list, color: Colors.white),
-                        ],
-                      ))
-                  : const SizedBox(height: 30),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRoutes.userForm, arguments: user);
+      },
+      child: Card(
+        //color: corCartao,
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: ListTile(
+            leading: SizedBox(
+                width: 100,
+                child: Text(
+                  levels[user.level].toString(),
+                  style: const TextStyle(color: Colors.black),
+                )),
+            title: Text(
+              user.name,
+              style: const TextStyle(
+                  fontSize: 15, color: Colors.red, fontWeight: FontWeight.w400),
+            ),
+            subtitle: Text(
+              user.email,
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+            ),
+            trailing: CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.grey,
+              backgroundImage: FileImage(File('assets/images/avatar.jpg')),
+            ),
           ),
         ),
       ),

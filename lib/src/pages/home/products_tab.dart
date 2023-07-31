@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/product_filtered.dart';
+import 'package:rm/src/pages/home/components/product_tile.dart';
 import '../../models/product_list.dart';
-import '../../models/product_model.dart';
-import 'components/product_tile.dart';
 
 class ProductsTab extends StatefulWidget {
-  ProductsTab(this.selectedCategory, {super.key});
+  const ProductsTab({
+    super.key,
+    required this.selectedCategory,
+    required this.items,
+  });
 
-  String selectedCategory;
+  final String selectedCategory;
+  final List<ProductFiltered> items;
+
   @override
   State<ProductsTab> createState() => _ProductsTabState();
-}
-
-Future<void> _refreshProducts(BuildContext context) {
-  return Provider.of<ProductList>(
-    context,
-    listen: false,
-  ).loadProducts();
 }
 
 class _ProductsTabState extends State<ProductsTab> {
@@ -26,42 +25,23 @@ class _ProductsTabState extends State<ProductsTab> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadProducts().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    Provider.of<CategoryList>(
-      context,
-      listen: false,
-    ).loadCategories().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    Provider.of<ProductList>(context, listen: false)
+        .loadData()
+        .then((value) => setState(() => _isLoading = false));
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context);
-
-    final List<Product> products = provider.product.toList()
-      // .where((element) => element.show)
-      // .toList()
+    final List<ProductFiltered> products = widget.items
+        .where((element) => element.category == widget.selectedCategory)
+        .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
-    List<Product> productsFiltered = products
-        // .where((element) =>
-        //     element.category == widget.selectedCategory && element.show)
-        .toList();
-
-    final CategoryList category = Provider.of(context);
-
     double tamanhoTela = MediaQuery.of(context).size.width;
-    int quantidadeItemsTela = tamanhoTela ~/ 150; // divisão por inteiro
+    int quantidadeItemsTela = tamanhoTela ~/ 130; // divisão por inteiro
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -70,41 +50,41 @@ class _ProductsTabState extends State<ProductsTab> {
         backgroundColor: Colors.pink.shade200,
         centerTitle: true,
         elevation: 0,
-        title: Text(widget.selectedCategory,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w700)),
+        title: Row(
+          children: [
+            Text(widget.selectedCategory,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w200)),
+          ],
+        ),
       ),
 
       // Campo Pesquisa
       body: !_isLoading
           ? Column(
               children: [
-                // Grid
-                const SizedBox(height: 12),
                 Expanded(
-                    child: GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: quantidadeItemsTela,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    childAspectRatio: 8 / 11,
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: quantidadeItemsTela,
+                      mainAxisSpacing: 2,
+                      crossAxisSpacing: 2,
+                      childAspectRatio: 9 / 14,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (_, index) {
+                      return ProductTile(products: products[index]);
+                    },
                   ),
-                  itemCount: widget.selectedCategory == 'Todos'
-                      ? products.length
-                      : productsFiltered.length,
-                  itemBuilder: (_, index) {
-                    return widget.selectedCategory == 'Todos'
-                        ? ProductTile(product: products[index])
-                        : ProductTile(product: productsFiltered[index]);
-                  },
                 ))
               ],
             )
           : const Center(child: CircularProgressIndicator()),
-      //drawer: const AppDrawer(),
     );
   }
 }
