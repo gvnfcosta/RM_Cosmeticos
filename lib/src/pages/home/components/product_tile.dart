@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rm/src/config/custom_colors.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/pages/product/product_screen.dart';
 import '/src/services/utils_services.dart';
@@ -18,10 +17,7 @@ class ProductTile extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (c) {
-                  return ProductScreen(products: products);
-                },
-              ),
+                  builder: (c) => ProductScreen(products: products)),
             );
           },
           //Conteúdo
@@ -33,26 +29,23 @@ class ProductTile extends StatelessWidget {
               children: [
                 //Imagem
                 Container(
-                  height: 250,
+                  height: 150,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.network(products.imageUrl),
                 ),
 
                 //Código
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'RM ${products.code}',
-                    style: const TextStyle(
-                        fontSize: 13, fontStyle: FontStyle.italic),
-                    textAlign: TextAlign.center,
-                  ),
+                Text(
+                  'RM ${products.code}',
+                  style: const TextStyle(
+                      fontSize: 14, fontStyle: FontStyle.italic),
+                  textAlign: TextAlign.center,
                 ),
 
                 //Nome
                 Text(
                   products.name,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 17),
                   textAlign: TextAlign.center,
                 ),
 
@@ -62,11 +55,17 @@ class ProductTile extends StatelessWidget {
                   children: [
                     Text(
                       utilsServices.priceToCurrency(products.price),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                        color: CustomColors.customSwatchColor,
+                        fontSize: 16,
+                        color: Colors.pink,
                       ),
+                    ),
+                    Text(
+                      '     ${products.pageNumber}/${products.itemNumber}',
+                      style: const TextStyle(
+                          fontSize: 9, fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

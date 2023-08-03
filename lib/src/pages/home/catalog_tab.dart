@@ -2,10 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_list.dart';
-import 'package:rm/src/models/category_list.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
-import '../../models/category_model.dart';
 import 'components/product_tile.dart';
 
 class CatalogTab extends StatefulWidget {
@@ -24,7 +22,7 @@ class _CatalogTabState extends State<CatalogTab> {
   void initState() {
     super.initState();
 
-    Provider.of<CategoryList>(context, listen: false).loadCategories();
+    // Provider.of<CategoryList>(context, listen: false).loadCategories();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
@@ -32,10 +30,14 @@ class _CatalogTabState extends State<CatalogTab> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Category> category = Provider.of<CategoryList>(context)
-        .categories
-        .toList()
-      ..sort((a, b) => a.nome.compareTo(b.nome));
+    // final List<Category> category = Provider.of<CategoryList>(context)
+    //     .categories
+    //     .toList()
+    //   ..sort((a, b) => a.nome.compareTo(b.nome));
+
+    List<ProductFiltered> items = widget.items
+      ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)))
+      ..sort(((a, b) => a.pageNumber.compareTo(b.pageNumber)));
 
     String catalogoName = '';
     widget.items.isNotEmpty ? catalogoName = widget.items.first.catalog : null;
@@ -74,20 +76,11 @@ class _CatalogTabState extends State<CatalogTab> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: category.length,
+                          itemCount: items.length + 1,
                           itemBuilder: (_, index) {
-                            List<ProductFiltered> productsFiltered = widget
-                                .items
-                              ..sort((a, b) =>
-                                  a.pageNumber.compareTo(b.pageNumber))
-                              ..sort((a, b) =>
-                                  a.itemNumber.compareTo(b.itemNumber));
-
-                            // List<ProductFiltered> productsFiltered =
-                            //     widget.items
-                            //         //  -------> AQUI
-                            //         .where((element) => element.pageNumber == 1)
-                            //         .toList();
+                            List<ProductFiltered> productsFiltered = items
+                                .where((element) => element.pageNumber == index)
+                                .toList();
 
                             // List<ProductFiltered> productsFiltered = widget
                             //     .items
@@ -97,42 +90,41 @@ class _CatalogTabState extends State<CatalogTab> {
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty
-                                    ? const SizedBox.shrink()
-                                    // Padding(
-                                    //     padding: const EdgeInsets.only(
-                                    //         top: 8, bottom: 5),
-                                    //     child: Row(
-                                    //       children: [
-                                    //         Container(
-                                    //           height: 30,
-                                    //           width: 280,
-                                    //           decoration: BoxDecoration(
-                                    //             gradient: LinearGradient(
-                                    //               stops: const [0.1, 0.5, 1],
-                                    //               colors: [
-                                    //                 Colors.pink.shade800,
-                                    //                 Colors.pink.shade100,
-                                    //                 Colors.white,
-                                    //               ],
-                                    //             ),
-                                    //           ),
-                                    //           child:
-                                    //  Row(
-                                    //   children: [
-                                    //     Text(
-                                    //       ' ${category[index].nome}',
-                                    //       style: const TextStyle(
-                                    //           fontWeight:
-                                    //               FontWeight.w200,
-                                    //           fontSize: 23,
-                                    //           color: Colors.white),
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // )
+                                    ? //const SizedBox.shrink()
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 5),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 30,
+                                              width: 280,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  stops: const [0.3, 0.6, 1],
+                                                  colors: [
+                                                    Colors.pink.shade800,
+                                                    Colors.pink.shade200,
+                                                    Colors.white,
+                                                  ],
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    '  Página $index',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        fontSize: 20,
+                                                        color: Colors.white),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     : const Center(),
                                 RefreshIndicator(
                                   onRefresh: () => _refreshData(context),
@@ -142,8 +134,8 @@ class _CatalogTabState extends State<CatalogTab> {
                                     shrinkWrap: true,
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 320,
-                                      childAspectRatio: 3 / 6,
+                                      maxCrossAxisExtent: 250,
+                                      childAspectRatio: 0.75,
                                     ),
                                     itemCount: productsFiltered.length,
                                     itemBuilder: (_, index) {

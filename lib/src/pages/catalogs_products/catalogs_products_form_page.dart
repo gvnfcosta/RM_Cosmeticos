@@ -109,8 +109,10 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
       productNames.add(item.name);
     }
 
-    List<Product> productsFiltered =
-        products.where((item) => !productNames.contains(item.name)).toList();
+    List<Product> productsFiltered = products
+        .where((item) => !productNames.contains(item.name))
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
 
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),

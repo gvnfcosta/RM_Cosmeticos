@@ -66,6 +66,12 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
                     fontSize: 11,
                     fontColor: Colors.red,
                   ),
+                  CustomLabel(
+                      label: 'Descrição',
+                      description:
+                          '${widget.item.pageNumber} - ${widget.item.itemNumber}',
+                      customWidth: deviceSize.width * 0.60,
+                      fontSize: 10),
                 ],
               ),
             ),

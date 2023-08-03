@@ -31,32 +31,31 @@ class UserTile extends StatelessWidget {
       child: Card(
         //color: corCartao,
         elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: ListTile(
-            leading: SizedBox(
-                width: 100,
-                child: Text(
-                  levels[user.level].toString(),
-                  style: const TextStyle(color: Colors.black),
-                )),
-            title: Text(
+        child: ListTile(
+          leading: SizedBox(
+            width: 80,
+            child: Text(
               user.name,
               style: const TextStyle(
                   fontSize: 15, color: Colors.red, fontWeight: FontWeight.w400),
             ),
-            subtitle: Text(
-              user.email,
-              style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey),
+          ),
+          title: Text(
+            levels[user.level].toString(),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
             ),
-            trailing: CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.grey,
-              backgroundImage: FileImage(File('assets/images/avatar.jpg')),
-            ),
+          ),
+          subtitle: Text(
+            user.email,
+            style: const TextStyle(
+                fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey),
+          ),
+          trailing: CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.grey,
+            backgroundImage: FileImage(File('assets/images/avatar.jpg')),
           ),
         ),
       ),

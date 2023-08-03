@@ -47,11 +47,13 @@ class SignInScreen extends StatelessWidget {
                         Stack(
                           children: [
                             const Padding(
-                              padding: EdgeInsets.only(left: 2, top: 1),
+                              padding: EdgeInsets.only(left: 2, top: 2),
                               child: Text(
                                 'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.black87, fontSize: 50),
+                                    color: Colors.black54,
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w500),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -60,7 +62,9 @@ class SignInScreen extends StatelessWidget {
                               child: Text(
                                 'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.pink.shade600, fontSize: 50),
+                                    color: Colors.pink.shade600,
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w500),
                                 textAlign: TextAlign.center,
                               ),
                             ),

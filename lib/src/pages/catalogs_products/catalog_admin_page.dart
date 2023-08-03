@@ -41,18 +41,25 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
 
     Future.delayed(const Duration(seconds: 2));
 
-    final List<Product> products = productProvider.items_
-        .where((element) => element.show)
-        .toList()
-      ..sort((a, b) => a.name.compareTo(b.name));
+    final List<Product> products =
+        productProvider.items_.where((element) => element.show).toList();
+    // ..sort((a, b) => a.name.compareTo(b.name));
+
+    // final List<CatalogProducts> catalogProduct = catalogProvider.items_
+    //   ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)));
 
     final List<CatalogProducts> catalogProduct = catalogProvider.items_
         .where((element) => element.seller == widget.catalog.seller)
         .where((element) => element.catalog == widget.catalog.name)
         .toList();
+    //..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)));
 
     final List<ProductFiltered> items =
         filtraCatalogo(products, catalogProduct);
+
+    final List<ProductFiltered> productsFiltered = items
+      ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)))
+      ..sort(((a, b) => a.pageNumber.compareTo(b.pageNumber)));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -77,9 +84,9 @@ class _CatalogAdminPageState extends State<CatalogAdminPage> {
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 separatorBuilder: (_, index) => const Divider(),
-                itemCount: items.length,
+                itemCount: productsFiltered.length,
                 itemBuilder: (ctx, i) {
-                  return ProductUnitTile(item: items[i]);
+                  return ProductUnitTile(item: productsFiltered[i]);
                 },
               ),
             ),

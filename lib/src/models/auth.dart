@@ -129,9 +129,8 @@ class Auth with ChangeNotifier {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
     _logoutTimer = Timer(
-      Duration(seconds: timeToLogout! - 60),
-      //logout,
-      keepLogged,
+      Duration(seconds: timeToLogout ?? 0),
+      logout,
     );
   }
 }

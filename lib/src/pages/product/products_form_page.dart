@@ -505,8 +505,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       FocusScope.of(context)
                                           .requestFocus(_imageUrlFocus);
                                     },
-                                    onSaved: (name) =>
-                                        _formData['name'] = name ?? '',
+                                    onSaved: (name) => _formData['name'] =
+                                        name!.toUpperCase() ?? '',
                                     validator: (nam) {
                                       final name = nam ?? '';
 

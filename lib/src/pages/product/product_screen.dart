@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rm/src/models/product_filtered.dart';
-import '/src/config/custom_colors.dart';
 import '/src/services/utils_services.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -18,10 +17,8 @@ class _ProductScreenState extends State<ProductScreen> {
   int cartItemQuantity = 1;
   final bool editProduct = false;
 
-  final customPreco = TextStyle(
-      fontSize: 22,
-      fontWeight: FontWeight.bold,
-      color: CustomColors.customSwatchColor);
+  final customPreco = const TextStyle(
+      fontSize: 25, fontWeight: FontWeight.bold, color: Colors.pink);
 
   @override
   Widget build(BuildContext context) {
@@ -32,29 +29,29 @@ class _ProductScreenState extends State<ProductScreen> {
         children: [
           // Conteúdo
           Padding(
-            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 Expanded(
                   child: Hero(
                     tag: productUnit.imageUrl,
                     child: InteractiveViewer(
-                      child: Image.network(productUnit.imageUrl),
-                    ),
+                        child: Image.network(productUnit.imageUrl)),
                   ),
                 ),
                 Container(
-                  height: 200,
+                  height: 250,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withAlpha(210),
+                    color: Colors.white.withAlpha(230),
                     //color: Colors.white,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(30)),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(20),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.pink.shade300,
-                          offset: const Offset(0, 2)),
+                          color: Colors.grey.shade600,
+                          offset: const Offset(2, 2)),
                     ],
                   ),
                   child: Column(
@@ -70,8 +67,9 @@ class _ProductScreenState extends State<ProductScreen> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
                                   fontStyle: FontStyle.italic),
                             ),
 
@@ -84,35 +82,29 @@ class _ProductScreenState extends State<ProductScreen> {
                           Text(
                             ' / ${productUnit.unit}',
                             style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.blueGrey,
+                              fontSize: 18,
+                              color: Colors.pink,
                             ),
                           )
                         ],
                       ),
 
                       //Nome
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Nome: ${productUnit.name}',
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.blueGrey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        productUnit.name,
+                        overflow: TextOverflow.clip,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
 
                       //Descrição
                       Text(
                         widget.products.description,
                         style: const TextStyle(
-                            fontSize: 15, color: Colors.blueGrey),
+                            fontSize: 18, color: Colors.black54),
                       ),
                     ],
                   ),
@@ -125,31 +117,10 @@ class _ProductScreenState extends State<ProductScreen> {
             top: 10,
             child: SafeArea(
               child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                  )),
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.arrow_back_ios)),
             ),
           ),
-          // editProduct
-          //     ? Positioned(
-          //         right: 10,
-          //         top: 10,
-          //         child: SafeArea(
-          //           child: IconButton(
-          //               onPressed: () {
-          //                 Navigator.of(context).pushNamed(AppRoutes.productForm,
-          //                     arguments: widget.product);
-          //               },
-          //               icon: const Icon(
-          //                 Icons.edit,
-          //                 color: Colors.deepOrange,
-          //               )),
-          //         ),
-          //       )
-          //     : const SizedBox(),
         ],
       ),
     );
