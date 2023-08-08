@@ -49,8 +49,8 @@ class CatalogTile extends StatelessWidget {
                   ),
                   child: isAdmin
                       ? Container(
-                          height: 22,
-                          color: Colors.pink[100],
+                          height: 25,
+                          color: Colors.grey[100],
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -106,7 +106,7 @@ class CatalogTile extends StatelessWidget {
                   icon: Icon(
                     Icons.edit,
                     color: Colors.orangeAccent[200],
-                    size: 30,
+                    size: 25,
                   ),
                   onPressed: () => Navigator.of(context)
                       .pushNamed(AppRoutes.catalogForm, arguments: catalog),

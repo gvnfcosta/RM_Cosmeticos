@@ -28,9 +28,8 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
   void initState() {
     super.initState();
 
-    Provider.of<CatalogProductsList>(context, listen: false)
-        .loadData()
-        .then((value) => setState(() => _isLoading = false));
+    Provider.of<CatalogProductsList>(context, listen: false).loadData();
+    // .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -55,9 +54,9 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       backgroundColor: Colors.white,
 
       // Campo Pesquisa
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : CatalogTab(items: items),
+      body:
+          // _isLoading          ? const Center(child: CircularProgressIndicator())          :
+          CatalogTab(items: items),
 
       // PageView(
       //     physics: const NeverScrollableScrollPhysics(),

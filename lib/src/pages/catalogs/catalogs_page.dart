@@ -15,7 +15,7 @@ class CatalogsPage extends StatefulWidget {
 }
 
 class _CatalogsPageState extends State<CatalogsPage> {
-  bool _isLoading = true;
+  final bool _isLoading = true;
   String userName = '';
   bool isAdmin = false;
 
@@ -23,9 +23,8 @@ class _CatalogsPageState extends State<CatalogsPage> {
   void initState() {
     super.initState();
     Provider.of<UserList>(context, listen: false).loadData();
-    Provider.of<CatalogList>(context, listen: false)
-        .loadData()
-        .then((value) => setState(() => _isLoading = false));
+    Provider.of<CatalogList>(context, listen: false).loadData();
+    // .then((value) => setState(() => _isLoading = false));
   }
 
   @override
@@ -59,8 +58,11 @@ class _CatalogsPageState extends State<CatalogsPage> {
         title: Stack(alignment: Alignment.center, children: [
           Image.asset('assets/images/LogoRM.png'),
           Text(
-            'Catálogos ${userName == "Admin" ? "Vendedores" : userName}',
-            style: const TextStyle(color: Colors.white),
+            userName == "Admin" ? "Administração" : userName,
+            style: const TextStyle(
+                color: Colors.white60,
+                fontSize: 42,
+                fontWeight: FontWeight.w200),
           ),
         ]),
         centerTitle: true,
@@ -68,35 +70,35 @@ class _CatalogsPageState extends State<CatalogsPage> {
       ),
 
       // Campo Pesquisa
-      body: !_isLoading
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: RefreshIndicator(
-                      onRefresh: () => _refreshData(context),
-                      child: GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 150,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 8 / 12,
-                        ),
-                        itemCount: catalogs.length,
-                        itemBuilder: (_, i) {
-                          return CatalogTile(catalog: catalogs[i]);
-                        },
-                      ),
-                    ),
+      body:
+          //  _isLoading          ? null          :
+          SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: RefreshIndicator(
+                onRefresh: () => _refreshData(context),
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 150,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childAspectRatio: 8 / 12,
                   ),
-                ],
+                  itemCount: catalogs.length,
+                  itemBuilder: (_, i) {
+                    return CatalogTile(catalog: catalogs[i]);
+                  },
+                ),
               ),
-            )
-          : null,
+            ),
+          ],
+        ),
+      ),
+
       floatingActionButton: isAdmin
           ? FloatingActionButton(
               onPressed: () => Navigator.of(context).push(

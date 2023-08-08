@@ -19,18 +19,16 @@ class ProductPage extends StatefulWidget {
 bool isAdmin = false;
 
 class _ProductPageState extends State<ProductPage> {
-  bool _isLoading = true;
+  final bool _isLoading = true;
   String selectedCategory = 'Todos os Produtos';
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(context, listen: false)
-        .loadData()
-        .then((value) => setState(() => _isLoading = false));
-    Provider.of<CategoryList>(context, listen: false)
-        .loadCategories()
-        .then((value) => setState(() => _isLoading = false));
+    Provider.of<ProductList>(context, listen: false).loadData();
+    // .then((value) => setState(() => _isLoading = false));
+    Provider.of<CategoryList>(context, listen: false).loadCategories();
+    // .then((value) => setState(() => _isLoading = false));
   }
 
   List<String> allCategories = ["Todos os Produtos"];
@@ -107,56 +105,55 @@ class _ProductPageState extends State<ProductPage> {
       ),
 
       // Campo Pesquisa
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 30,
-                    color: Colors.pink[50],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          selectedCategory,
-                          style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.pink),
-                        ),
-                      ],
-                    ),
+      body:
+          //  _isLoading          ? const Center(child: CircularProgressIndicator())          :
+          Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 30,
+              color: Colors.pink[50],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    selectedCategory,
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.pink),
                   ),
-                ),
-
-                // Categories
-
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () => _refreshProduct(context),
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(8),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 100,
-                        childAspectRatio: 0.5,
-                      ),
-                      itemCount: selectedCategory == "Todos os Produtos"
-                          ? products.length
-                          : productsFiltered.length,
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, index) =>
-                          selectedCategory == "Todos os Produtos"
-                              ? ProductTile(products[index])
-                              : ProductTile(productsFiltered[index]),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+
+          // Categories
+
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => _refreshProduct(context),
+              child: GridView.builder(
+                //  padding: const EdgeInsets.all(8),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 100,
+                  childAspectRatio: 0.5,
+                ),
+                itemCount: selectedCategory == "Todos os Produtos"
+                    ? products.length
+                    : productsFiltered.length,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) =>
+                    selectedCategory == "Todos os Produtos"
+                        ? ProductTile(products[index])
+                        : ProductTile(productsFiltered[index]),
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: IconButton(

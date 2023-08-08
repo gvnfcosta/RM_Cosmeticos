@@ -32,7 +32,7 @@ class _ProductUnitTileState extends State<ProductUnitTile> {
               height: 70,
               width: 80,
               child: Image.network(widget.item.imageUrl)),
-
+          const SizedBox(width: 10),
           //Nome
           Expanded(
             child: GestureDetector(
