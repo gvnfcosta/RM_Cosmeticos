@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:rm/src/config/app_data.dart';
@@ -15,8 +14,6 @@ class Auth with ChangeNotifier {
   Timer? _logoutTimer;
   final String _userEmail = '';
   final String _userPassword = '';
-
-  late Box box;
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -35,10 +32,6 @@ class Auth with ChangeNotifier {
     return isAuth ? _userId : null;
   }
 
-  // Future<void> startUser() async {
-  //   box = await Hive.openBox('userData');
-  // }
-
   Future<void> _authenticate(
       String email, String password, String urlFragment) async {
     final url =
@@ -51,7 +44,6 @@ class Auth with ChangeNotifier {
         'returnSecureToken': true,
       }),
     );
-    print('Response: $response');
 
     final body = jsonDecode(response.body);
 
@@ -73,6 +65,12 @@ class Auth with ChangeNotifier {
         'expiryDate': _expiryDate!.toIso8601String(),
       });
 
+      //     FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      // if (user != null) {
+      //   print(user.uid);
+      // }
+      // });
+
       _autoLogout();
       notifyListeners();
     }
@@ -89,6 +87,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
+    //await box.put('userEmail', email);
     return _authenticate(email, password, 'signInWithPassword');
   }
 
@@ -96,6 +95,10 @@ class Auth with ChangeNotifier {
     if (isAuth) return;
 
     final userData = await Store.getMap('userData');
+
+    //  final userCredential =
+    //   await FirebaseAuth.instance.signInWithCredential(credential);
+    //final user = userCredential.user;
 
     if (userData.isEmpty) return;
 
@@ -133,12 +136,14 @@ class Auth with ChangeNotifier {
   //   await login(_userEmail, _userPassword, String urlFragment);
   // }
 
-  void _autoLogout() {
+  void _autoLogout() async {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
     _logoutTimer = Timer(
       Duration(seconds: timeToLogout ?? 0),
       logout,
+
+      //    await user?.reauthenticateWithCredential(credential);
     );
   }
 }

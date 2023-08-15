@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/config/hive_config.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
+
 import 'src/models/catalog_products_list.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
@@ -23,7 +25,7 @@ import 'src/utils/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await HiveConfig.start();
+  await HiveConfig.start();
   runApp(const MyApp());
 }
 

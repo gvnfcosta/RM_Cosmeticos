@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:rm/src/config/hive_config.dart';
-import 'package:rm/src/models/user_model.dart';
+import 'package:rm/src/config/local_data.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
-bool isWeb = false;
-
 enum AuthMode { signup, login }
 
+Auth auth = Auth();
+bool isWeb = false;
 String userEmail = '';
 
 class AuthForm extends StatefulWidget {
@@ -21,9 +20,10 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.login;
-  User userLoad = User();
+  //User userLoad = User();
 
   final Map<String, String> _authData = {'email': '', 'password': ''};
 
@@ -34,12 +34,14 @@ class _AuthFormState extends State<AuthForm> {
   @override
   void initState() {
     super.initState();
-    // final box = Hive.openBox('UserData');
+
+    // userEmail = ''; //'mauricio@rm.com';
+    userEmail = localDados() as String;
+
     _isObscure = true;
     if (isWeb) {
       _authData['email'] = 'loja@rm.com';
       _authData['senha'] = '123456';
-
       _iniciaWeb(_authData);
     } else {
       _authData['email'] = userEmail;
@@ -78,37 +80,6 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  // loadSharedPrefs() async {
-  //   SharedPref sharedPref = SharedPref();
-  //   try {
-  //     User user = User.fromJson(await sharedPref.read("user"));
-  //     setState(() {
-  //       userLoad = user;
-  //     });
-  //   } catch (Excepetion) {
-  //     return;
-  //     // do something
-  //   }
-  // }
-
-  // Future<String> loadEmail() async {
-  //   await HiveConfig.start();
-
-  //   var box = await Hive.openBox('userdata');
-
-  //   Future<String> userEmail = box.get('email') ?? '';
-
-  //   return userEmail;
-  // }
-
-  // void saveEmail(email) async {
-  //   await HiveConfig.start();
-
-  //   var box = await Hive.openBox('userdata');
-
-  //   await box.put('email', email);
-  // }
-
   Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -124,8 +95,8 @@ class _AuthFormState extends State<AuthForm> {
     try {
       if (_isLogin()) {
         // Login
-        await auth.login(_authData['email']!, _authData['password']!);
-        // saveEmail(_authData['email']);
+        await auth.login(
+            _authData['email']!, _authData['password'] ?? '123456');
       } else {
         // Registrar
         await auth.signup(
@@ -139,13 +110,12 @@ class _AuthFormState extends State<AuthForm> {
       _showErrorDialog('Ocorreu um erro inesperado!');
     }
 
+    saveEmail(_authData['email']);
     setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    //_authData['email'] = loadEmail() as String;
-
     return !isWeb
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -171,8 +141,9 @@ class _AuthFormState extends State<AuthForm> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
+                    initialValue: userEmail,
                     keyboardType: TextInputType.emailAddress,
-                    onSaved: (email) => _authData['email'] = email ?? '',
+                    onSaved: (email) => _authData['email'] = email ?? userEmail,
                     validator: (email_) {
                       final email = email_ ?? '';
                       if (email.trim().isEmpty || !email.contains('@')) {
@@ -236,15 +207,13 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       obscureText: true,
-                      validator: _isLogin()
-                          ? null
-                          : (password_) {
-                              final password = password_ ?? '';
-                              if (password != _passwordController.text) {
-                                return 'Senhas informadas não conferem.';
-                              }
-                              return null;
-                            },
+                      validator: (password_) {
+                        final password = password_ ?? '';
+                        if (password != _passwordController.text) {
+                          return 'Senhas informadas não conferem.';
+                        }
+                        return null;
+                      },
                     ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 5),
@@ -252,7 +221,7 @@ class _AuthFormState extends State<AuthForm> {
                     const LinearProgressIndicator()
                   else
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
                           height: 50,
@@ -273,11 +242,10 @@ class _AuthFormState extends State<AuthForm> {
                             ),
                           ),
                         ),
-                        const Spacer(),
                         TextButton(
                           onPressed: _switchAuthMode,
                           child: Text(
-                            _isLogin() ? 'QUERO REGISTRAR' : 'JÁ TENHO CONTA',
+                            _isLogin() ? 'Não tenho conta' : 'Já tenho conta',
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
