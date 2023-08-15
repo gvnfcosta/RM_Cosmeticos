@@ -22,13 +22,13 @@ class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  final AuthMode _authMode = AuthMode.login;
+  AuthMode _authMode = AuthMode.login;
   User userLoad = User();
 
   final Map<String, String> _authData = {'email': '', 'password': ''};
 
   bool _isLogin() => _authMode == AuthMode.login;
-  //bool _isSignup() => _authMode == AuthMode.signup;
+  bool _isSignup() => _authMode == AuthMode.signup;
   bool _isObscure = false;
 
   @override
@@ -52,15 +52,15 @@ class _AuthFormState extends State<AuthForm> {
     await auth.login(authData['email'], authData['senha']);
   }
 
-  // void _switchAuthMode() {
-  //   setState(() {
-  //     if (_isLogin()) {
-  //       _authMode = AuthMode.signup;
-  //     } else {
-  //       _authMode = AuthMode.login;
-  //     }
-  //   });
-  // }
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.signup;
+      } else {
+        _authMode = AuthMode.login;
+      }
+    });
+  }
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -128,16 +128,14 @@ class _AuthFormState extends State<AuthForm> {
         // saveEmail(_authData['email']);
       } else {
         // Registrar
-        // await auth.signup(
-        //   _authData['email']!,
-        //   _authData['password']!,
-        // );
+        await auth.signup(
+          _authData['email']!,
+          _authData['password']!,
+        );
       }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
-      print(error.toString());
     } catch (error) {
-      print(error.toString());
       _showErrorDialog('Ocorreu um erro inesperado!');
     }
 
@@ -183,7 +181,7 @@ class _AuthFormState extends State<AuthForm> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Senha',
@@ -221,7 +219,35 @@ class _AuthFormState extends State<AuthForm> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
+                  if (_isSignup())
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Confirmar Senha',
+                        labelStyle:
+                            const TextStyle(fontWeight: FontWeight.bold),
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: Colors.pink,
+                        ),
+                        isDense: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      obscureText: true,
+                      validator: _isLogin()
+                          ? null
+                          : (password_) {
+                              final password = password_ ?? '';
+                              if (password != _passwordController.text) {
+                                return 'Senhas informadas não conferem.';
+                              }
+                              return null;
+                            },
+                    ),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
                   if (_isLoading)
                     const LinearProgressIndicator()
                   else
@@ -229,7 +255,7 @@ class _AuthFormState extends State<AuthForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 40,
+                          height: 50,
                           width: 180,
                           child: ElevatedButton(
                             onPressed: _submit,
@@ -239,10 +265,20 @@ class _AuthFormState extends State<AuthForm> {
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 8),
                             ),
-                            child: const Text(
-                              'ENTRAR',
-                              style: TextStyle(fontSize: 18),
+                            child: Text(
+                              _authMode == AuthMode.login
+                                  ? 'ENTRAR'
+                                  : 'REGISTRAR',
+                              style: const TextStyle(fontSize: 18),
                             ),
+                          ),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: _switchAuthMode,
+                          child: Text(
+                            _isLogin() ? 'QUERO REGISTRAR' : 'JÁ TENHO CONTA',
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ],

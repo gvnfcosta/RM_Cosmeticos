@@ -84,12 +84,12 @@ class Auth with ChangeNotifier {
   //   login(_userEmail, _userPassword);
   // }
 
+  Future<void> signup(String email, String password) async {
+    return _authenticate(email, password, 'signUp');
+  }
+
   Future<void> login(String email, String password) async {
-    // return _authenticate(email, password, 'signInWithPassword');
-
     return _authenticate(email, password, 'signInWithPassword');
-
-    //'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
   }
 
   Future<void> tryAutoLogin() async {
