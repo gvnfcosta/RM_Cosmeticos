@@ -124,10 +124,7 @@ class _AuthFormState extends State<AuthForm> {
     try {
       if (_isLogin()) {
         // Login
-        await auth.login(
-          _authData['email']!,
-          _authData['password']!,
-        );
+        await auth.login(_authData['email']!, _authData['password']!);
         // saveEmail(_authData['email']);
       } else {
         // Registrar
@@ -138,7 +135,9 @@ class _AuthFormState extends State<AuthForm> {
       }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
+      print(error.toString());
     } catch (error) {
+      print(error.toString());
       _showErrorDialog('Ocorreu um erro inesperado!');
     }
 

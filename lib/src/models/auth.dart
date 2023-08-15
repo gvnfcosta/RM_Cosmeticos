@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:rm/src/config/app_data.dart';
 import '../data/store.dart';
 import '../exceptions/auth_exception.dart';
 
@@ -38,7 +39,10 @@ class Auth with ChangeNotifier {
   //   box = await Hive.openBox('userData');
   // }
 
-  Future<void> _authenticate(String email, String password, String url) async {
+  Future<void> _authenticate(
+      String email, String password, String urlFragment) async {
+    final url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlFragment?key=${Constants.webApiKey}';
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode({
@@ -47,6 +51,7 @@ class Auth with ChangeNotifier {
         'returnSecureToken': true,
       }),
     );
+    print('Response: $response');
 
     final body = jsonDecode(response.body);
 
@@ -80,8 +85,11 @@ class Auth with ChangeNotifier {
   // }
 
   Future<void> login(String email, String password) async {
-    return _authenticate(email, password,
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
+    // return _authenticate(email, password, 'signInWithPassword');
+
+    return _authenticate(email, password, 'signInWithPassword');
+
+    //'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBSycGT_t9EY5cFNCLHbTR8Ep-tZRZH-YY');
   }
 
   Future<void> tryAutoLogin() async {
@@ -121,9 +129,9 @@ class Auth with ChangeNotifier {
     _logoutTimer = null;
   }
 
-  void keepLogged() async {
-    await login(_userEmail, _userPassword);
-  }
+  // void keepLogged() async {
+  //   await login(_userEmail, _userPassword, String urlFragment);
+  // }
 
   void _autoLogout() {
     _clearLogoutTimer();
