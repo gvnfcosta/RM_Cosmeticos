@@ -51,7 +51,7 @@ class SignInScreen extends StatelessWidget {
                               child: Text(
                                 'Catálogos\nde Produtos',
                                 style: TextStyle(
-                                    color: Colors.black54,
+                                    color: Colors.black26,
                                     fontSize: 50,
                                     fontWeight: FontWeight.w500),
                                 textAlign: TextAlign.center,

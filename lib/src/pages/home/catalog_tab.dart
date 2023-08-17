@@ -135,7 +135,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                       maxCrossAxisExtent: 250,
-                                      childAspectRatio: 0.75,
+                                      childAspectRatio: 0.7,
                                     ),
                                     itemCount: productsFiltered.length,
                                     itemBuilder: (_, index) {

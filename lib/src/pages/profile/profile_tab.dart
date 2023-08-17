@@ -123,6 +123,7 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   Future<bool?> updatePassword() {
+    Auth auth = Provider.of(context, listen: false);
     return showDialog(
       context: context,
       builder: (context) {
@@ -172,7 +173,9 @@ class _ProfileTabState extends State<ProfileTab> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          auth.changePassword();
+                        },
                         child: const Text('ATUALIZAR'),
                       ),
                     ),

@@ -26,6 +26,7 @@ import 'src/utils/app_routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveConfig.start();
+
   runApp(const MyApp());
 }
 
@@ -76,13 +77,9 @@ class MyApp extends StatelessWidget {
           },
         ),
         ChangeNotifierProxyProvider<Auth, CatalogList>(
-          create: (_) => CatalogList('', '', []),
+          create: (_) => CatalogList(''),
           update: (ctx, auth, previous) {
-            return CatalogList(
-              auth.token ?? '',
-              auth.email ?? '',
-              previous?.items ?? [],
-            );
+            return CatalogList(auth.token ?? '');
           },
         ),
         ChangeNotifierProxyProvider<Auth, SubCategoryList>(

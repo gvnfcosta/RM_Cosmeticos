@@ -12,8 +12,6 @@ class Auth with ChangeNotifier {
   String? _userId;
   DateTime? _expiryDate;
   Timer? _logoutTimer;
-  final String _userEmail = '';
-  final String _userPassword = '';
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -113,7 +111,22 @@ class Auth with ChangeNotifier {
     _expiryDate = expiryDate;
 
     _autoLogout();
-    notifyListeners();
+  }
+
+  void changePassword(String password) async {
+    //Create an instance of the current user.
+    final userData = await Store.getMap('userData');
+
+    //Pass in the password to updatePassword.
+    userData
+        .update('password', (password) => null)
+        .updatePassword(password)
+        .then((_) {
+      print("Successfully changed password");
+    }).catchError((error) {
+      print("Password can't be changed$error");
+      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    });
   }
 
   void logout() {

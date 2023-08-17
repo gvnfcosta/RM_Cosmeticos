@@ -8,13 +8,12 @@ import 'catalog_model.dart';
 
 class CatalogList with ChangeNotifier {
   final String _token;
-  final String _seller;
 
   List<CatalogModel> items_ = [];
   List<CatalogModel> get items => [...items_];
   List<CatalogModel> get lista => items_.toList();
 
-  CatalogList(this._token, this._seller, this.items_);
+  CatalogList(this._token);
 
   int get itemsCount => items_.length;
 

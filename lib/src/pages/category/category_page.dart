@@ -50,7 +50,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   maxCrossAxisExtent: 150,
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
-                  childAspectRatio: 4 / 4.5,
+                  childAspectRatio: 4 / 5.2,
                 ),
                 itemCount: categories.length,
                 physics: const BouncingScrollPhysics(),

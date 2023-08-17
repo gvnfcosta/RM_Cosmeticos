@@ -1,14 +1,27 @@
-import 'package:hive_flutter/hive_flutter.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
 
-localDados() async {
-  var box = await Hive.openBox('user_data');
+// localDados() async {
 
-  String dados = box.get('email');
-  return dados;
-}
+//   box = createOpenBox();
 
-saveEmail(email) async {
-  var box = await Hive.openBox('user_data');
-  await box.put('email', email);
-  print(box.path);
-}
+
+//   if (box.length == 0) {
+//     String email = box.get('email');
+//     String password = box.get('password');
+
+//     final Map<String, String> dados = {'email': email, 'password': password};
+
+//     return dados;
+//   }
+//   return null;
+// }
+
+// saveEmail(email, password) async {
+//   var box = await Hive.openBox('user_data');
+
+//   // box.deleteFromDisk();
+//   // box = await Hive.openBox('user_data');
+//   await box.put('email', email);
+//   await box.put('password', password);
+//   print(box.path);
+// }

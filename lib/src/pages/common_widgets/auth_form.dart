@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/config/local_data.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
@@ -8,7 +8,6 @@ enum AuthMode { signup, login }
 
 Auth auth = Auth();
 bool isWeb = false;
-String userEmail = '';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
@@ -18,12 +17,10 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.login;
-  //User userLoad = User();
 
   final Map<String, String> _authData = {'email': '', 'password': ''};
 
@@ -31,21 +28,23 @@ class _AuthFormState extends State<AuthForm> {
   bool _isSignup() => _authMode == AuthMode.signup;
   bool _isObscure = false;
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  late Box box;
+
   @override
   void initState() {
     super.initState();
 
-    // userEmail = ''; //'mauricio@rm.com';
-    userEmail = localDados() as String;
+    createOpenBox();
 
     _isObscure = true;
     if (isWeb) {
       _authData['email'] = 'loja@rm.com';
       _authData['senha'] = '123456';
       _iniciaWeb(_authData);
-    } else {
-      _authData['email'] = userEmail;
-    }
+    } else {}
   }
 
   Future<void> _iniciaWeb(authData) async {
@@ -104,13 +103,13 @@ class _AuthFormState extends State<AuthForm> {
           _authData['password']!,
         );
       }
+      login();
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
       _showErrorDialog('Ocorreu um erro inesperado!');
     }
 
-    saveEmail(_authData['email']);
     setState(() => _isLoading = false);
   }
 
@@ -141,9 +140,9 @@ class _AuthFormState extends State<AuthForm> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    initialValue: userEmail,
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    onSaved: (email) => _authData['email'] = email ?? userEmail,
+                    onSaved: (email) => _authData['email'] = email ?? '',
                     validator: (email_) {
                       final email = email_ ?? '';
                       if (email.trim().isEmpty || !email.contains('@')) {
@@ -179,7 +178,7 @@ class _AuthFormState extends State<AuthForm> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     obscureText: _isObscure,
-                    controller: _passwordController,
+                    controller: passwordController,
                     onSaved: (password) =>
                         _authData['password'] = password ?? '',
                     validator: (password_) {
@@ -209,7 +208,7 @@ class _AuthFormState extends State<AuthForm> {
                       obscureText: true,
                       validator: (password_) {
                         final password = password_ ?? '';
-                        if (password != _passwordController.text) {
+                        if (password != passwordController.text) {
                           return 'Senhas informadas não conferem.';
                         }
                         return null;
@@ -256,5 +255,29 @@ class _AuthFormState extends State<AuthForm> {
             ),
           )
         : const SizedBox.shrink();
+  }
+
+  void createOpenBox() async {
+    box = await Hive.openBox('user_data');
+    getdata();
+  }
+
+  void getdata() async {
+    if (box.get('email') != null) {
+      emailController.text = box.get('email');
+      setState(() {});
+    }
+    if (box.get('pass') != null) {
+      passwordController.text = box.get('pass');
+      setState(() {});
+    }
+  }
+
+  void login() {
+    if (emailController.value.text != box.get('email') ||
+        passwordController.value.text != box.get('password')) {
+      box.put('email', emailController.value.text);
+      box.put('pass', passwordController.value.text);
+    }
   }
 }
