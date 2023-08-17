@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +15,15 @@ class ProfileTab extends StatefulWidget {
 }
 
 bool _isLoading = true;
+bool _isObscure = false;
+
+String? _oldPassword = '';
+String? _newPassword = '';
+String? _confirmPassword = '';
 
 class _ProfileTabState extends State<ProfileTab> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +31,10 @@ class _ProfileTabState extends State<ProfileTab> {
         .loadData()
         .then((value) => setState(() => _isLoading = false));
   }
+
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +131,7 @@ class _ProfileTabState extends State<ProfileTab> {
     );
   }
 
-  Future<bool?> updatePassword() {
+  updatePassword() {
     Auth auth = Provider.of(context, listen: false);
     return showDialog(
       context: context,
@@ -134,52 +143,150 @@ class _ProfileTabState extends State<ProfileTab> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      // Título
-                      child: Text('Atualização de Senha',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                    // Senha atual
-                    const CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock,
-                      label: 'Senha atual',
-                    ),
-                    // Nova senha
-                    const CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock_outline,
-                      label: 'Nova senha',
-                    ),
-                    //Confirmação nova senha
-                    const CustomTextField(
-                      isSecret: true,
-                      icon: Icons.lock_outline,
-                      label: 'Confirmar nova senha',
-                    ),
-                    // Botão de confirmação
-                    SizedBox(
-                      height: 45,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        onPressed: () {
-                          auth.changePassword();
-                        },
-                        child: const Text('ATUALIZAR'),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        // Título
+                        child: Text('Atualização de Senha',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
-                    ),
-                  ],
+                      // Senha atual
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Senha Atual',
+                          labelStyle:
+                              const TextStyle(fontWeight: FontWeight.bold),
+                          prefixIcon: const Icon(
+                            Icons.password,
+                            color: Colors.pink,
+                          ),
+                          suffixIcon: IconButton(
+                              onPressed: (() {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.pink,
+                              )),
+                          isDense: true,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        obscureText: _isObscure,
+                        controller: oldPasswordController,
+                        onSaved: (password) => _oldPassword = password ?? '',
+                        validator: (password_) {
+                          final password = password_ ?? '';
+                          if (password.isEmpty || password.length < 5) {
+                            return 'Informe uma senha válida';
+                          }
+                          return null;
+                        },
+                      ),
+                      // Nova senha
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Nova Senha',
+                          labelStyle:
+                              const TextStyle(fontWeight: FontWeight.bold),
+                          prefixIcon: const Icon(
+                            Icons.password,
+                            color: Colors.pink,
+                          ),
+                          suffixIcon: IconButton(
+                              onPressed: (() {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.pink,
+                              )),
+                          isDense: true,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        obscureText: _isObscure,
+                        controller: newPasswordController,
+                        onSaved: (password) => _newPassword = password ?? '',
+                        validator: (value) {
+                          if (value!.length < 6) {
+                            return "A senha não deve ter menos que 6 caracteres";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      //Confirmação nova senha
+                      TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Confirmar Senha',
+                            labelStyle:
+                                const TextStyle(fontWeight: FontWeight.bold),
+                            prefixIcon: const Icon(
+                              Icons.password,
+                              color: Colors.pink,
+                            ),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          obscureText: _isObscure,
+                          controller: confirmPasswordController,
+                          onSaved: (password) =>
+                              _confirmPassword = password ?? '',
+                          validator: (value) {
+                            if (value != newPasswordController.text) {
+                              return 'Senhas informadas não conferem.';
+                            }
+                            return null;
+                          }),
+                      const SizedBox(height: 10),
+                      // Botão de confirmação
+                      SizedBox(
+                        height: 45,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed:
+                              // authController.isLoading.value
+                              //       ? null
+                              //       :
+                              () {
+                            if (_formKey.currentState!.validate()) {
+                              // authController.changePassword(
+                              //   currentPassword:
+                              //       oldPasswordController.text,
+                              //   newPassword:
+                              //       newPasswordController.text,
+                              // );
+                            }
+                          },
+                          child: const Text('ATUALIZAR'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(

@@ -30,6 +30,7 @@ class _AuthFormState extends State<AuthForm> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   late Box box;
 
@@ -60,6 +61,8 @@ class _AuthFormState extends State<AuthForm> {
       } else {
         _authMode = AuthMode.login;
       }
+      emailController.text = '';
+      passwordController.text = '';
     });
   }
 
@@ -153,42 +156,41 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                   const SizedBox(height: 5),
                   TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      prefixIcon: const Icon(
-                        Icons.email,
-                        color: Colors.pink,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        labelStyle:
+                            const TextStyle(fontWeight: FontWeight.bold),
+                        prefixIcon: const Icon(
+                          Icons.password,
+                          color: Colors.pink,
+                        ),
+                        suffixIcon: IconButton(
+                            onPressed: (() {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            }),
+                            icon: Icon(
+                              _isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.pink,
+                            )),
+                        isDense: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
-                      suffixIcon: IconButton(
-                          onPressed: (() {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          }),
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.pink,
-                          )),
-                      isDense: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    obscureText: _isObscure,
-                    controller: passwordController,
-                    onSaved: (password) =>
-                        _authData['password'] = password ?? '',
-                    validator: (password_) {
-                      final password = password_ ?? '';
-                      if (password.isEmpty || password.length < 5) {
-                        return 'Informe uma senha válida';
-                      }
-                      return null;
-                    },
-                  ),
+                      keyboardType: TextInputType.emailAddress,
+                      obscureText: _isObscure,
+                      controller: passwordController,
+                      onSaved: (password) =>
+                          _authData['password'] = password ?? '',
+                      validator: (value) {
+                        if (value!.length < 6) {
+                          return "A senha não deve ter menos que 6 caracteres";
+                        }
+                        return null;
+                      }),
                   const SizedBox(height: 5),
                   if (_isSignup())
                     TextFormField(
@@ -197,7 +199,7 @@ class _AuthFormState extends State<AuthForm> {
                         labelStyle:
                             const TextStyle(fontWeight: FontWeight.bold),
                         prefixIcon: const Icon(
-                          Icons.email,
+                          Icons.password,
                           color: Colors.pink,
                         ),
                         isDense: true,
@@ -205,10 +207,10 @@ class _AuthFormState extends State<AuthForm> {
                             borderRadius: BorderRadius.circular(8)),
                       ),
                       keyboardType: TextInputType.emailAddress,
-                      obscureText: true,
-                      validator: (password_) {
-                        final password = password_ ?? '';
-                        if (password != passwordController.text) {
+                      obscureText: _isObscure,
+                      controller: confirmPasswordController,
+                      validator: (value) {
+                        if (value != passwordController.text) {
                           return 'Senhas informadas não conferem.';
                         }
                         return null;

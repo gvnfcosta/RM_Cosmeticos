@@ -13,6 +13,8 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   Timer? _logoutTimer;
 
+  //Você pode obter idTokenusando o getIdToken() método no objeto FirebaseUser
+
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
     return _token != null && isValid;
@@ -63,29 +65,16 @@ class Auth with ChangeNotifier {
         'expiryDate': _expiryDate!.toIso8601String(),
       });
 
-      //     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      // if (user != null) {
-      //   print(user.uid);
-      // }
-      // });
-
       _autoLogout();
       notifyListeners();
     }
   }
-
-  // Future<void> newLogin(String email, String password) async {
-  //   _userEmail = email;
-  //   _userPassword = password;
-  //   login(_userEmail, _userPassword);
-  // }
 
   Future<void> signup(String email, String password) async {
     return _authenticate(email, password, 'signUp');
   }
 
   Future<void> login(String email, String password) async {
-    //await box.put('userEmail', email);
     return _authenticate(email, password, 'signInWithPassword');
   }
 
@@ -93,10 +82,6 @@ class Auth with ChangeNotifier {
     if (isAuth) return;
 
     final userData = await Store.getMap('userData');
-
-    //  final userCredential =
-    //   await FirebaseAuth.instance.signInWithCredential(credential);
-    //final user = userCredential.user;
 
     if (userData.isEmpty) return;
 
@@ -113,20 +98,26 @@ class Auth with ChangeNotifier {
     _autoLogout();
   }
 
-  void changePassword(String password) async {
-    //Create an instance of the current user.
-    final userData = await Store.getMap('userData');
+// https://pt.stackoverflow.com/questions/516370/como-manter-o-login-ativo-flutter-firebase
 
-    //Pass in the password to updatePassword.
-    userData
-        .update('password', (password) => null)
-        .updatePassword(password)
-        .then((_) {
-      print("Successfully changed password");
-    }).catchError((error) {
-      print("Password can't be changed$error");
-      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
-    });
+  void changePassword(String password) async {
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${Constants.webApiKey}';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'returnSecureToken': true,
+      }),
+    );
+    //     .then((_) {
+    //   print("Successfully changed password");
+    // }).catchError((error) {
+    //   print("Password can't be changed$error");
+    //   //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    // });
   }
 
   void logout() {
@@ -145,18 +136,19 @@ class Auth with ChangeNotifier {
     _logoutTimer = null;
   }
 
-  // void keepLogged() async {
-  //   await login(_userEmail, _userPassword, String urlFragment);
-  // }
-
   void _autoLogout() async {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
     _logoutTimer = Timer(
       Duration(seconds: timeToLogout ?? 0),
       logout,
-
-      //    await user?.reauthenticateWithCredential(credential);
     );
+  }
+
+  String validarSenha(String newPassword, String confirmPassword) {
+    if (newPassword != confirmPassword) {
+      return 'Senhas informadas não conferem.';
+    }
+    return "Senha Alterada com Sucesso";
   }
 }
