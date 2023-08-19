@@ -1,16 +1,43 @@
 # rm_cosmeticos
 
-A new Flutter project.
+# Catálogos de Produtos RM COSMÉTICOS
 
-## Getting Started
+## 📚 Documentação 
 
-This project is a starting point for a Flutter application.
+Repositório do Aplicativo RM Cosméticos que permite cadastrar produtos, vendendores e criar diversos catálogos de produtos por vendedor. Foi criado por mim sob encomenda do proprietário da empresa para substituir os diversos catálogos criado em PDF no InDesign.
 
-A few resources to get you started if this is your first Flutter project:
+O projeto está em desenvolvimento.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+O objetivo é permitir que cada usuário(vendedor) cadastrado no App tenha uam infinidade de catálogos de produtos para cada região conforme necessidade e critérios do Administrador.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+Possi dois modos:
+
+
+### FUNÇÃO ADMINISTRADOR: 
+💄 Permite cadastrar os Produtos, suas Categorias e Subcategorias. 
+
+🧑 Também permite cadastrar os usuários (que podem ser vendedores e administradores).
+
+📓 Permite criar diversos catálogos para cada vendedor com preço e disposição coforme     desejo do administrador.
+
+👁 Permite ocultar ou reexibir algum produto que aparecerão ou não nos catálogos, bem como alterar o preço por catálogo individualmente.
+
+
+### FUNÇÃO USUÁRIO: 
+ Permite acessar os catálogos disponíveis para sua conta.
+
+
+- ### 🔗 [RM COSMÉTICOS](https://rmapp-3284d.web.app/#/).
+
+
+### Para fim de testes:
+
+| Usuário | Senha |
+|---------------|---------|
+|Admin@rm.com | adm@123 | Administrador |
+|Mauricio@rm.com | 123456 | Vendedor |
+
+#### Usuário (Vendedor Maurício) -usuario: Mauricio - senha:123456
+
+
