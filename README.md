@@ -1,5 +1,3 @@
-# rm_cosmeticos
-
 # Catálogos de Produtos RM COSMÉTICOS
 
 ## 📚 Documentação 
