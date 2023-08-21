@@ -132,7 +132,6 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   updatePassword() {
-    Auth auth = Provider.of(context, listen: false);
     return showDialog(
       context: context,
       builder: (context) {

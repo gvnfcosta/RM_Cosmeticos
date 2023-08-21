@@ -6,6 +6,7 @@ import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 
 import 'src/models/catalog_products_list.dart';
 import 'src/models/catalog_list.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        //ChangeNotifierProvider(create: (_) => AdminController()),
+        ChangeNotifierProvider(create: (_) => AdminController()),
         ChangeNotifierProxyProvider<Auth, ProductList>(
           create: (_) => ProductList('', []),
           update: (ctx, auth, previous) {

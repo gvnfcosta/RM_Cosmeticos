@@ -4,6 +4,8 @@ import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalog_admin_page.dart';
+import 'package:rm/src/pages/home/catalog_web_tab.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import 'package:rm/src/utils/app_routes.dart';
 import '../../../models/catalog_model.dart';
 import '/src/services/utils_services.dart';

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
+import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
+import 'package:rm/src/pages/home/catalog_web_tab.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';
 import 'catalog_form_page.dart';
@@ -14,8 +17,10 @@ class CatalogsPage extends StatefulWidget {
   State<CatalogsPage> createState() => _CatalogsPageState();
 }
 
+AdminController adminController = AdminController();
+bool _isWeb = adminController.isWeb;
+
 class _CatalogsPageState extends State<CatalogsPage> {
-  final bool _isLoading = true;
   String userName = '';
   bool isAdmin = false;
 
@@ -51,7 +56,11 @@ class _CatalogsPageState extends State<CatalogsPage> {
           allCatalogs.where((element) => element.seller == userName).toList();
     }
 
-    return Scaffold(
+    return
+        //  _isWeb
+        //     ? CatalogProductsPage(catalogs[1])
+        //     :
+        Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 140, 0, 110).withAlpha(150),
@@ -70,9 +79,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
       ),
 
       // Campo Pesquisa
-      body:
-          //  _isLoading          ? null          :
-          SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(

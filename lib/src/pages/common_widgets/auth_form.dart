@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 
 enum AuthMode { signup, login }
 
 Auth auth = Auth();
-bool isWeb = false;
+bool _isWeb = AdminController().isWeb;
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class _AuthFormState extends State<AuthForm> {
     createOpenBox();
 
     _isObscure = true;
-    if (isWeb) {
+    if (_isWeb) {
       _authData['email'] = 'loja@rm.com';
       _authData['senha'] = '123456';
       _iniciaWeb(_authData);
@@ -118,7 +119,7 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    return !isWeb
+    return !_isWeb
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -217,7 +218,6 @@ class _AuthFormState extends State<AuthForm> {
                       },
                     ),
                   const SizedBox(height: 20),
-                  const SizedBox(height: 5),
                   if (_isLoading)
                     const LinearProgressIndicator()
                   else

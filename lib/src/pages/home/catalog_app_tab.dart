@@ -6,18 +6,18 @@ import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
 import 'components/product_tile.dart';
 
-class CatalogTab extends StatefulWidget {
-  const CatalogTab({super.key, required this.items});
+class CatalogAppTab extends StatefulWidget {
+  const CatalogAppTab({super.key, required this.items});
 
   final List<ProductFiltered> items;
 
   @override
-  State<CatalogTab> createState() => _CatalogTabState();
+  State<CatalogAppTab> createState() => _CatalogAppTabState();
 }
 
 bool _isLoading = true;
 
-class _CatalogTabState extends State<CatalogTab> {
+class _CatalogAppTabState extends State<CatalogAppTab> {
   @override
   void initState() {
     super.initState();
@@ -135,7 +135,7 @@ class _CatalogTabState extends State<CatalogTab> {
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                       maxCrossAxisExtent: 250,
-                                      childAspectRatio: 0.7,
+                                      childAspectRatio: 0.75,
                                     ),
                                     itemCount: productsFiltered.length,
                                     itemBuilder: (_, index) {
