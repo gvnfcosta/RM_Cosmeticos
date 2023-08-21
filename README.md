@@ -27,6 +27,7 @@ Possi dois modos:
 
 
 - ### 🔗 [RM COSMÉTICOS](https://rmapp-3284d.web.app/#/).
+  (App ainda em desenvolvimento, os valores não são reais)
 
 
 ### Para fim de testes:
