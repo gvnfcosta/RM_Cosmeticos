@@ -20,18 +20,17 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
 
-  bool _isLoading = false;
+  final Map<String, String> _authData = {'email': '', 'password': ''};
   AuthMode _authMode = AuthMode.login;
 
-  final Map<String, String> _authData = {'email': '', 'password': ''};
-
+  bool _isLoading = false;
   bool _isLogin() => _authMode == AuthMode.login;
   bool _isSignup() => _authMode == AuthMode.signup;
   bool _isObscure = false;
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   late Box box;
 
@@ -46,7 +45,7 @@ class _AuthFormState extends State<AuthForm> {
       _authData['email'] = 'loja@rm.com';
       _authData['senha'] = '123456';
       _iniciaWeb(_authData);
-    } else {}
+    }
   }
 
   Future<void> _iniciaWeb(authData) async {
@@ -71,7 +70,7 @@ class _AuthFormState extends State<AuthForm> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Ocorreo um Erro'),
+        title: const Text('Ocorreu um Erro'),
         content: Text(msg),
         actions: [
           TextButton(

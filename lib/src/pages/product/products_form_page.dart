@@ -151,39 +151,43 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
-      appBar:
-          AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
-        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
-        IconButton(
-          icon: const Icon(Icons.delete),
-          iconSize: 25,
-          color: Colors.white,
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('Excluir Categoria'),
-                content: const Text('Tem certeza?'),
-                actions: [
-                  TextButton(
-                      child: const Text('NÃO'),
-                      onPressed: () => Navigator.of(ctx).pop()),
-                  TextButton(
-                    child: const Text('SIM'),
-                    onPressed: () {
-                      Provider.of<ProductList>(context, listen: false)
-                          .removeData(ModalRoute.of(context)?.settings.arguments
-                              as Product);
-                      Navigator.of(ctx).pop();
-                      Navigator.of(ctx).pop();
-                    },
+      appBar: AppBar(
+          title: const Text('Editar Produtos'),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          actions: [
+            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              iconSize: 25,
+              color: Colors.white,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Excluir Categoria'),
+                    content: const Text('Tem certeza?'),
+                    actions: [
+                      TextButton(
+                          child: const Text('NÃO'),
+                          onPressed: () => Navigator.of(ctx).pop()),
+                      TextButton(
+                        child: const Text('SIM'),
+                        onPressed: () {
+                          Provider.of<ProductList>(context, listen: false)
+                              .removeData(ModalRoute.of(context)
+                                  ?.settings
+                                  .arguments as Product);
+                          Navigator.of(ctx).pop();
+                          Navigator.of(ctx).pop();
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
-      ]),
+                );
+              },
+            ),
+          ]),
       body: SizedBox(
         height: deviceSize.height,
         width: deviceSize.width,
@@ -269,7 +273,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Container(
                                       height: 40,
-                                      width: 120,
+                                      width: 100,
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1,
@@ -321,30 +325,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       ),
                                     ),
                                   ),
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 15,
-                                        child: _visibleIcon
-                                            ? const Icon(
-                                                Icons.visibility,
-                                                color: Colors.indigo,
-                                              )
-                                            : const Icon(
-                                                Icons.visibility_off,
-                                                color: Colors.red,
-                                              ),
-                                      ),
-                                      Switch(
-                                          value: _formData['show'] as bool,
-                                          activeColor: Colors.blue,
-                                          onChanged: (bool value) {
-                                            setState(() {
-                                              _formData['show'] = value;
-                                              _visibleIcon = !_visibleIcon;
-                                            });
-                                          }),
-                                    ],
+                                  const SizedBox(width: 5),
+                                  SizedBox(
+                                    width: 30,
+                                    child: _visibleIcon
+                                        ? const Icon(
+                                            Icons.visibility,
+                                            color: Colors.indigo,
+                                          )
+                                        : const Icon(
+                                            Icons.visibility_off,
+                                            color: Colors.red,
+                                          ),
+                                  ),
+                                  SizedBox(
+                                    width: 50,
+                                    child: Switch(
+                                        value: _formData['show'] as bool,
+                                        activeColor: Colors.blue,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            _formData['show'] = value;
+                                            _visibleIcon = !_visibleIcon;
+                                          });
+                                        }),
                                   ),
                                 ]),
                             Row(

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class AdminController with ChangeNotifier {
-  bool _isWeb = true;
+  bool _isWeb = false;
 
   bool get isWeb => _isWeb;
 

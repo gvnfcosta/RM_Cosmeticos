@@ -100,25 +100,25 @@ class Auth with ChangeNotifier {
 
 // https://pt.stackoverflow.com/questions/516370/como-manter-o-login-ativo-flutter-firebase
 
-  void changePassword(String password) async {
-    const url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${Constants.webApiKey}';
+  // void changePassword(String password) async {
+  //   const url =
+  //       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${Constants.webApiKey}';
 
-    final response = await http.post(
-      Uri.parse(url),
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-        'returnSecureToken': true,
-      }),
-    );
-    //     .then((_) {
-    //   print("Successfully changed password");
-    // }).catchError((error) {
-    //   print("Password can't be changed$error");
-    //   //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
-    // });
-  }
+  //   final response = await http
+  //       .post(
+  //     Uri.parse(url),
+  //     body: jsonEncode({
+  //       'email': email,
+  //       'password': password,
+  //       'returnSecureToken': true,
+  //     }),
+  //   )
+  //       .then((_) {
+  //     print("A senha foi alterada.");
+  //   }).catchError((error) {
+  //     print("Alteração deu erro changed$error");
+  //   });
+  // }
 
   void logout() {
     _token = null;

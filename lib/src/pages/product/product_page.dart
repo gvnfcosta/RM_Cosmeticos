@@ -18,10 +18,9 @@ class ProductPage extends StatefulWidget {
 
 bool isAdmin = false;
 
-class _ProductPageState extends State<ProductPage> {
-  final bool _isLoading = true;
-  String selectedCategory = 'Todos os Produtos';
+String selectedCategory = 'Todos os Produtos';
 
+class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
@@ -31,7 +30,7 @@ class _ProductPageState extends State<ProductPage> {
     // .then((value) => setState(() => _isLoading = false));
   }
 
-  List<String> allCategories = ["Todos os Produtos"];
+  List<String> allCategories = [selectedCategory];
   bool _isSecret = false;
 
   @override

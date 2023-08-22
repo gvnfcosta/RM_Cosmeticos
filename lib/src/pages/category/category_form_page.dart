@@ -165,7 +165,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                 ),
               ),
               Container(
-                height: 320,
+                height: 340,
                 padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 decoration: const BoxDecoration(
                   color: Colors.white,
