@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/config/hive_config.dart';
@@ -26,7 +27,8 @@ import 'src/utils/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await HiveConfig.start();
+
+  if (!kIsWeb) await HiveConfig.start();
 
   runApp(const MyApp());
 }
