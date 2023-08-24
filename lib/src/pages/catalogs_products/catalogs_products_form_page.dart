@@ -131,130 +131,138 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
             key: _formKey,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(width: 1, color: Colors.grey),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: DropdownButton2(
-                              focusColor: Colors.white.withAlpha(240),
-                              dropdownElevation: 18,
-                              hint: Text('Produto',
-                                  style: TextStyle(
-                                      color: Theme.of(context).hintColor)),
-                              items: productsFiltered
-                                  .map(
-                                    (item) => DropdownMenuItem<String>(
-                                      value: item.name,
-                                      child: Text(item.name,
-                                          style: const TextStyle(fontSize: 14)),
-                                    ),
-                                  )
-                                  .toList(),
-                              value: _formData['productId'],
-                              isDense: true,
-                              onChanged: (value) {
-                                setState(() =>
-                                    _formData['productId'] = value as String);
-                                selectedProduct = value as String;
-                              },
-                              buttonHeight: 30,
-                              buttonWidth: 10,
-                              itemHeight: 30,
-                              autofocus: true,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(width: 1, color: Colors.grey),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: DropdownButton2(
+                                focusColor: Colors.grey[200],
+                                dropdownElevation: 18,
+                                isExpanded: true,
+                                hint: Text('Produto',
+                                    style: TextStyle(
+                                        color: Theme.of(context).hintColor)),
+                                items: productsFiltered
+                                    .map(
+                                      (item) => DropdownMenuItem<String>(
+                                        value: item.name,
+                                        child: Text(item.name,
+                                            style:
+                                                const TextStyle(fontSize: 14)),
+                                      ),
+                                    )
+                                    .toList(),
+                                value: _formData['productId'],
+                                isDense: true,
+                                onChanged: (value) {
+                                  setState(() =>
+                                      _formData['productId'] = value as String);
+                                  selectedProduct = value as String;
+                                },
+                                buttonHeight: 30,
+                                buttonWidth: 10,
+                                itemHeight: 30,
+                                autofocus: true,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                divisor(),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      child: TextFormField(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: TextFormField(
+                            style: const TextStyle(fontSize: 14),
+                            initialValue:
+                                _formData['price']?.toString() ?? '0.0',
+                            decoration: InputDecoration(
+                                labelText: 'Preço',
+                                labelStyle: const TextStyle(fontSize: 12),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            textInputAction: TextInputAction.next,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                              signed: true,
+                            ),
+                            onSaved: (price) => _formData['price'] =
+                                double.parse(price ?? '0.0'),
+                            onFieldSubmitted: (_) => FocusScope.of(context)
+                                .requestFocus(_pageNumberFocus),
+                            validator: (price_) {
+                              final priceString = price_ ?? '';
+                              final price = double.tryParse(priceString) ?? -1;
+
+                              if (price <= 0) {
+                                return 'Informe um preço válido';
+                              }
+
+                              return null;
+                            }),
+                      ),
+                      divisor(),
+                      SizedBox(
+                        width: 80,
+                        child: TextFormField(
                           style: const TextStyle(fontSize: 14),
-                          initialValue: _formData['price']?.toString() ?? '0.0',
+                          initialValue:
+                              _formData['pageNumber']?.toString() ?? '0',
                           decoration: InputDecoration(
-                              labelText: 'Preço',
+                              labelText: 'Página',
                               labelStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8))),
                           textInputAction: TextInputAction.next,
                           keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                            signed: true,
+                            decimal: false,
+                            signed: false,
                           ),
-                          onSaved: (price) =>
-                              _formData['price'] = double.parse(price ?? '0.0'),
+                          onSaved: (page) =>
+                              _formData['pageNumber'] = int.parse(page ?? '0'),
                           onFieldSubmitted: (_) => FocusScope.of(context)
-                              .requestFocus(_pageNumberFocus),
-                          validator: (price_) {
-                            final priceString = price_ ?? '';
-                            final price = double.tryParse(priceString) ?? -1;
-
-                            if (price <= 0) {
-                              return 'Informe um preço válido';
-                            }
-
-                            return null;
-                          }),
-                    ),
-                    divisor(),
-                    SizedBox(
-                      width: 80,
-                      child: TextFormField(
-                        style: const TextStyle(fontSize: 14),
-                        initialValue:
-                            _formData['pageNumber']?.toString() ?? '0',
-                        decoration: InputDecoration(
-                            labelText: 'Página',
-                            labelStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: false,
-                          signed: false,
+                              .requestFocus(_itemNumberFocus),
                         ),
-                        onSaved: (page) =>
-                            _formData['pageNumber'] = int.parse(page ?? '0'),
-                        onFieldSubmitted: (_) => FocusScope.of(context)
-                            .requestFocus(_itemNumberFocus),
                       ),
-                    ),
-                    divisor(),
-                    SizedBox(
-                      width: 80,
-                      child: TextFormField(
-                        style: const TextStyle(fontSize: 14),
-                        initialValue:
-                            _formData['itemNumber']?.toString() ?? '0',
-                        decoration: InputDecoration(
-                            labelText: 'Sequência',
-                            labelStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: false,
-                          signed: false,
+                      divisor(),
+                      SizedBox(
+                        width: 80,
+                        child: TextFormField(
+                          style: const TextStyle(fontSize: 14),
+                          initialValue:
+                              _formData['itemNumber']?.toString() ?? '0',
+                          decoration: InputDecoration(
+                              labelText: 'Sequência',
+                              labelStyle: const TextStyle(fontSize: 12),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8))),
+                          textInputAction: TextInputAction.next,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: false,
+                            signed: false,
+                          ),
+                          onSaved: (item) =>
+                              _formData['itemNumber'] = int.parse(item ?? '0'),
+                          onFieldSubmitted: (_) => _submitForm(),
                         ),
-                        onSaved: (item) =>
-                            _formData['itemNumber'] = int.parse(item ?? '0'),
-                        onFieldSubmitted: (_) => _submitForm(),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

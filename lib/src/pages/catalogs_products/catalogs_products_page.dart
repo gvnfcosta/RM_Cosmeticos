@@ -8,6 +8,8 @@ import 'package:rm/src/models/product_list.dart';
 import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/pages/catalogs/components/filtra_catalogo.dart';
 import 'package:rm/src/pages/home/catalog_app_tab.dart';
+import 'package:rm/src/pages/home/catalog_web_tab.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 
 class CatalogProductsPage extends StatefulWidget {
   const CatalogProductsPage(this.catalog, {super.key});
@@ -19,6 +21,7 @@ class CatalogProductsPage extends StatefulWidget {
 }
 
 bool _isLoading = true;
+bool _isWeb = AdminController().isWeb;
 
 class _CatalogProductsPageState extends State<CatalogProductsPage> {
   int currentIndex = 0;
@@ -55,7 +58,7 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
       backgroundColor: Colors.white,
 
       // Campo Pesquisa
-      body: CatalogAppTab(items: items),
+      body: _isWeb ? CatalogWebTab(items: items) : CatalogAppTab(items: items),
 
       // PageView(
       //     physics: const NeverScrollableScrollPhysics(),

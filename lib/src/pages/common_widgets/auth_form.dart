@@ -38,7 +38,7 @@ class _AuthFormState extends State<AuthForm> {
   void initState() {
     super.initState();
 
-    createOpenBox();
+    if (!_isWeb) createOpenBox();
 
     _isObscure = true;
     if (_isWeb) {
@@ -97,8 +97,7 @@ class _AuthFormState extends State<AuthForm> {
     try {
       if (_isLogin()) {
         // Login
-        await auth.login(
-            _authData['email']!, _authData['password'] ?? '123456');
+        await auth.login(_authData['email']!, _authData['password']!);
       } else {
         // Registrar
         await auth.signup(
@@ -106,7 +105,7 @@ class _AuthFormState extends State<AuthForm> {
           _authData['password']!,
         );
       }
-      login();
+      if (!_isWeb) login();
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {

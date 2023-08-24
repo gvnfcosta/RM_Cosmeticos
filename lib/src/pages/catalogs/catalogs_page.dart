@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
-import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
-import 'package:rm/src/pages/home/catalog_web_tab.dart';
 import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';

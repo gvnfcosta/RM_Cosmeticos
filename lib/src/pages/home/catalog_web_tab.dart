@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/catalog_list.dart';
+import 'package:rm/src/models/category_list.dart';
+import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/product_filtered.dart';
 import 'package:rm/src/models/product_list.dart';
 import 'components/product_tile.dart';
@@ -22,7 +24,9 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
   void initState() {
     super.initState();
 
-    // Provider.of<CategoryList>(context, listen: false).loadCategories();
+    Provider.of<CategoryList>(context, listen: false)
+        .loadCategories()
+        .then((value) => setState(() => _isLoading = false));
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
@@ -30,6 +34,10 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Category> category = Provider.of<CategoryList>(context)
+        .categories
+        .toList()
+      ..sort((a, b) => a.nome.compareTo(b.nome));
     List<ProductFiltered> items = widget.items
       ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)))
       ..sort(((a, b) => a.pageNumber.compareTo(b.pageNumber)));
@@ -71,12 +79,16 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: items.length + 1,
+                          itemCount: category.length,
                           itemBuilder: (_, index) {
-                            List<ProductFiltered> productsFiltered = items
-                                .where((element) => element.pageNumber == index)
+                            // List<ProductFiltered> productsFiltered = items
+                            //     .where((element) => element.pageNumber == index)
+                            //     .toList();
+                            List<ProductFiltered> productsFiltered = widget
+                                .items
+                                .where((element) =>
+                                    element.category == category[index].nome)
                                 .toList();
-
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty
@@ -101,7 +113,7 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    '  Página $index',
+                                                    category[index].nome,
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w300,
