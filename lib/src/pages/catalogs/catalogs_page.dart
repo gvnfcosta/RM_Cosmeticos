@@ -27,17 +27,10 @@ class _CatalogsPageState extends State<CatalogsPage> {
     super.initState();
     Provider.of<UserList>(context, listen: false).loadData();
     Provider.of<CatalogList>(context, listen: false).loadData();
-    // .then((value) => setState(() => _isLoading = false));
   }
 
   @override
   Widget build(BuildContext context) {
-    // List<UserModel> user = Provider.of<UserList>(context).user;
-    // if (user.isNotEmpty) {
-    //   userName = user.first.name;
-    //   isAdmin = user.first.level == 0;
-    // }
-
     UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
 
     String userName = users?.name ?? '';
@@ -54,11 +47,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
           allCatalogs.where((element) => element.seller == userName).toList();
     }
 
-    return
-        //  _isWeb
-        //     ? CatalogProductsPage(catalogs[1])
-        //     :
-        Scaffold(
+    return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 140, 0, 110).withAlpha(150),
@@ -68,7 +57,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
             userName == "Admin" ? "Administração" : userName,
             style: const TextStyle(
                 color: Colors.white60,
-                fontSize: 42,
+                fontSize: 28,
                 fontWeight: FontWeight.w200),
           ),
         ]),

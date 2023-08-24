@@ -22,7 +22,6 @@ class _CatalogAppTabState extends State<CatalogAppTab> {
   void initState() {
     super.initState();
 
-    // Provider.of<CategoryList>(context, listen: false).loadCategories();
     Provider.of<ProductList>(context, listen: false)
         .loadData()
         .then((value) => setState(() => _isLoading = false));
@@ -30,11 +29,6 @@ class _CatalogAppTabState extends State<CatalogAppTab> {
 
   @override
   Widget build(BuildContext context) {
-    // final List<Category> category = Provider.of<CategoryList>(context)
-    //     .categories
-    //     .toList()
-    //   ..sort((a, b) => a.nome.compareTo(b.nome));
-
     List<ProductFiltered> items = widget.items
       ..sort(((a, b) => a.itemNumber.compareTo(b.itemNumber)))
       ..sort(((a, b) => a.pageNumber.compareTo(b.pageNumber)));
@@ -57,7 +51,7 @@ class _CatalogAppTabState extends State<CatalogAppTab> {
                 alignment: Alignment.center,
                 child: Text(catalogoName,
                     style: const TextStyle(
-                      fontSize: 28,
+                      fontSize: 22,
                       fontWeight: FontWeight.w300,
                     )),
               ),
@@ -82,16 +76,10 @@ class _CatalogAppTabState extends State<CatalogAppTab> {
                                 .where((element) => element.pageNumber == index)
                                 .toList();
 
-                            // List<ProductFiltered> productsFiltered = widget
-                            //     .items
-                            //     .where((element) =>
-                            //         element.category == category[index].nome)
-                            //     .toList();
                             return Column(
                               children: [
                                 productsFiltered.isNotEmpty
-                                    ? //const SizedBox.shrink()
-                                    Padding(
+                                    ? Padding(
                                         padding: const EdgeInsets.only(
                                             top: 5, left: 5),
                                         child: Row(
@@ -129,7 +117,6 @@ class _CatalogAppTabState extends State<CatalogAppTab> {
                                 RefreshIndicator(
                                   onRefresh: () => _refreshData(context),
                                   child: GridView.builder(
-                                    //scrollDirection: Axis.horizontal,
                                     physics: const BouncingScrollPhysics(),
                                     shrinkWrap: true,
                                     gridDelegate:

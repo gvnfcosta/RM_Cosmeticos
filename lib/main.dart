@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
+          AppRoutes.authOrHome: (ctx) => AuthOrHomePage(),
           AppRoutes.signUpPage: (ctx) => SignUpScreen(),
           AppRoutes.baseScreen: (ctx) => const BaseScreen(),
           AppRoutes.userForm: (ctx) => const UserFormPage(),

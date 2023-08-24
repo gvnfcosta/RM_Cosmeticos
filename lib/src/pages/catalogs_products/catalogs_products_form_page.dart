@@ -108,6 +108,10 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
       productNames.add(item.name);
     }
 
+    // List<Product> productsFiltered = products.toList()
+    //   ..sort((a, b) => a.name.compareTo(b.name));
+
+    /// Lista que exclui os itens que ja estão na list
     List<Product> productsFiltered = products
         .where((item) => !productNames.contains(item.name))
         .toList()
@@ -122,9 +126,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
           IconButton(onPressed: _submitForm, icon: const Icon(Icons.check))
         ],
       ),
-      body:
-          // _isLoading          ? const Center(child: CircularProgressIndicator())          :
-          Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Form(

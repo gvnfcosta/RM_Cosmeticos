@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/pages/catalogs/catalogs_page.dart';
+import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import '../../models/auth.dart';
 import '../initial/base_screen.dart';
 import 'sign_in_screen.dart';
 
 class AuthOrHomePage extends StatelessWidget {
-  const AuthOrHomePage({Key? key}) : super(key: key);
+  AuthOrHomePage({Key? key}) : super(key: key);
+
+  final bool _isWeb = AdminController().isWeb;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,13 @@ class AuthOrHomePage extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth ? const BaseScreen() : SignInScreen();
+          return _isWeb
+              ? auth.isAuth
+                  ? const CatalogsPage()
+                  : SignInScreen()
+              : auth.isAuth
+                  ? const BaseScreen()
+                  : SignInScreen();
         }
       },
     );

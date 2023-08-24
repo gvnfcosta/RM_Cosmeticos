@@ -119,6 +119,7 @@ class _SubCategoryFormPageState extends State<SubCategoryFormPage> {
           ? Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(

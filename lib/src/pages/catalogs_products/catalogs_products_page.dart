@@ -59,30 +59,6 @@ class _CatalogProductsPageState extends State<CatalogProductsPage> {
 
       // Campo Pesquisa
       body: _isWeb ? CatalogWebTab(items: items) : CatalogAppTab(items: items),
-
-      // PageView(
-      //     physics: const NeverScrollableScrollPhysics(),
-      //     controller: pageController, //indica qual a tela aberta
-      //     children: [
-      //       CatalogTab(items: items),
-      //       CategoryTab(items: items),
-      //     ],
-      //   ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: currentIndex,
-      //   onTap: (indice) {
-      //     setState(() {
-      //       currentIndex = indice;
-      //       pageController.jumpToPage(indice); //muda a tela pelo indice
-      //     });
-      //   },
-      //   type: BottomNavigationBarType.fixed,
-      //   backgroundColor: Colors.pink.shade600,
-      //   selectedItemColor: Colors.white,
-      //   unselectedItemColor: Colors.white.withAlpha(100),
-      //   items: navigationItems,
-      // ),
     );
   }
 

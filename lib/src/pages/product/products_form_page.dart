@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:rm/src/models/category_model.dart';
+import 'package:rm/src/models/sub_category_model.dart';
 import '../../models/sub_category_list.dart';
 import '../category/category_form_page.dart';
 import '../category/sub_category_form_page.dart';
@@ -140,10 +142,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size deviceSize = MediaQuery.of(context).size;
+    final List<Category> categorias = Provider.of<CategoryList>(context).items_
+      ..sort((a, b) => a.nome.compareTo(b.nome));
 
-    final CategoryList categoria = Provider.of(context);
-    final SubCategoryList subCategoria = Provider.of(context);
+    final List<SubCategory> subCategorias =
+        Provider.of<SubCategoryList>(context).items_
+          ..sort((a, b) => a.nome.compareTo(b.nome));
 
     selectedUnidade = _formData['unit']?.toString();
     selectedCategoria = _formData['category']?.toString();
@@ -151,129 +155,121 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
-      appBar: AppBar(
-          title: const Text('Editar Produtos'),
-          elevation: 0,
-          backgroundColor: Colors.white,
-          actions: [
-            IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              iconSize: 25,
-              color: Colors.white,
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Excluir Categoria'),
-                    content: const Text('Tem certeza?'),
-                    actions: [
-                      TextButton(
-                          child: const Text('NÃO'),
-                          onPressed: () => Navigator.of(ctx).pop()),
-                      TextButton(
-                        child: const Text('SIM'),
-                        onPressed: () {
-                          Provider.of<ProductList>(context, listen: false)
-                              .removeData(ModalRoute.of(context)
-                                  ?.settings
-                                  .arguments as Product);
-                          Navigator.of(ctx).pop();
-                          Navigator.of(ctx).pop();
-                        },
-                      ),
-                    ],
+      appBar:
+          AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
+        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+        IconButton(
+          icon: const Icon(Icons.delete),
+          iconSize: 25,
+          color: Colors.white,
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Excluir Categoria'),
+                content: const Text('Tem certeza?'),
+                actions: [
+                  TextButton(
+                      child: const Text('NÃO'),
+                      onPressed: () => Navigator.of(ctx).pop()),
+                  TextButton(
+                    child: const Text('SIM'),
+                    onPressed: () {
+                      Provider.of<ProductList>(context, listen: false)
+                          .removeData(ModalRoute.of(context)?.settings.arguments
+                              as Product);
+                      Navigator.of(ctx).pop();
+                      Navigator.of(ctx).pop();
+                    },
                   ),
-                );
-              },
-            ),
-          ]),
-      body: SizedBox(
-        height: deviceSize.height,
-        width: deviceSize.width,
-        child: Column(children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: _imageUrlController.text.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Informe os dados',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                    )
-                  : Image.network(_imageUrlController.text),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(30),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.shade600, offset: const Offset(0, 2)),
-              ],
+            );
+          },
+        ),
+      ]),
+      body: Column(children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: _imageUrlController.text.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Informe os dados',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  )
+                : Image.network(_imageUrlController.text),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(30),
             ),
-            child: !_isLoading
-                ? Form(
-                    key: _formKey,
-                    child: SizedBox(
-                      height: 340,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 5.0, right: 5.0),
-                                      child: SizedBox(
-                                        height: 40,
-                                        child: TextFormField(
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                            initialValue:
-                                                _formData['code']?.toString(),
-                                            decoration: InputDecoration(
-                                                labelText: 'Código RM',
-                                                labelStyle: const TextStyle(
-                                                    fontSize: 12),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8))),
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            focusNode: _codeFocus,
-                                            onFieldSubmitted: (_) {
-                                              FocusScope.of(context)
-                                                  .requestFocus(_nameFocus);
-                                            },
-                                            onSaved: (code) =>
-                                                _formData['code'] = code ?? '',
-                                            validator: (cod) {
-                                              final code = cod ?? '';
-
-                                              if (code.trim().isEmpty) {
-                                                return 'Código é obrigatório';
-                                              }
-
-                                              return null;
-                                            }),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Container(
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade600, offset: const Offset(0, 2)),
+            ],
+          ),
+          child: !_isLoading
+              ? Form(
+                  key: _formKey,
+                  child: SizedBox(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10.0, right: 5.0),
+                                    child: SizedBox(
                                       height: 40,
                                       width: 100,
+                                      child: TextFormField(
+                                          style: const TextStyle(fontSize: 14),
+                                          initialValue:
+                                              _formData['code']?.toString(),
+                                          decoration: InputDecoration(
+                                              labelText: 'Código RM',
+                                              labelStyle:
+                                                  const TextStyle(fontSize: 12),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8))),
+                                          textInputAction: TextInputAction.next,
+                                          focusNode: _codeFocus,
+                                          onFieldSubmitted: (_) {
+                                            FocusScope.of(context)
+                                                .requestFocus(_nameFocus);
+                                          },
+                                          onSaved: (code) =>
+                                              _formData['code'] = code ?? '',
+                                          validator: (cod) {
+                                            final code = cod ?? '';
+
+                                            if (code.trim().isEmpty) {
+                                              return 'Código é obrigatório';
+                                            }
+
+                                            return null;
+                                          }),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: Container(
+                                      height: 40,
+                                      // width: 100,
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1,
@@ -325,10 +321,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 5),
-                                  SizedBox(
-                                    width: 30,
-                                    child: _visibleIcon
+                                ),
+                                const SizedBox(width: 20),
+                                Row(
+                                  children: [
+                                    _visibleIcon
                                         ? const Icon(
                                             Icons.visibility,
                                             color: Colors.indigo,
@@ -337,10 +334,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             Icons.visibility_off,
                                             color: Colors.red,
                                           ),
-                                  ),
-                                  SizedBox(
-                                    width: 50,
-                                    child: Switch(
+                                    Switch(
                                         value: _formData['show'] as bool,
                                         activeColor: Colors.blue,
                                         onChanged: (bool value) {
@@ -349,29 +343,94 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             _visibleIcon = !_visibleIcon;
                                           });
                                         }),
-                                  ),
-                                ]),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CategoryFormPage(),
+                                  ],
+                                ),
+                              ]),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CategoryFormPage(),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.add,
+                                      color: Colors.orange)),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 8.0, right: 8.0),
+                                child: SizedBox(
+                                  child: Container(
+                                    height: 40,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.black38,
                                         ),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.add,
-                                        color: Colors.orange)),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 8.0, right: 8.0),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: DropdownButtonHideUnderline(
+                                      child: SizedBox(
+                                        width: 120,
+                                        child: DropdownButton2(
+                                          focusNode: _unitFocus,
+                                          dropdownElevation: 12,
+                                          hint: Text('  Categoria',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context)
+                                                      .hintColor)),
+                                          items: categorias
+                                              .map((item) =>
+                                                  DropdownMenuItem<String>(
+                                                      value: item.nome,
+                                                      child: Text(item.nome,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      12))))
+                                              .toList(),
+                                          value: selectedCategoria,
+                                          onChanged: (value) {
+                                            setState(
+                                              () {
+                                                selectedCategoria =
+                                                    value as String;
+                                                _formData['category'] = value;
+                                              },
+                                            );
+                                          },
+                                          buttonHeight: 30,
+                                          buttonWidth: 10,
+                                          itemHeight: 30,
+                                          autofocus: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SubCategoryFormPage(),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.add,
+                                      color: Colors.orange)),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
                                   child: SizedBox(
                                     child: Container(
                                       height: 40,
-                                      width: 130,
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1,
@@ -381,16 +440,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                               BorderRadius.circular(8)),
                                       child: DropdownButtonHideUnderline(
                                         child: SizedBox(
-                                          width: 120,
+                                          //width: 120,
                                           child: DropdownButton2(
-                                            focusNode: _unitFocus,
+                                            focusNode: _subCategoryFocus,
                                             dropdownElevation: 12,
-                                            hint: Text('Categoria',
+                                            hint: Text('  SubCategoria',
                                                 style: TextStyle(
                                                     fontSize: 12,
                                                     color: Theme.of(context)
                                                         .hintColor)),
-                                            items: categoria.items
+                                            items: subCategorias
                                                 .map((item) =>
                                                     DropdownMenuItem<String>(
                                                         value: item.nome,
@@ -400,13 +459,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                                     fontSize:
                                                                         12))))
                                                 .toList(),
-                                            value: selectedCategoria,
+                                            value: selectedSubCategoria,
                                             onChanged: (value) {
                                               setState(
                                                 () {
-                                                  selectedCategoria =
+                                                  selectedSubCategoria =
                                                       value as String;
-                                                  _formData['category'] = value;
+                                                  _formData['subCategory'] =
+                                                      value;
                                                 },
                                               );
                                             },
@@ -420,177 +480,109 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SubCategoryFormPage(),
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.add,
-                                        color: Colors.orange)),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: SizedBox(
-                                      child: Container(
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 1,
-                                              color: Colors.black38,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: SizedBox(
-                                            //width: 120,
-                                            child: DropdownButton2(
-                                              focusNode: _subCategoryFocus,
-                                              dropdownElevation: 12,
-                                              hint: Text('SubCategoria',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Theme.of(context)
-                                                          .hintColor)),
-                                              items: subCategoria.items
-                                                  .map((item) =>
-                                                      DropdownMenuItem<String>(
-                                                          value: item.nome,
-                                                          child: Text(item.nome,
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          12))))
-                                                  .toList(),
-                                              value: selectedSubCategoria,
-                                              onChanged: (value) {
-                                                setState(
-                                                  () {
-                                                    selectedSubCategoria =
-                                                        value as String;
-                                                    _formData['subCategory'] =
-                                                        value;
-                                                  },
-                                                );
-                                              },
-                                              buttonHeight: 30,
-                                              buttonWidth: 10,
-                                              itemHeight: 30,
-                                              autofocus: true,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: SizedBox(
-                                height: 40,
-                                child: TextFormField(
-                                    style: const TextStyle(fontSize: 12),
-                                    initialValue: _formData['name']?.toString(),
-                                    decoration: InputDecoration(
-                                        labelText: 'Nome',
-                                        labelStyle:
-                                            const TextStyle(fontSize: 12),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8))),
-                                    textInputAction: TextInputAction.next,
-                                    focusNode: _nameFocus,
-                                    onFieldSubmitted: (_) {
-                                      FocusScope.of(context)
-                                          .requestFocus(_imageUrlFocus);
-                                    },
-                                    onSaved: (name) => _formData['name'] =
-                                        name!.toUpperCase() ?? '',
-                                    validator: (nam) {
-                                      final name = nam ?? '';
-
-                                      if (name.trim().isEmpty) {
-                                        return 'Nome é obrigatório';
-                                      }
-
-                                      return null;
-                                    }),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: SizedBox(
+                              height: 40,
                               child: TextFormField(
-                                  maxLines: 3,
                                   style: const TextStyle(fontSize: 12),
-                                  initialValue: _formData['imgUrl']?.toString(),
+                                  initialValue: _formData['name']?.toString(),
                                   decoration: InputDecoration(
-                                      labelText: 'Url da Imagem',
+                                      labelText: 'Nome',
                                       labelStyle: const TextStyle(fontSize: 12),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8))),
-                                  keyboardType: TextInputType.url,
-                                  textInputAction: TextInputAction.done,
-                                  focusNode: _imageUrlFocus,
-                                  controller: _imageUrlController,
+                                  textInputAction: TextInputAction.next,
+                                  focusNode: _nameFocus,
                                   onFieldSubmitted: (_) {
                                     FocusScope.of(context)
                                         .requestFocus(_imageUrlFocus);
                                   },
-                                  onSaved: (imageUrl) =>
-                                      _formData['imageUrl'] = imageUrl ?? '',
-                                  validator: (imageUr) {
-                                    final imageUrl = imageUr ?? '';
+                                  onSaved: (name) => _formData['name'] =
+                                      name!.toUpperCase() ?? '',
+                                  validator: (nam) {
+                                    final name = nam ?? '';
 
-                                    if (!isValidImageUrl(imageUrl)) {
-                                      return 'Informe uma Url válida!';
+                                    if (name.trim().isEmpty) {
+                                      return 'Nome é obrigatório';
                                     }
 
                                     return null;
                                   }),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: TextFormField(
-                                  maxLines: 2,
-                                  style: const TextStyle(fontSize: 12),
-                                  initialValue:
-                                      _formData['description']?.toString(),
-                                  decoration: InputDecoration(
-                                      labelText: 'Descrição',
-                                      labelStyle: const TextStyle(fontSize: 12),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8))),
-                                  keyboardType: TextInputType.multiline,
-                                  textInputAction: TextInputAction.next,
-                                  focusNode: _descriptionFocus,
-                                  onFieldSubmitted: (_) => _submitForm(),
-                                  onSaved: (description) =>
-                                      _formData['description'] =
-                                          description ?? '',
-                                  validator: (descriptio) {
-                                    final description = descriptio ?? '';
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: TextFormField(
+                                maxLines: 3,
+                                style: const TextStyle(fontSize: 12),
+                                initialValue: _formData['imgUrl']?.toString(),
+                                decoration: InputDecoration(
+                                    labelText: 'Url da Imagem',
+                                    labelStyle: const TextStyle(fontSize: 12),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.done,
+                                focusNode: _imageUrlFocus,
+                                controller: _imageUrlController,
+                                onFieldSubmitted: (_) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_imageUrlFocus);
+                                },
+                                onSaved: (imageUrl) =>
+                                    _formData['imageUrl'] = imageUrl ?? '',
+                                validator: (imageUr) {
+                                  final imageUrl = imageUr ?? '';
 
-                                    if (description.trim().isEmpty) {
-                                      return 'Descrição é obrigatório';
-                                    }
+                                  if (!isValidImageUrl(imageUrl)) {
+                                    return 'Informe uma Url válida!';
+                                  }
 
-                                    return null;
-                                  }),
-                            ),
-                          ]),
-                    ),
-                  )
-                : const Center(child: CircularProgressIndicator()),
-          ),
-        ]),
-      ),
+                                  return null;
+                                }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: TextFormField(
+                                maxLines: 2,
+                                style: const TextStyle(fontSize: 12),
+                                initialValue:
+                                    _formData['description']?.toString(),
+                                decoration: InputDecoration(
+                                    labelText: 'Descrição',
+                                    labelStyle: const TextStyle(fontSize: 12),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _descriptionFocus,
+                                onFieldSubmitted: (_) => _submitForm(),
+                                onSaved: (description) =>
+                                    _formData['description'] =
+                                        description ?? '',
+                                validator: (descriptio) {
+                                  final description = descriptio ?? '';
+
+                                  if (description.trim().isEmpty) {
+                                    return 'Descrição é obrigatório';
+                                  }
+
+                                  return null;
+                                }),
+                          ),
+                        ]),
+                  ),
+                )
+              : const Center(child: CircularProgressIndicator()),
+        ),
+      ]),
     );
   }
 }

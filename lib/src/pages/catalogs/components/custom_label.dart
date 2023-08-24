@@ -21,8 +21,7 @@ class CustomLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: customWidth ?? customWidth,
+        Expanded(
           child: Text(description,
               style: TextStyle(
                 fontSize: fontSize ?? 12,

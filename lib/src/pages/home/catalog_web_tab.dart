@@ -81,9 +81,6 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: category.length,
                           itemBuilder: (_, index) {
-                            // List<ProductFiltered> productsFiltered = items
-                            //     .where((element) => element.pageNumber == index)
-                            //     .toList();
                             List<ProductFiltered> productsFiltered = widget
                                 .items
                                 .where((element) =>
@@ -99,7 +96,7 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                                           children: [
                                             Container(
                                               height: 30,
-                                              width: 280,
+                                              width: 300,
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   stops: const [0.3, 0.6, 1],
@@ -113,7 +110,7 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    category[index].nome,
+                                                    '  ${category[index].nome}',
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w300,
@@ -130,13 +127,12 @@ class _CatalogWebTabState extends State<CatalogWebTab> {
                                 RefreshIndicator(
                                   onRefresh: () => _refreshData(context),
                                   child: GridView.builder(
-                                    //scrollDirection: Axis.horizontal,
                                     physics: const BouncingScrollPhysics(),
                                     shrinkWrap: true,
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                       maxCrossAxisExtent: 250,
-                                      childAspectRatio: 0.7,
+                                      childAspectRatio: 1,
                                     ),
                                     itemCount: productsFiltered.length,
                                     itemBuilder: (_, index) {

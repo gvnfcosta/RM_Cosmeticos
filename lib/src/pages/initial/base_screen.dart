@@ -34,9 +34,6 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Auth auth = Provider.of(context, listen: false);
-    // auth.keepLogged();
-
     int? userLevel = Provider.of<UserList>(context).userLevel;
 
     return Scaffold(
