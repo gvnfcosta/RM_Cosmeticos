@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/sub_category_model.dart';
+import 'package:rm/src/pages/product/product_image_picker.dart';
 import '../../models/sub_category_list.dart';
 import '../category/category_form_page.dart';
 import '../category/sub_category_form_page.dart';
@@ -12,6 +16,8 @@ import '/src/models/product_model.dart';
 import '../../config/custom_colors.dart';
 import '/src/services/utils_services.dart';
 import '../../config/app_data.dart' as appData;
+
+File? file;
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -108,16 +114,60 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return isValidUrl; //&& endsWithFile;
   }
 
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: Theme.of(context).colorScheme.error,
+    ));
+  }
+
+//  Future<UploadTask> upload(String path) async {
+//     File file = File(path);
+//     try {
+//       String ref = 'images/img-${DateTime.now().toString()}.jpeg';
+//       final storageRef = FirebaseStorage.instance.ref();
+//       return storageRef.child(ref).putFile(
+//             file,
+//             SettableMetadata(
+//               cacheControl: "public, max-age=300",
+//               contentType: "image/jpeg",
+//               customMetadata: {
+//                 "user": "123",
+//               },
+//             ),
+//           );
+//     } on FirebaseException catch (e) {
+//       throw Exception('Erro no upload: ${e.code}');
+//     }
+//   }
+
+  //   pickAndUploadImage() async {
+  //   XFile? file = await getImage();
+  //   if (file != null) {
+  //     UploadTask task = await upload(file.path);
+  //   }
+  // }
+
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) return;
+
+    if (file == null) {
+      return _showMessage('Selecione a imagem do produto');
+    }
+
+    // _formData['imageUrl'] = await saveImage(file, _formData['code'].toString());
+
+    Future<String> imagem = Future.value(_formData['imageUrl'] =
+        saveImage(file, (_formData['code']).toString()));
 
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
 
     try {
+      //if (!mounted) return;
       await Provider.of<ProductList>(context, listen: false)
           .saveData(_formData);
     } catch (error) {
@@ -135,9 +185,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
         ),
       );
     } finally {
+      // if (!mounted) return;
       setState(() => _isLoading = false);
       Navigator.of(context).pop();
     }
+  }
+
+  Future<String> saveImage(File? image, String productName) async {
+    final imageName = '$productName.jpg';
+    final imageURL = await _uploadUserImage(image, imageName);
+    return imageURL.toString();
+  }
+
+  Future<String?> _uploadUserImage(File? image, String imageName) async {
+    if (image == null) return null;
+
+    final storage = FirebaseStorage.instance;
+    final imageRef = storage.ref().child('rm_products').child(imageName);
+    await imageRef.putFile(image).whenComplete(() {});
+    return await imageRef.getDownloadURL();
+  }
+
+  void _handleImagePick(File image) {
+    // _formData['imageUrl'] = image.path;
+    file = image;
   }
 
   @override
@@ -157,49 +228,29 @@ class _ProductFormPageState extends State<ProductFormPage> {
       backgroundColor: CustomColors.customSwatchColor,
       appBar:
           AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
-        IconButton(onPressed: _submitForm, icon: const Icon(Icons.check)),
+        IconButton(
+            onPressed: () => _submitForm(), icon: const Icon(Icons.check)),
         IconButton(
           icon: const Icon(Icons.delete),
           iconSize: 25,
           color: Colors.white,
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('Excluir Categoria'),
-                content: const Text('Tem certeza?'),
-                actions: [
-                  TextButton(
-                      child: const Text('NÃO'),
-                      onPressed: () => Navigator.of(ctx).pop()),
-                  TextButton(
-                    child: const Text('SIM'),
-                    onPressed: () {
-                      Provider.of<ProductList>(context, listen: false)
-                          .removeData(ModalRoute.of(context)?.settings.arguments
-                              as Product);
-                      Navigator.of(ctx).pop();
-                      Navigator.of(ctx).pop();
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
+          onPressed: () => dialogExclude(),
         ),
       ]),
       body: Column(children: [
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: _imageUrlController.text.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Informe os dados',
-                      style: TextStyle(fontSize: 25),
-                    ),
-                  )
-                : Image.network(_imageUrlController.text),
+            child: ProductImagePicker(onImagePick: _handleImagePick),
+
+            // _imageUrlController.text.isEmpty
+            //     ? const Center(
+            //         child: Text(
+            //           'Informe os dados',
+            //           style: TextStyle(fontSize: 25),
+            //         ),
+            //       )
+            //     : Image.network(_imageUrlController.text),
           ),
         ),
         Container(
@@ -515,38 +566,38 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   }),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: TextFormField(
-                                maxLines: 3,
-                                style: const TextStyle(fontSize: 12),
-                                initialValue: _formData['imgUrl']?.toString(),
-                                decoration: InputDecoration(
-                                    labelText: 'Url da Imagem',
-                                    labelStyle: const TextStyle(fontSize: 12),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.done,
-                                focusNode: _imageUrlFocus,
-                                controller: _imageUrlController,
-                                onFieldSubmitted: (_) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_imageUrlFocus);
-                                },
-                                onSaved: (imageUrl) =>
-                                    _formData['imageUrl'] = imageUrl ?? '',
-                                validator: (imageUr) {
-                                  final imageUrl = imageUr ?? '';
+                          // Padding(
+                          //   padding: const EdgeInsets.only(bottom: 8.0),
+                          //   child: TextFormField(
+                          //       maxLines: 3,
+                          //       style: const TextStyle(fontSize: 12),
+                          //       initialValue: _formData['imgUrl']?.toString(),
+                          //       decoration: InputDecoration(
+                          //           labelText: 'Url da Imagem',
+                          //           labelStyle: const TextStyle(fontSize: 12),
+                          //           border: OutlineInputBorder(
+                          //               borderRadius:
+                          //                   BorderRadius.circular(8))),
+                          //       keyboardType: TextInputType.url,
+                          //       textInputAction: TextInputAction.done,
+                          //       focusNode: _imageUrlFocus,
+                          //       controller: _imageUrlController,
+                          //       onFieldSubmitted: (_) {
+                          //         FocusScope.of(context)
+                          //             .requestFocus(_imageUrlFocus);
+                          //       },
+                          //       onSaved: (imageUrl) =>
+                          //           _formData['imageUrl'] = imageUrl ?? '',
+                          //       validator: (imageUr) {
+                          //         final imageUrl = imageUr ?? '';
 
-                                  if (!isValidImageUrl(imageUrl)) {
-                                    return 'Informe uma Url válida!';
-                                  }
+                          //         if (!isValidImageUrl(imageUrl)) {
+                          //           return 'Informe uma Url válida!';
+                          //         }
 
-                                  return null;
-                                }),
-                          ),
+                          //         return null;
+                          //       }),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: TextFormField(
@@ -583,6 +634,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
               : const Center(child: CircularProgressIndicator()),
         ),
       ]),
+    );
+  }
+
+  dialogExclude() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Excluir Categoria'),
+        content: const Text('Tem certeza?'),
+        actions: [
+          TextButton(
+              child: const Text('NÃO'),
+              onPressed: () => Navigator.of(ctx).pop()),
+          TextButton(
+            child: const Text('SIM'),
+            onPressed: () {
+              Provider.of<ProductList>(context, listen: false).removeData(
+                  ModalRoute.of(context)?.settings.arguments as Product);
+              Navigator.of(ctx).pop();
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

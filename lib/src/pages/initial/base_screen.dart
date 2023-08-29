@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import 'package:rm/src/pages/category/category_page.dart';
 import 'package:rm/src/pages/home/components/admin_tab.dart';

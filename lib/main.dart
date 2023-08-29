@@ -30,6 +30,8 @@ void main() async {
 
   if (!kIsWeb) await HiveConfig.start();
 
+  // V.2.0.0
+
   runApp(const MyApp());
 }
 
