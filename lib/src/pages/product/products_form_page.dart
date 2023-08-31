@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/sub_category_model.dart';
@@ -17,7 +19,7 @@ import '../../config/custom_colors.dart';
 import '/src/services/utils_services.dart';
 import '../../config/app_data.dart' as appData;
 
-File? file;
+// File? file;
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -28,6 +30,8 @@ class ProductFormPage extends StatefulWidget {
 
 class _ProductFormPageState extends State<ProductFormPage> {
   final utilsServices = UtilsServices();
+
+  // UploadTask? uploadTask;
 
   bool _isLoading = true;
   bool _visibleIcon = true;
@@ -73,6 +77,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
       _formData['unit'] = 'Un';
       _formData['show'] = true;
+      _formData['code'] = 'product.code';
+      _formData['name'] = 'product.name';
+      _formData['description'] = 'product.description';
+      _formData['category'] = 'Pele';
+      _formData['subCategory'] = 'Gel';
 
       if (arg != null) {
         final product = arg as Product;
@@ -153,18 +162,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     if (!isValid) return;
 
-    if (file == null) {
-      return _showMessage('Selecione a imagem do produto');
-    }
-
-    // _formData['imageUrl'] = await saveImage(file, _formData['code'].toString());
-
-    Future<String> imagem = Future.value(_formData['imageUrl'] =
-        saveImage(file, (_formData['code']).toString()));
+    // if (file == null) {
+    //   return _showMessage('Selecione a imagem do produto');
+    // }
 
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
+
+    // String fileLink = uploadFile(file!).toString();
+
+    // print(fileLink);
 
     try {
       //if (!mounted) return;
@@ -191,25 +199,67 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
   }
 
-  Future<String> saveImage(File? image, String productName) async {
-    final imageName = '$productName.jpg';
-    final imageURL = await _uploadUserImage(image, imageName);
-    return imageURL.toString();
+  uploadImage(file) async {
+    final firebaseStorage = FirebaseStorage.instance;
+    final imagePicker = ImagePicker();
+    PickedFile image;
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      //Select Image
+      image = await imagePicker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      // if (image != null){
+      if (file != null) {
+        //Upload to Firebase
+        var snapshot = await firebaseStorage
+            .ref()
+            .child('images/imageName')
+            .putFile(file)
+            .onComplete;
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+        setState(() {
+          _formData['imageUrl'] = downloadUrl;
+        });
+      } else {
+        print('No Image Path Received');
+      }
+    } else {
+      print('Permission not granted. Try Again with permission access');
+    }
   }
 
-  Future<String?> _uploadUserImage(File? image, String imageName) async {
-    if (image == null) return null;
+  // Future<String> uploadFile(File file) async {
+  //   final ref = FirebaseStorage.instance.ref().child(file.toString());
 
-    final storage = FirebaseStorage.instance;
-    final imageRef = storage.ref().child('rm_products').child(imageName);
-    await imageRef.putFile(image).whenComplete(() {});
-    return await imageRef.getDownloadURL();
-  }
+  //   setState(() {
+  //     uploadTask = ref.putFile(file);
+  //   });
 
-  void _handleImagePick(File image) {
-    // _formData['imageUrl'] = image.path;
-    file = image;
-  }
+  //   final snapshot = await uploadTask!.whenComplete(() {});
+  //   final urlDownload = await snapshot.ref.getDownloadURL();
+  //   return urlDownload;
+  // }
+
+  // Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+  //       stream: uploadTask?.snapshotEvents,
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           final data = snapshot.data!;
+  //           double progress = data.bytesTransferred / data.totalBytes;
+  //         } else {
+  //           return const SizedBox(height: 50);
+  //         }
+  //       },
+  //     );
+
+  // void _handleImagePick(File image) {
+  //   file = image;
+  // }
 
   @override
   Widget build(BuildContext context) {

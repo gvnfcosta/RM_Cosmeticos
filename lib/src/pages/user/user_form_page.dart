@@ -228,7 +228,7 @@ class _UserFormPageState extends State<UserFormPage> {
                                     child: Expanded(
                                       child: DropdownButton2(
                                         focusNode: _levelFocus,
-                                        dropdownElevation: 12,
+                                        // dropdownElevation: 12,
                                         hint: Text('Selecione',
                                             style: TextStyle(
                                                 color: Theme.of(context)
@@ -260,9 +260,9 @@ class _UserFormPageState extends State<UserFormPage> {
                                             );
                                           }
                                         },
-                                        buttonHeight: 30,
-                                        buttonWidth: 10,
-                                        itemHeight: 30,
+                                        // buttonHeight: 30,
+                                        // buttonWidth: 10,
+                                        // itemHeight: 30,
                                         autofocus: true,
                                       ),
                                     ),
