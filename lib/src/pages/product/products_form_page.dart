@@ -1,13 +1,13 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/sub_category_model.dart';
+import 'package:rm/src/pages/product/image_upload.dart';
 import 'package:rm/src/pages/product/product_image_picker.dart';
 import '../../models/sub_category_list.dart';
 import '../category/category_form_page.dart';
@@ -19,7 +19,7 @@ import '../../config/custom_colors.dart';
 import '/src/services/utils_services.dart';
 import '../../config/app_data.dart' as appData;
 
-// File? file;
+File? file;
 
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
@@ -29,9 +29,10 @@ class ProductFormPage extends StatefulWidget {
 }
 
 class _ProductFormPageState extends State<ProductFormPage> {
-  final utilsServices = UtilsServices();
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
-  // UploadTask? uploadTask;
+  final utilsServices = UtilsServices();
 
   bool _isLoading = true;
   bool _visibleIcon = true;
@@ -57,6 +58,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   @override
   void initState() {
     super.initState();
+
     Provider.of<CategoryList>(context, listen: false)
         .loadCategories()
         .then((value) => setState(() {
@@ -77,11 +79,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
       _formData['unit'] = 'Un';
       _formData['show'] = true;
-      _formData['code'] = 'product.code';
-      _formData['name'] = 'product.name';
-      _formData['description'] = 'product.description';
-      _formData['category'] = 'Pele';
-      _formData['subCategory'] = 'Gel';
 
       if (arg != null) {
         final product = arg as Product;
@@ -130,49 +127,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
     ));
   }
 
-//  Future<UploadTask> upload(String path) async {
-//     File file = File(path);
-//     try {
-//       String ref = 'images/img-${DateTime.now().toString()}.jpeg';
-//       final storageRef = FirebaseStorage.instance.ref();
-//       return storageRef.child(ref).putFile(
-//             file,
-//             SettableMetadata(
-//               cacheControl: "public, max-age=300",
-//               contentType: "image/jpeg",
-//               customMetadata: {
-//                 "user": "123",
-//               },
-//             ),
-//           );
-//     } on FirebaseException catch (e) {
-//       throw Exception('Erro no upload: ${e.code}');
-//     }
-//   }
-
-  //   pickAndUploadImage() async {
-  //   XFile? file = await getImage();
-  //   if (file != null) {
-  //     UploadTask task = await upload(file.path);
-  //   }
-  // }
-
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) return;
 
-    // if (file == null) {
-    //   return _showMessage('Selecione a imagem do produto');
-    // }
+    if (file == null) {
+      return _showMessage('Selecione a imagem do produto');
+    }
+
+    _formData['imageUrl'] = await saveImage(file, _formData['code'].toString());
+    // _formData['imageUrl'] = const ImageUploads();
+
+    // Future<String> imagem = Future.value(_formData['imageUrl'] =
+    //     saveImage(file, (_formData['code']).toString()));
 
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
-
-    // String fileLink = uploadFile(file!).toString();
-
-    // print(fileLink);
 
     try {
       //if (!mounted) return;
@@ -199,67 +171,25 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
   }
 
-  uploadImage(file) async {
-    final firebaseStorage = FirebaseStorage.instance;
-    final imagePicker = ImagePicker();
-    PickedFile image;
-    //Check Permissions
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-
-    if (permissionStatus.isGranted) {
-      //Select Image
-      image = await imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image.path);
-
-      // if (image != null){
-      if (file != null) {
-        //Upload to Firebase
-        var snapshot = await firebaseStorage
-            .ref()
-            .child('images/imageName')
-            .putFile(file)
-            .onComplete;
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          _formData['imageUrl'] = downloadUrl;
-        });
-      } else {
-        print('No Image Path Received');
-      }
-    } else {
-      print('Permission not granted. Try Again with permission access');
-    }
+  Future<String> saveImage(File? image, String productName) async {
+    // await Firebase.initializeApp();
+    final imageName = '$productName.jpg';
+    final imageURL = await _uploadUserImage(image, imageName);
+    return imageURL.toString();
   }
 
-  // Future<String> uploadFile(File file) async {
-  //   final ref = FirebaseStorage.instance.ref().child(file.toString());
+  Future<String?> _uploadUserImage(File? image, String imageName) async {
+    if (image == null) return null;
 
-  //   setState(() {
-  //     uploadTask = ref.putFile(file);
-  //   });
+    final storage = firebase_storage.FirebaseStorage.instance;
+    final imageRef = storage.ref().child('AppImages').child(imageName);
+    await imageRef.putFile(image).whenComplete(() {});
+    return await imageRef.getDownloadURL();
+  }
 
-  //   final snapshot = await uploadTask!.whenComplete(() {});
-  //   final urlDownload = await snapshot.ref.getDownloadURL();
-  //   return urlDownload;
-  // }
-
-  // Widget buildProgress() => StreamBuilder<TaskSnapshot>(
-  //       stream: uploadTask?.snapshotEvents,
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           final data = snapshot.data!;
-  //           double progress = data.bytesTransferred / data.totalBytes;
-  //         } else {
-  //           return const SizedBox(height: 50);
-  //         }
-  //       },
-  //     );
-
-  // void _handleImagePick(File image) {
-  //   file = image;
-  // }
+  void _handleImagePick(File image) {
+    file = image;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -288,23 +218,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
         ),
       ]),
       body: Column(children: [
-        Expanded(
+        const Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: ProductImagePicker(onImagePick: _handleImagePick),
-
-            // _imageUrlController.text.isEmpty
-            //     ? const Center(
-            //         child: Text(
-            //           'Informe os dados',
-            //           style: TextStyle(fontSize: 25),
-            //         ),
-            //       )
-            //     : Image.network(_imageUrlController.text),
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            // child: ProductImagePicker(onImagePick: _handleImagePick),
+            child: ImageUploads(),
           ),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.vertical(
@@ -370,7 +292,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         const EdgeInsets.only(bottom: 10.0),
                                     child: Container(
                                       height: 40,
-                                      // width: 100,
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1,
@@ -541,7 +462,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                               BorderRadius.circular(8)),
                                       child: DropdownButtonHideUnderline(
                                         child: SizedBox(
-                                          //width: 120,
                                           child: DropdownButton2(
                                             focusNode: _subCategoryFocus,
                                             dropdownElevation: 12,
@@ -616,38 +536,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   }),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.only(bottom: 8.0),
-                          //   child: TextFormField(
-                          //       maxLines: 3,
-                          //       style: const TextStyle(fontSize: 12),
-                          //       initialValue: _formData['imgUrl']?.toString(),
-                          //       decoration: InputDecoration(
-                          //           labelText: 'Url da Imagem',
-                          //           labelStyle: const TextStyle(fontSize: 12),
-                          //           border: OutlineInputBorder(
-                          //               borderRadius:
-                          //                   BorderRadius.circular(8))),
-                          //       keyboardType: TextInputType.url,
-                          //       textInputAction: TextInputAction.done,
-                          //       focusNode: _imageUrlFocus,
-                          //       controller: _imageUrlController,
-                          //       onFieldSubmitted: (_) {
-                          //         FocusScope.of(context)
-                          //             .requestFocus(_imageUrlFocus);
-                          //       },
-                          //       onSaved: (imageUrl) =>
-                          //           _formData['imageUrl'] = imageUrl ?? '',
-                          //       validator: (imageUr) {
-                          //         final imageUrl = imageUr ?? '';
-
-                          //         if (!isValidImageUrl(imageUrl)) {
-                          //           return 'Informe uma Url válida!';
-                          //         }
-
-                          //         return null;
-                          //       }),
-                          // ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: TextFormField(
