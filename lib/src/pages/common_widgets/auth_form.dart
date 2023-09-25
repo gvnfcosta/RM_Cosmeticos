@@ -121,10 +121,16 @@ class _AuthFormState extends State<AuthForm> {
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            decoration: BoxDecoration(
-                color: Colors.pink.withAlpha(30),
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20))),
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(215, 117, 255, 0.5),
+                    Color.fromRGBO(215, 117, 255, 0.2),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Form(
               key: _formKey,
               child: Column(
@@ -160,7 +166,7 @@ class _AuthFormState extends State<AuthForm> {
                         labelStyle:
                             const TextStyle(fontWeight: FontWeight.bold),
                         prefixIcon: const Icon(
-                          Icons.password,
+                          Icons.lock,
                           color: Colors.pink,
                         ),
                         suffixIcon: IconButton(

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -58,7 +57,7 @@ class _ImageUploadsState extends State<ImageUploads> {
           .child(fileName);
       await ref.putFile(_photo!);
     } catch (e) {
-      print('error occured');
+      print('Ocorreu um erro');
     }
   }
 
@@ -66,17 +65,16 @@ class _ImageUploadsState extends State<ImageUploads> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 32),
+          const SizedBox(height: 26),
           Center(
             child: GestureDetector(
               onTap: () {
                 _showPicker(context);
               },
               child: CircleAvatar(
-                radius: 155,
+                radius: 140,
                 backgroundColor: Colors.white,
                 child: _photo != null
                     ? ClipRRect(
@@ -118,14 +116,14 @@ class _ImageUploadsState extends State<ImageUploads> {
                 children: <Widget>[
                   ListTile(
                       leading: const Icon(Icons.photo_library),
-                      title: const Text('Gallery'),
+                      title: const Text('Galeria'),
                       onTap: () {
                         imgFromGallery();
                         Navigator.of(context).pop();
                       }),
                   ListTile(
                     leading: const Icon(Icons.photo_camera),
-                    title: const Text('Camera'),
+                    title: const Text('Câmera'),
                     onTap: () {
                       imgFromCamera();
                       Navigator.of(context).pop();

@@ -3,11 +3,9 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:rm/src/pages/common_widgets/auth_form.dart';
 
 class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
+  const SignInScreen({super.key});
 
   //Controladores de campos de texto
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,91 +13,69 @@ class SignInScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
+      body: Center(
+        child: SizedBox(
           height: deviceSize.height,
           width: deviceSize.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(255, 255, 255, 1),
-                Color.fromRGBO(255, 255, 255, 0.1),
-                Color.fromRGBO(215, 117, 255, 0.8),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        //height: 300,
-                        child: Image.asset('assets/images/TelaInicial.png'),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Stack(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(left: 2, top: 2),
-                              child: Text(
-                                'Catálogos\nde Produtos',
-                                style: TextStyle(
-                                    color: Colors.black26,
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 0, top: 0),
-                              child: Text(
-                                'Catálogos\nde Produtos',
-                                style: TextStyle(
-                                    color: Colors.pink.shade600,
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: DefaultTextStyle(
-                        style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w200,
-                            color: Colors.pink.shade700),
-                        child: AnimatedTextKit(
-                          pause: Duration.zero,
-                          repeatForever: true,
-                          animatedTexts: [
-                            FadeAnimatedText('Maquiagem'),
-                            FadeAnimatedText('Cremes'),
-                            FadeAnimatedText('Shampoos'),
-                            FadeAnimatedText('Condicionadores'),
-                            FadeAnimatedText('Infantil'),
-                            FadeAnimatedText('Facial'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                  ],
+                child: Image.asset(
+                  'assets/images/TelaInicial.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 50,
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.pink.shade700),
+                  child: AnimatedTextKit(
+                    pause: Duration.zero,
+                    repeatForever: true,
+                    animatedTexts: [
+                      FadeAnimatedText('Maquiagem'),
+                      FadeAnimatedText('Cremes'),
+                      FadeAnimatedText('Shampoos'),
+                      FadeAnimatedText('Condicionadores'),
+                      FadeAnimatedText('Infantil'),
+                      FadeAnimatedText('Facial'),
+                    ],
+                  ),
                 ),
               ),
 
               //Formulário
               const AuthForm(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Stack(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 2, top: 2),
+                      child: Text(
+                        'Catálogos de Produtos',
+                        style: TextStyle(
+                            color: Colors.black26,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Text(
+                      'Catálogos de Produtos',
+                      style: TextStyle(
+                          color: Colors.pink.shade600,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/sub_category_model.dart';
@@ -172,7 +172,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   Future<String> saveImage(File? image, String productName) async {
-    // await Firebase.initializeApp();
+    await Firebase.initializeApp();
     final imageName = '$productName.jpg';
     final imageURL = await _uploadUserImage(image, imageName);
     return imageURL.toString();
@@ -193,11 +193,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Category> categorias = Provider.of<CategoryList>(context).items_
+    final List<Category> categorias = Provider.of<CategoryList>(context)
+        .categories
       ..sort((a, b) => a.nome.compareTo(b.nome));
 
     final List<SubCategory> subCategorias =
-        Provider.of<SubCategoryList>(context).items_
+        Provider.of<SubCategoryList>(context).subCategories
           ..sort((a, b) => a.nome.compareTo(b.nome));
 
     selectedUnidade = _formData['unit']?.toString();
@@ -219,18 +220,17 @@ class _ProductFormPageState extends State<ProductFormPage> {
       ]),
       body: Column(children: [
         const Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            // child: ProductImagePicker(onImagePick: _handleImagePick),
-            child: ImageUploads(),
-          ),
-        ),
+            child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: ImageUploads(),
+        )),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+          height: 245,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(30),
+              top: Radius.circular(20),
             ),
             boxShadow: [
               BoxShadow(
@@ -536,36 +536,31 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   }),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: TextFormField(
-                                maxLines: 2,
-                                style: const TextStyle(fontSize: 12),
-                                initialValue:
-                                    _formData['description']?.toString(),
-                                decoration: InputDecoration(
-                                    labelText: 'Descrição',
-                                    labelStyle: const TextStyle(fontSize: 12),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
-                                keyboardType: TextInputType.multiline,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _descriptionFocus,
-                                onFieldSubmitted: (_) => _submitForm(),
-                                onSaved: (description) =>
-                                    _formData['description'] =
-                                        description ?? '',
-                                validator: (descriptio) {
-                                  final description = descriptio ?? '';
+                          TextFormField(
+                              maxLines: 2,
+                              style: const TextStyle(fontSize: 12),
+                              initialValue:
+                                  _formData['description']?.toString(),
+                              decoration: InputDecoration(
+                                  labelText: 'Descrição',
+                                  labelStyle: const TextStyle(fontSize: 12),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8))),
+                              keyboardType: TextInputType.multiline,
+                              textInputAction: TextInputAction.next,
+                              focusNode: _descriptionFocus,
+                              onFieldSubmitted: (_) => _submitForm(),
+                              onSaved: (description) =>
+                                  _formData['description'] = description ?? '',
+                              validator: (descriptio) {
+                                final description = descriptio ?? '';
 
-                                  if (description.trim().isEmpty) {
-                                    return 'Descrição é obrigatório';
-                                  }
+                                if (description.trim().isEmpty) {
+                                  return 'Descrição é obrigatório';
+                                }
 
-                                  return null;
-                                }),
-                          ),
+                                return null;
+                              }),
                         ]),
                   ),
                 )
