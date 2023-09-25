@@ -4,46 +4,55 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'package:rm/src/config/custom_colors.dart';
 
 class ImageUploads extends StatefulWidget {
-  const ImageUploads({Key? key}) : super(key: key);
+  final void Function(File photo) onImagePick;
 
+  const ImageUploads({super.key, required this.onImagePick});
   @override
   _ImageUploadsState createState() => _ImageUploadsState();
 }
 
 class _ImageUploadsState extends State<ImageUploads> {
+  File? _photo;
+
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
-  File? _photo;
-  final ImagePicker _picker = ImagePicker();
-
   Future imgFromGallery() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 100,
+      maxWidth: 500,
+    );
+    if (pickedImage != null) {
+      setState(() {
+        _photo = File(pickedImage.path);
+        // uploadFile();
+      });
 
-    setState(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-
-        uploadFile();
-      } else {
-        print('No image selected.');
-      }
-    });
+      widget.onImagePick(_photo!);
+    }
   }
 
   Future imgFromCamera() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 100,
+      maxWidth: 500,
+    );
 
-    setState(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        uploadFile();
-      } else {
-        print('No image selected.');
-      }
-    });
+    if (pickedImage != null) {
+      setState(() {
+        _photo = File(pickedImage.path);
+        // uploadFile();
+      });
+
+      widget.onImagePick(_photo!);
+    }
   }
 
   Future uploadFile() async {
@@ -64,7 +73,7 @@ class _ImageUploadsState extends State<ImageUploads> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CustomColors.customSwatchColor,
       body: Column(
         children: <Widget>[
           const SizedBox(height: 26),
@@ -74,8 +83,9 @@ class _ImageUploadsState extends State<ImageUploads> {
                 _showPicker(context);
               },
               child: CircleAvatar(
-                radius: 140,
-                backgroundColor: Colors.white,
+                radius: 150,
+                backgroundColor: CustomColors.customSwatchColor,
+                //backgroundColor: Colors.white,
                 child: _photo != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(1),
@@ -88,14 +98,14 @@ class _ImageUploadsState extends State<ImageUploads> {
                       )
                     : Container(
                         decoration: BoxDecoration(
-                            //  color: Colors.grey[200],
+                            color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(50)),
                         width: 300,
                         height: 300,
-                        child: Icon(
+                        child: const Icon(
                           Icons.camera_alt,
-                          size: 80,
-                          color: Colors.grey[800],
+                          size: 150,
+                          color: Colors.blueGrey,
                         ),
                       ),
               ),
@@ -111,26 +121,24 @@ class _ImageUploadsState extends State<ImageUploads> {
         context: context,
         builder: (BuildContext bc) {
           return SafeArea(
-            child: Container(
-              child: Wrap(
-                children: <Widget>[
-                  ListTile(
-                      leading: const Icon(Icons.photo_library),
-                      title: const Text('Galeria'),
-                      onTap: () {
-                        imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  ListTile(
-                    leading: const Icon(Icons.photo_camera),
-                    title: const Text('Câmera'),
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Galeria'),
                     onTap: () {
-                      imgFromCamera();
+                      imgFromGallery();
                       Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const Text('Câmera'),
+                  onTap: () {
+                    imgFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           );
         });

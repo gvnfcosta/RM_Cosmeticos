@@ -114,9 +114,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   bool isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    // bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-    //     url.toLowerCase().endsWith('.jpg') ||
-    //     url.toLowerCase().endsWith('.jpeg');
     return isValidUrl; //&& endsWithFile;
   }
 
@@ -187,8 +184,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return await imageRef.getDownloadURL();
   }
 
-  void _handleImagePick(File image) {
-    file = image;
+  void _handleImagePick(File photo) {
+    file = photo;
   }
 
   @override
@@ -219,10 +216,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
         ),
       ]),
       body: Column(children: [
-        const Expanded(
+        Expanded(
             child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: ImageUploads(),
+          padding: const EdgeInsets.all(8.0),
+          child: ImageUploads(onImagePick: _handleImagePick),
+          //child: ProductImagePicker(onImagePick: _handleImagePick),
         )),
         Container(
           height: 245,
@@ -396,8 +394,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         ),
                                         borderRadius: BorderRadius.circular(8)),
                                     child: DropdownButtonHideUnderline(
-                                      child: SizedBox(
+                                      child: Container(
                                         width: 120,
+                                        margin: const EdgeInsets.only(left: 8),
                                         child: DropdownButton2(
                                           focusNode: _unitFocus,
                                           dropdownElevation: 12,
@@ -574,7 +573,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Excluir Categoria'),
+        title: const Text('Excluir Produto'),
         content: const Text('Tem certeza?'),
         actions: [
           TextButton(
