@@ -28,10 +28,10 @@ class AuthOrHomePage extends StatelessWidget {
           return _isWeb
               ? auth.isAuth
                   ? const CatalogsPage()
-                  : SignInScreen()
+                  : const SignInScreen()
               : auth.isAuth
                   ? const BaseScreen()
-                  : SignInScreen();
+                  : const SignInScreen();
         }
       },
     );

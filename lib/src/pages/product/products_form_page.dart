@@ -8,7 +8,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:rm/src/models/category_model.dart';
 import 'package:rm/src/models/sub_category_model.dart';
 import 'package:rm/src/pages/product/image_upload.dart';
-import 'package:rm/src/pages/product/product_image_picker.dart';
 import '../../models/sub_category_list.dart';
 import '../category/category_form_page.dart';
 import '../category/sub_category_form_page.dart';
@@ -133,7 +132,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
       return _showMessage('Selecione a imagem do produto');
     }
 
-    _formData['imageUrl'] = await saveImage(file, _formData['code'].toString());
+    _formData['imageUrl'] =
+        await saveImage(file, _formData['maquiagem'].toString());
     // _formData['imageUrl'] = const ImageUploads();
 
     // Future<String> imagem = Future.value(_formData['imageUrl'] =
@@ -170,7 +170,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   Future<String> saveImage(File? image, String productName) async {
     await Firebase.initializeApp();
-    final imageName = '$productName.jpg';
+    const imageName = 'productName.jpg';
     final imageURL = await _uploadUserImage(image, imageName);
     return imageURL.toString();
   }
