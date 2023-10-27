@@ -249,7 +249,7 @@ class _CatalogProductsFormPageState extends State<CatalogProductsFormPage> {
                           initialValue:
                               _formData['itemNumber']?.toString() ?? '0',
                           decoration: InputDecoration(
-                              labelText: 'Sequência',
+                              labelText: 'Item',
                               labelStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8))),

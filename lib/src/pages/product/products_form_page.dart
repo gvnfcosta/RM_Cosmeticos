@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
@@ -53,6 +54,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   String? selectedOffer;
   String? selectedCategoria;
   String? selectedSubCategoria;
+  String? productCode;
 
   @override
   void initState() {
@@ -132,12 +134,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
       return _showMessage('Selecione a imagem do produto');
     }
 
-    _formData['imageUrl'] =
-        await saveImage(file, _formData['maquiagem'].toString());
-    // _formData['imageUrl'] = const ImageUploads();
-
-    // Future<String> imagem = Future.value(_formData['imageUrl'] =
-    //     saveImage(file, (_formData['code']).toString()));
+    _formData['imageUrl'] = await saveImage(file, productCode!);
 
     _formKey.currentState?.save();
 
@@ -168,9 +165,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
   }
 
-  Future<String> saveImage(File? image, String productName) async {
+  Future<String> saveImage(File? image, String imageName) async {
     await Firebase.initializeApp();
-    const imageName = 'productName.jpg';
     final imageURL = await _uploadUserImage(image, imageName);
     return imageURL.toString();
   }
@@ -220,7 +216,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
             child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ImageUploads(onImagePick: _handleImagePick),
-          //child: ProductImagePicker(onImagePick: _handleImagePick),
         )),
         Container(
           height: 245,
@@ -270,10 +265,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             FocusScope.of(context)
                                                 .requestFocus(_nameFocus);
                                           },
-                                          onSaved: (code) =>
-                                              _formData['code'] = code ?? '',
+                                          onSaved: (code) {
+                                            _formData['code'] = code ?? '';
+                                          },
                                           validator: (cod) {
                                             final code = cod ?? '';
+                                            productCode = code;
 
                                             if (code.trim().isEmpty) {
                                               return 'Código é obrigatório';
