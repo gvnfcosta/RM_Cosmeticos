@@ -83,16 +83,16 @@ class _ImageUploadsState extends State<ImageUploads> {
                 _showPicker(context);
               },
               child: CircleAvatar(
-                radius: 150,
+                radius: 200,
                 backgroundColor: CustomColors.customSwatchColor,
                 //backgroundColor: Colors.white,
                 child: _photo != null
                     ? ClipRRect(
-                        borderRadius: BorderRadius.circular(1),
+                        borderRadius: BorderRadius.circular(20),
                         child: Image.file(
                           _photo!,
                           width: 300,
-                          height: 300,
+                          height: 400,
                           fit: BoxFit.fitHeight,
                         ),
                       )
@@ -101,7 +101,7 @@ class _ImageUploadsState extends State<ImageUploads> {
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(50)),
                         width: 300,
-                        height: 300,
+                        height: 400,
                         child: const Icon(
                           Icons.camera_alt,
                           size: 150,
