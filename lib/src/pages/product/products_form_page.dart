@@ -226,7 +226,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
               ),
             ),
             SizedBox(
-              height: 260,
+              height: 270,
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 20),

@@ -72,18 +72,19 @@ class _ImageUploadsState extends State<ImageUploads> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const SizedBox(height: 26),
           Center(
             child: GestureDetector(
               onTap: () {
                 _showPicker(context);
               },
               child: CircleAvatar(
-                radius: 200,
+                radius: size.height * 0.22,
                 backgroundColor: CustomColors.customSwatchColor,
                 //backgroundColor: Colors.white,
                 child: _photo != null
