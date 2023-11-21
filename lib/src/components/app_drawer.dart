@@ -10,6 +10,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? userName = Provider.of<UserList>(context).userName;
+    if (userName == 'Admin') userName = 'Administrador';
 
     return Drawer(
       child: Column(

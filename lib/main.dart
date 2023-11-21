@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/firebase_options.dart';
-import 'package:rm/src/config/hive_config.dart';
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
@@ -29,14 +28,11 @@ import 'src/utils/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  if (!kIsWeb) await HiveConfig.start();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // V.2.0.0
-
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 

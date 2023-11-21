@@ -228,6 +228,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           if (value!.length < 6) {
                             return "A senha não deve ter menos que 6 caracteres";
                           }
+
                           return null;
                         },
                       ),
@@ -292,9 +293,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 top: 5,
                 right: 5,
                 child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close),
                 ),
               ),

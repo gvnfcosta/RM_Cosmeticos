@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -54,6 +54,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   String? selectedOffer;
   String? selectedCategoria;
   String? selectedSubCategoria;
+
   String? productCode;
 
   @override
@@ -214,94 +215,215 @@ class _ProductFormPageState extends State<ProductFormPage> {
       ]),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: size.height * 0.9,
-          width: size.width,
-          child: Column(children: [
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: ImageUploads(onImagePick: _handleImagePick),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 270,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
+          height: size.height * 0.90,
+          // width: size.width,
+          child: Column(
+            children: [
+              _imageUrlController.text != ''
+                  ? Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: GestureDetector(
+                          onTap: () =>
+                              ImageUploads(onImagePick: _handleImagePick),
+                          child: Image.network(
+                            _imageUrlController.text,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: ImageUploads(onImagePick: _handleImagePick),
+                      ),
+                    ),
+              SizedBox(
+                height: 255,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade600,
+                          offset: const Offset(0, 2)),
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        offset: const Offset(0, 2)),
-                  ],
-                ),
-                child: !_isLoading
-                    ? Form(
-                        key: _formKey,
-                        child: SizedBox(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
+                  child: !_isLoading
+                      ? Form(
+                          key: _formKey,
+                          child: SizedBox(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10.0, right: 5.0),
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 100,
+                                              child: TextFormField(
+                                                  style: const TextStyle(
+                                                      fontSize: 14),
+                                                  initialValue:
+                                                      _formData['code']
+                                                          ?.toString(),
+                                                  decoration: InputDecoration(
+                                                      labelText: 'Código RM',
+                                                      labelStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8))),
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  focusNode: _codeFocus,
+                                                  onFieldSubmitted: (_) {
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            _nameFocus);
+                                                  },
+                                                  onSaved: (code) {
+                                                    _formData['code'] =
+                                                        code ?? '';
+                                                  },
+                                                  validator: (cod) {
+                                                    final code = cod ?? '';
+                                                    productCode = code;
+
+                                                    if (code.trim().isEmpty) {
+                                                      return 'Código é obrigatório';
+                                                    }
+
+                                                    return null;
+                                                  }),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10.0),
+                                            child: Container(
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.black38,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                child: SizedBox(
+                                                  width: 100,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8),
+                                                    child: DropdownButton2(
+                                                      focusNode: _unitFocus,
+                                                      dropdownElevation: 12,
+                                                      hint: Text('Unidade',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .hintColor)),
+                                                      items: appData.unidades
+                                                          .map((item) => DropdownMenuItem<
+                                                                  String>(
+                                                              value: item,
+                                                              child: Text(item,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12))))
+                                                          .toList(),
+                                                      value: selectedUnidade,
+                                                      onChanged: (value) {
+                                                        setState(
+                                                          () {
+                                                            selectedUnidade =
+                                                                value as String;
+                                                            _formData['unit'] =
+                                                                value;
+                                                          },
+                                                        );
+                                                      },
+                                                      buttonHeight: 30,
+                                                      buttonWidth: 10,
+                                                      itemHeight: 30,
+                                                      autofocus: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Row(
+                                          children: [
+                                            _visibleIcon
+                                                ? const Icon(
+                                                    Icons.visibility,
+                                                    color: Colors.indigo,
+                                                  )
+                                                : const Icon(
+                                                    Icons.visibility_off,
+                                                    color: Colors.red,
+                                                  ),
+                                            Switch(
+                                                value:
+                                                    _formData['show'] as bool,
+                                                activeColor: Colors.blue,
+                                                onChanged: (bool value) {
+                                                  setState(() {
+                                                    _formData['show'] = value;
+                                                    _visibleIcon =
+                                                        !_visibleIcon;
+                                                  });
+                                                }),
+                                          ],
+                                        ),
+                                      ]),
+                                  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0, right: 5.0),
-                                          child: SizedBox(
-                                            height: 40,
-                                            width: 100,
-                                            child: TextFormField(
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                                initialValue: _formData['code']
-                                                    ?.toString(),
-                                                decoration: InputDecoration(
-                                                    labelText: 'Código RM',
-                                                    labelStyle: const TextStyle(
-                                                        fontSize: 12),
-                                                    border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8))),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                focusNode: _codeFocus,
-                                                onFieldSubmitted: (_) {
-                                                  FocusScope.of(context)
-                                                      .requestFocus(_nameFocus);
-                                                },
-                                                onSaved: (code) {
-                                                  _formData['code'] =
-                                                      code ?? '';
-                                                },
-                                                validator: (cod) {
-                                                  final code = cod ?? '';
-                                                  productCode = code;
-
-                                                  if (code.trim().isEmpty) {
-                                                    return 'Código é obrigatório';
-                                                  }
-
-                                                  return null;
-                                                }),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CategoryFormPage(),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.add,
+                                              color: Colors.orange)),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 8.0, right: 8.0),
+                                        child: SizedBox(
                                           child: Container(
                                             height: 40,
+                                            width: 130,
                                             decoration: BoxDecoration(
                                                 border: Border.all(
                                                   width: 1,
@@ -310,39 +432,108 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(8)),
                                             child: DropdownButtonHideUnderline(
-                                              child: SizedBox(
-                                                width: 100,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8),
+                                              child: Container(
+                                                width: 120,
+                                                margin: const EdgeInsets.only(
+                                                    left: 8),
+                                                child: DropdownButton2(
+                                                  focusNode: _unitFocus,
+                                                  dropdownElevation: 12,
+                                                  hint: Text('  Categoria',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .hintColor)),
+                                                  items: categorias
+                                                      .map((item) => DropdownMenuItem<
+                                                              String>(
+                                                          value: item.nome,
+                                                          child: Text(item.nome,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          12))))
+                                                      .toList(),
+                                                  value: selectedCategoria,
+                                                  onChanged: (value) {
+                                                    setState(
+                                                      () {
+                                                        selectedCategoria =
+                                                            value as String;
+                                                        _formData['category'] =
+                                                            value;
+                                                      },
+                                                    );
+                                                  },
+                                                  buttonHeight: 30,
+                                                  buttonWidth: 10,
+                                                  itemHeight: 30,
+                                                  autofocus: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SubCategoryFormPage(),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.add,
+                                              color: Colors.orange)),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: SizedBox(
+                                            child: Container(
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.black38,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                child: SizedBox(
                                                   child: DropdownButton2(
-                                                    focusNode: _unitFocus,
+                                                    focusNode:
+                                                        _subCategoryFocus,
                                                     dropdownElevation: 12,
-                                                    hint: Text('Unidade',
+                                                    hint: Text('  SubCategoria',
                                                         style: TextStyle(
                                                             fontSize: 12,
                                                             color: Theme.of(
                                                                     context)
                                                                 .hintColor)),
-                                                    items: appData.unidades
+                                                    items: subCategorias
                                                         .map((item) =>
                                                             DropdownMenuItem<
                                                                     String>(
-                                                                value: item,
+                                                                value:
+                                                                    item.nome,
                                                                 child: Text(
-                                                                    item,
+                                                                    item.nome,
                                                                     style: const TextStyle(
                                                                         fontSize:
                                                                             12))))
                                                         .toList(),
-                                                    value: selectedUnidade,
+                                                    value: selectedSubCategoria,
                                                     onChanged: (value) {
                                                       setState(
                                                         () {
-                                                          selectedUnidade =
+                                                          selectedSubCategoria =
                                                               value as String;
-                                                          _formData['unit'] =
+                                                          _formData[
+                                                                  'subCategory'] =
                                                               value;
                                                         },
                                                       );
@@ -358,243 +549,79 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 20),
-                                      Row(
-                                        children: [
-                                          _visibleIcon
-                                              ? const Icon(
-                                                  Icons.visibility,
-                                                  color: Colors.indigo,
-                                                )
-                                              : const Icon(
-                                                  Icons.visibility_off,
-                                                  color: Colors.red,
-                                                ),
-                                          Switch(
-                                              value: _formData['show'] as bool,
-                                              activeColor: Colors.blue,
-                                              onChanged: (bool value) {
-                                                setState(() {
-                                                  _formData['show'] = value;
-                                                  _visibleIcon = !_visibleIcon;
-                                                });
-                                              }),
-                                        ],
-                                      ),
-                                    ]),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CategoryFormPage(),
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(Icons.add,
-                                            color: Colors.orange)),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 8.0, right: 8.0),
-                                      child: SizedBox(
-                                        child: Container(
-                                          height: 40,
-                                          width: 130,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                width: 1,
-                                                color: Colors.black38,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: DropdownButtonHideUnderline(
-                                            child: Container(
-                                              width: 120,
-                                              margin: const EdgeInsets.only(
-                                                  left: 8),
-                                              child: DropdownButton2(
-                                                focusNode: _unitFocus,
-                                                dropdownElevation: 12,
-                                                hint: Text('  Categoria',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Theme.of(context)
-                                                            .hintColor)),
-                                                items: categorias
-                                                    .map((item) => DropdownMenuItem<
-                                                            String>(
-                                                        value: item.nome,
-                                                        child: Text(item.nome,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        12))))
-                                                    .toList(),
-                                                value: selectedCategoria,
-                                                onChanged: (value) {
-                                                  setState(
-                                                    () {
-                                                      selectedCategoria =
-                                                          value as String;
-                                                      _formData['category'] =
-                                                          value;
-                                                    },
-                                                  );
-                                                },
-                                                buttonHeight: 30,
-                                                buttonWidth: 10,
-                                                itemHeight: 30,
-                                                autofocus: true,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SubCategoryFormPage(),
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(Icons.add,
-                                            color: Colors.orange)),
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: SizedBox(
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.black38,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: DropdownButtonHideUnderline(
-                                              child: SizedBox(
-                                                child: DropdownButton2(
-                                                  focusNode: _subCategoryFocus,
-                                                  dropdownElevation: 12,
-                                                  hint: Text('  SubCategoria',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .hintColor)),
-                                                  items: subCategorias
-                                                      .map((item) => DropdownMenuItem<
-                                                              String>(
-                                                          value: item.nome,
-                                                          child: Text(item.nome,
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          12))))
-                                                      .toList(),
-                                                  value: selectedSubCategoria,
-                                                  onChanged: (value) {
-                                                    setState(
-                                                      () {
-                                                        selectedSubCategoria =
-                                                            value as String;
-                                                        _formData[
-                                                                'subCategory'] =
-                                                            value;
-                                                      },
-                                                    );
-                                                  },
-                                                  buttonHeight: 30,
-                                                  buttonWidth: 10,
-                                                  itemHeight: 30,
-                                                  autofocus: true,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: SizedBox(
-                                    height: 40,
-                                    child: TextFormField(
-                                        style: const TextStyle(fontSize: 12),
-                                        initialValue:
-                                            _formData['name']?.toString(),
-                                        decoration: InputDecoration(
-                                            labelText: 'Nome',
-                                            labelStyle:
-                                                const TextStyle(fontSize: 12),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8))),
-                                        textInputAction: TextInputAction.next,
-                                        focusNode: _nameFocus,
-                                        onFieldSubmitted: (_) {
-                                          FocusScope.of(context)
-                                              .requestFocus(_imageUrlFocus);
-                                        },
-                                        onSaved: (name) => _formData['name'] =
-                                            name!.toUpperCase() ?? '',
-                                        validator: (nam) {
-                                          final name = nam ?? '';
-
-                                          if (name.trim().isEmpty) {
-                                            return 'Nome é obrigatório';
-                                          }
-
-                                          return null;
-                                        }),
+                                    ],
                                   ),
-                                ),
-                                TextFormField(
-                                    maxLines: 2,
-                                    style: const TextStyle(fontSize: 12),
-                                    initialValue:
-                                        _formData['description']?.toString(),
-                                    decoration: InputDecoration(
-                                        labelText: 'Descrição',
-                                        labelStyle:
-                                            const TextStyle(fontSize: 12),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8))),
-                                    keyboardType: TextInputType.multiline,
-                                    textInputAction: TextInputAction.next,
-                                    focusNode: _descriptionFocus,
-                                    onFieldSubmitted: (_) => _submitForm(),
-                                    onSaved: (description) =>
-                                        _formData['description'] =
-                                            description ?? '',
-                                    validator: (descriptio) {
-                                      final description = descriptio ?? '';
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: SizedBox(
+                                      height: 40,
+                                      child: TextFormField(
+                                          style: const TextStyle(fontSize: 12),
+                                          initialValue:
+                                              _formData['name']?.toString(),
+                                          decoration: InputDecoration(
+                                              labelText: 'Nome',
+                                              labelStyle:
+                                                  const TextStyle(fontSize: 12),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8))),
+                                          textInputAction: TextInputAction.next,
+                                          focusNode: _nameFocus,
+                                          onFieldSubmitted: (_) {
+                                            FocusScope.of(context)
+                                                .requestFocus(_imageUrlFocus);
+                                          },
+                                          onSaved: (name) => _formData['name'] =
+                                              name!.toUpperCase() ?? '',
+                                          validator: (nam) {
+                                            final name = nam ?? '';
 
-                                      if (description.trim().isEmpty) {
-                                        return 'Descrição é obrigatório';
-                                      }
+                                            if (name.trim().isEmpty) {
+                                              return 'Nome é obrigatório';
+                                            }
 
-                                      return null;
-                                    }),
-                              ]),
-                        ),
-                      )
-                    : const Center(child: CircularProgressIndicator()),
+                                            return null;
+                                          }),
+                                    ),
+                                  ),
+                                  TextFormField(
+                                      maxLines: 2,
+                                      style: const TextStyle(fontSize: 12),
+                                      initialValue:
+                                          _formData['description']?.toString(),
+                                      decoration: InputDecoration(
+                                          labelText: 'Descrição',
+                                          labelStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8))),
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.next,
+                                      focusNode: _descriptionFocus,
+                                      onFieldSubmitted: (_) => _submitForm(),
+                                      onSaved: (description) =>
+                                          _formData['description'] =
+                                              description ?? '',
+                                      validator: (descriptio) {
+                                        final description = descriptio ?? '';
+
+                                        if (description.trim().isEmpty) {
+                                          return 'Descrição é obrigatório';
+                                        }
+
+                                        return null;
+                                      }),
+                                ]),
+                          ),
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ),
     );

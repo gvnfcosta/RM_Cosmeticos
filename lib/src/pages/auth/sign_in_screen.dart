@@ -25,33 +25,9 @@ class SignInScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 50,
-                child: DefaultTextStyle(
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w200,
-                      color: Colors.pink.shade700),
-                  child: AnimatedTextKit(
-                    pause: Duration.zero,
-                    repeatForever: true,
-                    animatedTexts: [
-                      FadeAnimatedText('Maquiagem'),
-                      FadeAnimatedText('Cremes'),
-                      FadeAnimatedText('Shampoos'),
-                      FadeAnimatedText('Condicionadores'),
-                      FadeAnimatedText('Infantil'),
-                      FadeAnimatedText('Facial'),
-                    ],
-                  ),
-                ),
-              ),
 
-              //Formulário
-              const AuthForm(),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 18.0),
                 child: Stack(
                   children: [
                     const Padding(
@@ -74,6 +50,33 @@ class SignInScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ],
+                ),
+              ),
+
+              //Formulário
+              const AuthForm(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: SizedBox(
+                  height: 50,
+                  child: DefaultTextStyle(
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w200,
+                        color: Colors.pink.shade700),
+                    child: AnimatedTextKit(
+                      pause: Duration.zero,
+                      repeatForever: true,
+                      animatedTexts: [
+                        FadeAnimatedText('Maquiagem'),
+                        FadeAnimatedText('Cremes'),
+                        FadeAnimatedText('Shampoos'),
+                        FadeAnimatedText('Condicionadores'),
+                        FadeAnimatedText('Infantil'),
+                        FadeAnimatedText('Facial'),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

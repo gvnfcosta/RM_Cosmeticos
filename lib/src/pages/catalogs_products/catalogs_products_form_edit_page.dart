@@ -56,6 +56,7 @@ class _CatalogProductsFormEditPageState
         _formData['catalog'] = catalogProduct.catalog;
         _formData['pageNumber'] = catalogProduct.pageNumber;
         _formData['itemNumber'] = catalogProduct.itemNumber;
+        _formData['imageUrl'] = catalogProduct.imageUrl;
         catalog = catalogProduct.catalog;
         selectedProduct = _formData['productId'].toString();
       }
@@ -113,6 +114,15 @@ class _CatalogProductsFormEditPageState
           Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Image.network(
+                _formData['imageUrl'].toString(),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
           Text('$selectedProduct',
               style: const TextStyle(
                   fontWeight: FontWeight.w600,
@@ -199,6 +209,7 @@ class _CatalogProductsFormEditPageState
               ],
             ),
           ),
+          const SizedBox(height: 30),
         ],
       ),
     );

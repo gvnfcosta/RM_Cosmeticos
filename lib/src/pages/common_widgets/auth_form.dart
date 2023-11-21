@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/data/store.dart';
 import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
@@ -38,7 +39,7 @@ class _AuthFormState extends State<AuthForm> {
   void initState() {
     super.initState();
 
-    if (!_isWeb) createOpenBox();
+    getdata();
 
     _isObscure = true;
     if (_isWeb) {
@@ -85,9 +86,7 @@ class _AuthFormState extends State<AuthForm> {
   Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     setState(() => _isLoading = true);
 
@@ -119,7 +118,7 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return !_isWeb
         ? Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -230,7 +229,7 @@ class _AuthFormState extends State<AuthForm> {
                       children: [
                         SizedBox(
                           height: 50,
-                          width: 180,
+                          width: 200,
                           child: ElevatedButton(
                             onPressed: _submit,
                             style: ElevatedButton.styleFrom(
@@ -243,15 +242,19 @@ class _AuthFormState extends State<AuthForm> {
                               _authMode == AuthMode.login
                                   ? 'ENTRAR'
                                   : 'REGISTRAR',
-                              style: const TextStyle(fontSize: 18),
+                              style: const TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.w300),
                             ),
                           ),
                         ),
                         TextButton(
                           onPressed: _switchAuthMode,
                           child: Text(
-                            _isLogin() ? 'Não tenho conta' : 'Já tenho conta',
-                            style: const TextStyle(fontSize: 12),
+                            _isLogin() ? 'Criar uma conta' : 'Já tenho conta',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ],
@@ -263,27 +266,24 @@ class _AuthFormState extends State<AuthForm> {
         : const SizedBox.shrink();
   }
 
-  void createOpenBox() async {
-    box = await Hive.openBox('user_data');
-    getdata();
-  }
-
   void getdata() async {
-    if (box.get('email') != null) {
-      emailController.text = box.get('email');
-      setState(() {});
-    }
-    if (box.get('pass') != null) {
-      passwordController.text = box.get('pass');
+    final loginData = await Store.getMap('loginData');
+
+    if (loginData.isNotEmpty) {
+      emailController.text = await loginData['email'];
+      passwordController.text = await loginData['pass'];
       setState(() {});
     }
   }
 
-  void login() {
-    if (emailController.value.text != box.get('email') ||
-        passwordController.value.text != box.get('password')) {
-      box.put('email', emailController.value.text);
-      box.put('pass', passwordController.value.text);
+  void login() async {
+    final loginData = await Store.getMap('loginData');
+    if (emailController.value.text != await loginData['email'] ||
+        passwordController.value.text != await loginData['pass']) {
+      Store.saveMap('loginData', {
+        'email': emailController.value.text,
+        'pass': passwordController.value.text
+      });
     }
   }
 }
