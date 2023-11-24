@@ -80,7 +80,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       _formData['unit'] = 'Un';
-      // _formData['imageUrl'] = '';
+
       _formData['show'] = true;
 
       if (arg != null) {
@@ -132,7 +132,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     if (file == null) _showMessage('Selecione a imagem do produto');
 
-    _formData['imageUrl'] = await saveImage(file, productCode!);
+    _imageUrl != '' ? _formData['imageUrl'] = await saveImage(file, productCode!) : ;
 
     _formKey.currentState?.save();
 
