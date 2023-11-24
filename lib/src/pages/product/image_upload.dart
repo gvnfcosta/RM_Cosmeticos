@@ -8,8 +8,13 @@ import 'package:rm/src/config/custom_colors.dart';
 
 class ImageUploads extends StatefulWidget {
   final void Function(File photo) onImagePick;
+  final String? image;
 
-  const ImageUploads({super.key, required this.onImagePick});
+  const ImageUploads({
+    super.key,
+    required this.onImagePick,
+    required this.image,
+  });
   @override
   _ImageUploadsState createState() => _ImageUploadsState();
 }
@@ -55,23 +60,24 @@ class _ImageUploadsState extends State<ImageUploads> {
     }
   }
 
-  Future uploadFile() async {
-    if (_photo == null) return;
-    final fileName = basename(_photo!.path);
-    const destination = 'AppImages/';
+  // Future uploadFile() async {
+  //   if (_photo == null) return;
+  //   final fileName = basename(_photo!.path);
+  //   const destination = 'AppImages/';
 
-    try {
-      final ref = firebase_storage.FirebaseStorage.instance
-          .ref(destination)
-          .child(fileName);
-      await ref.putFile(_photo!);
-    } catch (e) {
-      print('Ocorreu um erro');
-    }
-  }
+  //   try {
+  //     final ref = firebase_storage.FirebaseStorage.instance
+  //         .ref(destination)
+  //         .child(fileName);
+  //     await ref.putFile(_photo!);
+  //   } catch (e) {
+  //     print('Ocorreu um erro');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    String _image = widget.image! != null ? widget.image! : '';
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
@@ -80,11 +86,9 @@ class _ImageUploadsState extends State<ImageUploads> {
         children: <Widget>[
           Center(
             child: GestureDetector(
-              onTap: () {
-                _showPicker(context);
-              },
+              onTap: () => _showPicker(context),
               child: CircleAvatar(
-                radius: size.height * 0.22,
+                radius: size.height * 0.13,
                 backgroundColor: CustomColors.customSwatchColor,
                 //backgroundColor: Colors.white,
                 child: _photo != null
@@ -92,8 +96,8 @@ class _ImageUploadsState extends State<ImageUploads> {
                         borderRadius: BorderRadius.circular(20),
                         child: Image.file(
                           _photo!,
-                          width: 300,
-                          height: 400,
+                          width: 400,
+                          height: 500,
                           fit: BoxFit.fitHeight,
                         ),
                       )
@@ -101,13 +105,15 @@ class _ImageUploadsState extends State<ImageUploads> {
                         decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(50)),
-                        width: 300,
-                        height: 400,
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 150,
-                          color: Colors.blueGrey,
-                        ),
+                        width: 400,
+                        height: 500,
+                        child: _image == ''
+                            ? const Icon(
+                                Icons.camera_alt,
+                                size: 100,
+                                color: Colors.blueGrey,
+                              )
+                            : Image.network(_image),
                       ),
               ),
             ),

@@ -136,8 +136,8 @@ class _ProductPageState extends State<ProductPage> {
               child: GridView.builder(
                 //  padding: const EdgeInsets.all(8),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 100,
-                  childAspectRatio: 0.5,
+                  maxCrossAxisExtent: 87,
+                  childAspectRatio: 0.53,
                 ),
                 itemCount: selectedCategory == "Todos os Produtos"
                     ? products.length

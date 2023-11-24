@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/config/app_data.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import 'package:rm/src/pages/category/category_page.dart';
 import 'package:rm/src/pages/home/components/admin_tab.dart';
@@ -34,6 +35,7 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   Widget build(BuildContext context) {
     int? userLevel = Provider.of<UserList>(context).userLevel;
+    CustomSize.screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       body: _isLoading

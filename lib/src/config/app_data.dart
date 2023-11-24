@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 const List<String> ofertas = ['de Linha', 'em Promoção', 'na Queima'];
 
 const List unidades = ['Un', 'Kit', 'Cx'];
@@ -12,4 +14,9 @@ class Constants {
     1: 'Vendedor',
     2: 'Cliente',
   };
+}
+
+class CustomSize {
+  static Size? screenSize;
+  static double textSize = (screenSize!.width ~/ 80).toDouble();
 }

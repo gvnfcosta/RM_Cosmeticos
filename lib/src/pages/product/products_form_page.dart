@@ -54,7 +54,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   String? selectedOffer;
   String? selectedCategoria;
   String? selectedSubCategoria;
-
+  String _imageUrl = '';
   String? productCode;
 
   @override
@@ -80,6 +80,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
       _formData['unit'] = 'Un';
+      // _formData['imageUrl'] = '';
       _formData['show'] = true;
 
       if (arg != null) {
@@ -110,9 +111,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _imageUrlFocus.dispose();
   }
 
-  void updateImage() {
-    setState(() {});
-  }
+  void updateImage() => setState(() {});
 
   bool isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
@@ -131,9 +130,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     if (!isValid) return;
 
-    if (file == null) {
-      return _showMessage('Selecione a imagem do produto');
-    }
+    if (file == null) _showMessage('Selecione a imagem do produto');
 
     _formData['imageUrl'] = await saveImage(file, productCode!);
 
@@ -181,9 +178,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return await imageRef.getDownloadURL();
   }
 
-  void _handleImagePick(File photo) {
-    file = photo;
-  }
+  void _handleImagePick(File photo) => file = photo;
 
   @override
   Widget build(BuildContext context) {
@@ -215,32 +210,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
       ]),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: size.height * 0.90,
+          height: size.height * 0.9,
           // width: size.width,
           child: Column(
             children: [
-              _imageUrlController.text != ''
-                  ? Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: GestureDetector(
-                          onTap: () =>
-                              ImageUploads(onImagePick: _handleImagePick),
-                          child: Image.network(
-                            _imageUrlController.text,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: ImageUploads(onImagePick: _handleImagePick),
-                      ),
-                    ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: ImageUploads(
+                    onImagePick: _handleImagePick,
+                    image: _formData['imageUrl'].toString(),
+                  ),
+                ),
+              ),
               SizedBox(
-                height: 255,
+                height: 315,
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -570,8 +554,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                           textInputAction: TextInputAction.next,
                                           focusNode: _nameFocus,
                                           onFieldSubmitted: (_) {
-                                            FocusScope.of(context)
-                                                .requestFocus(_imageUrlFocus);
+                                            FocusScope.of(context).requestFocus(
+                                                _descriptionFocus);
                                           },
                                           onSaved: (name) => _formData['name'] =
                                               name!.toUpperCase() ?? '',
@@ -587,7 +571,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                     ),
                                   ),
                                   TextFormField(
-                                      maxLines: 2,
+                                      // maxLines: 2,
                                       style: const TextStyle(fontSize: 12),
                                       initialValue:
                                           _formData['description']?.toString(),
@@ -601,7 +585,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                       keyboardType: TextInputType.multiline,
                                       textInputAction: TextInputAction.next,
                                       focusNode: _descriptionFocus,
-                                      onFieldSubmitted: (_) => _submitForm(),
+                                      onFieldSubmitted: (_) {
+                                        FocusScope.of(context)
+                                            .requestFocus(_imageUrlFocus);
+                                      },
                                       onSaved: (description) =>
                                           _formData['description'] =
                                               description ?? '',
@@ -609,10 +596,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                         final description = descriptio ?? '';
 
                                         if (description.trim().isEmpty) {
-                                          return 'Descrição é obrigatório';
+                                          return 'Descrição é obrigatória';
                                         }
 
                                         return null;
+                                      }),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                      // maxLines: 2,
+                                      style: const TextStyle(fontSize: 12),
+                                      // initialValue: '',
+                                      decoration: InputDecoration(
+                                          labelText: 'Link da Imagem',
+                                          labelStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8))),
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.next,
+                                      focusNode: _imageUrlFocus,
+                                      onSaved: (_image) {
+                                        if (_image != '') {
+                                          _imageUrl = _image!;
+                                        }
                                       }),
                                 ]),
                           ),

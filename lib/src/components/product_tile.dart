@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rm/src/config/app_data.dart';
 import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/utils/app_routes.dart';
 
@@ -32,9 +33,9 @@ class ProductTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    'RM ${product.code}',
-                    style: const TextStyle(
-                        fontSize: 8,
+                    product.code,
+                    style: TextStyle(
+                        fontSize: CustomSize.textSize + 6,
                         fontStyle: FontStyle.italic,
                         color: Colors.red),
                     textAlign: TextAlign.center,
@@ -44,7 +45,7 @@ class ProductTile extends StatelessWidget {
                 //Nome
                 Text(
                   product.name,
-                  style: const TextStyle(fontSize: 8),
+                  style: TextStyle(fontSize: CustomSize.textSize + 3),
                   textAlign: TextAlign.center,
                 ),
               ],
