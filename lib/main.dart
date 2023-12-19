@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/firebase_options.dart';
-import 'package:rm/src/config/app_data.dart';
+
 import 'package:rm/src/models/auth.dart';
 import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
 import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
-
 import 'src/models/catalog_products_list.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
