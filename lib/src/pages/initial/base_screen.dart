@@ -85,7 +85,10 @@ class _BaseScreenState extends State<BaseScreen> {
         icon: Icon(Icons.category), label: 'Categorias'),
     const BottomNavigationBarItem(
         icon: Icon(Icons.interests), label: 'SubCategorias'),
-    const BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Produtos'),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.list),
+      label: 'Produtos',
+    ),
     const BottomNavigationBarItem(
         icon: Icon(Icons.admin_panel_settings), label: 'Painel'),
   ];

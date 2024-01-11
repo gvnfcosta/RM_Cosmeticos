@@ -24,7 +24,7 @@ class ProductTile extends StatelessWidget {
               children: [
                 //Imagem
                 Container(
-                  height: 70,
+                  height: 65,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.network(product.imageUrl),
                 ),

@@ -52,10 +52,10 @@ class UserTile extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 12, fontWeight: FontWeight.w300, color: Colors.grey),
           ),
-          trailing: CircleAvatar(
+          trailing: const CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey,
-            backgroundImage: FileImage(File('assets/images/avatar.jpg')),
+            backgroundImage: AssetImage('assets/images/avatar.jpg'),
           ),
         ),
       ),

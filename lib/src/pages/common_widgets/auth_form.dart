@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -118,18 +119,19 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return !_isWeb
         ? Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5),
+            // margin: const EdgeInsets.symmetric(horizontal: 5),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(215, 117, 255, 0.5),
-                    Color.fromRGBO(215, 117, 255, 0.2),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(215, 117, 255, 0.5),
+                  Color.fromRGBO(215, 117, 255, 0.2),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              //   borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -252,9 +254,7 @@ class _AuthFormState extends State<AuthForm> {
                           child: Text(
                             _isLogin() ? 'Criar uma conta' : 'Já tenho conta',
                             style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
+                                fontSize: 14, color: Colors.grey),
                           ),
                         ),
                       ],

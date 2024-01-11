@@ -127,12 +127,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   Future<void> _submitForm() async {
-    final isValid = _formKey.currentState?.validate() ?? false;
-
-    if (!isValid) return;
-
-    if (!isWindows && file == null)
+    if (!isWindows && file == null) {
       _showMessage('Selecione a imagem do produto');
+    }
 
     if (_imageUrlController.text == '') {
       _formData['imageUrl'] = await saveImage(file, productCode!);
@@ -140,14 +137,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
       _formData['imageUrl'] = _imageUrlController.text;
     }
 
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
     _formKey.currentState?.save();
 
     setState(() => _isLoading = true);
 
     try {
-      //if (!mounted) return;
       await Provider.of<ProductList>(context, listen: false)
           .saveData(_formData);
+      //if (!mounted) return;
     } catch (error) {
       await showDialog<void>(
         context: context,
@@ -163,7 +162,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         ),
       );
     } finally {
-      if (!mounted) return;
+      // if (!mounted) return;
       setState(() => _isLoading = false);
       Navigator.of(context).pop();
     }
@@ -206,7 +205,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
       appBar:
           AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
         IconButton(
-            onPressed: () => _submitForm(), icon: const Icon(Icons.check)),
+          onPressed: () => _submitForm(),
+          icon: const Icon(Icons.check),
+        ),
         IconButton(
           icon: const Icon(Icons.delete),
           iconSize: 25,

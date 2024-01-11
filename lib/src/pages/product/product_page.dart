@@ -30,7 +30,7 @@ class _ProductPageState extends State<ProductPage> {
     // .then((value) => setState(() => _isLoading = false));
   }
 
-  List<String> allCategories = [selectedCategory];
+  List<String> allCategories = ['Todos os Produtos'];
   bool _isSecret = false;
 
   @override
@@ -55,7 +55,7 @@ class _ProductPageState extends State<ProductPage> {
         .where((element) => element.category == selectedCategory)
         .toList();
 
-    final List<Category> categories = Provider.of<CategoryList>(context)
+    List<Category> categories = Provider.of<CategoryList>(context)
         .items
         .toList()
       ..sort(((a, b) => a.nome.compareTo(b.nome)));
@@ -84,7 +84,7 @@ class _ProductPageState extends State<ProductPage> {
               allCategories.length,
               (i) => PopupMenuItem(
                 value: allCategories[i],
-                height: 30,
+                height: 35,
                 child: Text(allCategories[i]),
               ),
             ),
@@ -108,23 +108,20 @@ class _ProductPageState extends State<ProductPage> {
           //  _isLoading          ? const Center(child: CircularProgressIndicator())          :
           Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 30,
-              color: Colors.pink[50],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    selectedCategory,
-                    style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.pink),
-                  ),
-                ],
-              ),
+          Container(
+            height: 40,
+            color: Colors.pink[900],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  selectedCategory,
+                  style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                ),
+              ],
             ),
           ),
 
@@ -136,8 +133,8 @@ class _ProductPageState extends State<ProductPage> {
               child: GridView.builder(
                 //  padding: const EdgeInsets.all(8),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 87,
-                  childAspectRatio: 0.53,
+                  maxCrossAxisExtent: 97,
+                  childAspectRatio: 0.63,
                 ),
                 itemCount: selectedCategory == "Todos os Produtos"
                     ? products.length
