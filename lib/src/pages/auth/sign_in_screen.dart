@@ -22,35 +22,31 @@ class SignInScreen extends StatelessWidget {
               Expanded(
                 child: Image.asset(
                   'assets/images/TelaInicial.png',
-                  fit: BoxFit.contain,
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 18.0),
-                child: Stack(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 2, top: 2),
-                      child: Text(
-                        'Catálogos de Produtos',
-                        style: TextStyle(
-                            color: Colors.black26,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Text(
+              Stack(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 2, top: 2),
+                    child: Text(
                       'Catálogos de Produtos',
                       style: TextStyle(
-                          color: Colors.pink.shade600,
+                          color: Colors.black26,
                           fontSize: 30,
                           fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    'Catálogos de Produtos',
+                    style: TextStyle(
+                        color: Colors.pink.shade600,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
