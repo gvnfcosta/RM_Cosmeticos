@@ -134,7 +134,7 @@ class _ProductPageState extends State<ProductPage> {
                 //  padding: const EdgeInsets.all(8),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 100,
-                  childAspectRatio: 0.6,
+                  childAspectRatio: 0.5,
                 ),
                 itemCount: selectedCategory == "Todos os Produtos"
                     ? products.length

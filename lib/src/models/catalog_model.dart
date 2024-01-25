@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:rm/src/models/catalog_products_model.dart';
@@ -30,16 +29,13 @@ class CatalogModel {
 
   factory CatalogModel.fromMap(Map<String, dynamic> map) {
     return CatalogModel(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      seller: map['seller'] as String,
-      discount: map['discount'] as double,
-      catalogProducts: List<CatalogProducts>.from(
-        (map['catalogProducts'] as List<dynamic>).map<CatalogProducts>(
-          (x) => CatalogProducts.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-    );
+        id: map['id'] as String,
+        name: map['name'] as String,
+        seller: map['seller'] as String,
+        discount: map['discount'] as double,
+        catalogProducts: List<CatalogProducts>.from(
+            (map['catalogProducts'] as List<dynamic>).map<CatalogProducts>(
+                (x) => CatalogProducts.fromMap(x as Map<String, dynamic>))));
   }
 
   String toJson() => json.encode(toMap());

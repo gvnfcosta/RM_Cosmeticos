@@ -20,8 +20,12 @@ class UserList with ChangeNotifier {
 
   int get itemsCount => _items.length;
 
+  List<UserModel> get users =>
+      _items.where((element) => element.email == _email).first;
   UserModel? get user =>
-      _items.firstWhereOrNull((element) => element.email == _email);
+      _items.where((element) => element.email == _email).first;
+  // UserModel? get user =>
+  //     _items.firstWhereOrNull((element) => element.email == _email);
 
   int? get userLevel => user?.level;
   bool get isAdmin => userLevel == 0;
@@ -33,7 +37,7 @@ class UserList with ChangeNotifier {
     _items.clear();
 
     final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/user.json?auth=$_token'));
+        .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -54,7 +58,7 @@ class UserList with ChangeNotifier {
       email: dataDados['email'] as String,
       password: dataDados['password'] as String,
       discount: dataDados['discount'] as double,
-      catalogs: [], // List<CatalogModel>.from(dataDados['catalogs'] as List),
+      // catalogs: [], // List<CatalogModel>.from(dataDados['catalogs'] as List),
       level: dataDados['level'] as int,
     );
 
@@ -67,7 +71,7 @@ class UserList with ChangeNotifier {
 
   Future<void> addData(UserModel user) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/user.json?auth=$_token'),
+      Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'),
       body: jsonEncode(user.toMap()),
     );
 
@@ -83,7 +87,7 @@ class UserList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/user/${user.id}.json?auth=$_token'),
+        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
         body: jsonEncode(user.toMap()),
       );
 

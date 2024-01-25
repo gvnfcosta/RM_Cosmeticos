@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:rm/src/models/catalog_model.dart';
@@ -9,7 +8,7 @@ class UserModel {
   String email;
   String password;
   double discount;
-  List<CatalogModel> catalogs;
+  // List<CatalogModel> catalogs;
   int level;
 
   UserModel({
@@ -18,7 +17,7 @@ class UserModel {
     required this.email,
     required this.password,
     required this.discount,
-    required this.catalogs,
+    // required this.catalogs,
     required this.level,
   });
 
@@ -29,7 +28,7 @@ class UserModel {
       'email': email,
       'password': password,
       'discount': discount,
-      'catalogs': catalogs.map((x) => x.toMap()).toList(),
+      // 'catalogs': catalogs.map((x) => x.toMap()).toList(),
       'level': level,
     };
   }
@@ -41,11 +40,9 @@ class UserModel {
       email: map['email'] as String,
       password: map['password'] as String,
       discount: map['discount'] as double,
-      catalogs: List<CatalogModel>.from(
-        (map['catalogs'] as List<dynamic>).map<CatalogModel>(
-          (x) => CatalogModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      // catalogs: List<CatalogModel>.from((map['catalogs'] as List<dynamic>)
+      //     .map<CatalogModel>(
+      //         (x) => CatalogModel.fromMap(x as Map<String, dynamic>))),
       level: map['level'] as int,
     );
   }
@@ -61,7 +58,7 @@ class UserModel {
     String? email,
     String? password,
     double? discount,
-    List<CatalogModel>? catalogs,
+    // List<CatalogModel>? catalogs,
     int? level,
   }) {
     return UserModel(
@@ -70,7 +67,7 @@ class UserModel {
       email: email ?? this.email,
       password: password ?? this.password,
       discount: discount ?? this.discount,
-      catalogs: catalogs ?? this.catalogs,
+      // catalogs: catalogs ?? this.catalogs,
       level: level ?? this.level,
     );
   }

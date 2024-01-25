@@ -39,7 +39,7 @@ class _CatalogsPageState extends State<CatalogsPage> {
 
     List<CatalogModel> catalogs = allCatalogs.toList();
 
-    if (userName != 'Admin') {
+    if (isAdmin) {
       catalogs =
           allCatalogs.where((element) => element.seller == userName).toList();
     }
