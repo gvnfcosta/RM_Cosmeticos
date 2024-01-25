@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rm/src/models/catalog_products_model.dart';
 import '../exceptions/http_exception.dart';
 import 'package:http/http.dart' as http;
 import '../config/app_data.dart';
@@ -9,33 +10,28 @@ import 'catalog_model.dart';
 class CatalogList with ChangeNotifier {
   final String _token;
 
-  List<CatalogModel> items_ = [];
-  List<CatalogModel> get items => [...items_];
-  List<CatalogModel> get lista => items_.toList();
+  List<CatalogModel> _items = [];
+  List<CatalogModel> get items => [..._items];
+  List<CatalogModel> get lista => _items.toList();
 
   CatalogList(this._token);
 
-  int get itemsCount => items_.length;
+  int get itemsCount => _items.length;
 
   Future<void> loadData() async {
-    items_.clear();
+    _items.clear();
 
     final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/catalogs.json?auth=$_token'));
+        .get(Uri.parse('${Constants.baseUrl}/catalog.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
-    data.forEach((dataId, dataDados) {
-      items_.add(
-        CatalogModel(
-          id: dataId,
-          name: dataDados['name'],
-          seller: dataDados['seller'],
-          discount: dataDados['discount'],
-        ),
-      );
-    });
+    _items = data.entries
+        .map<CatalogModel>((entry) =>
+            CatalogModel.fromMap(entry.value as Map<String, dynamic>))
+        .toList();
+
     notifyListeners();
   }
 
@@ -47,6 +43,8 @@ class CatalogList with ChangeNotifier {
       id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
       name: dataDados['name'] as String,
       seller: dataDados['seller'] as String,
+      catalogProducts:
+          List<CatalogProducts>.from(dataDados['catalogProducts'] as List),
       discount: dataDados['discount'] as double,
     );
 
@@ -59,53 +57,37 @@ class CatalogList with ChangeNotifier {
 
   Future<void> addData(CatalogModel catalog) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/catalogs.json?auth=$_token'),
-      body: jsonEncode({
-        'id': catalog.id,
-        'name': catalog.name,
-        'seller': catalog.seller,
-        'discount': catalog.discount,
-      }),
+      Uri.parse('${Constants.baseUrl}/catalog.json?auth=$_token'),
+      body: jsonEncode(catalog.toMap()),
     );
 
     final id = jsonDecode(response.body)['name'];
-    items_.add(
-      CatalogModel(
-        id: id,
-        name: catalog.name,
-        seller: catalog.seller,
-        discount: catalog.discount,
-      ),
-    );
+    _items.add(catalog.copyWith(id: id));
+
     notifyListeners();
   }
 
   Future<void> updateData(CatalogModel catalog) async {
-    int index = items_.indexWhere((e) => e.id == catalog.id);
+    int index = _items.indexWhere((e) => e.id == catalog.id);
 
     if (index >= 0) {
       await http.patch(
         Uri.parse(
-            '${Constants.baseUrl}/catalogs/${catalog.id}.json?auth=$_token'),
-        body: jsonEncode({
-          'id': catalog.id,
-          'name': catalog.name,
-          'seller': catalog.seller,
-          'discount': catalog.discount,
-        }),
+            '${Constants.baseUrl}/catalog/${catalog.id}.json?auth=$_token'),
+        body: jsonEncode(catalog.toMap()),
       );
 
-      items_[index] = catalog;
+      _items[index] = catalog;
       notifyListeners();
     }
   }
 
   Future<void> removeData(CatalogModel catalog) async {
-    int index = items_.indexWhere((e) => e.id == catalog.id);
+    int index = _items.indexWhere((e) => e.id == catalog.id);
 
     if (index >= 0) {
-      final catalog = items_[index];
-      items_.remove(catalog);
+      final catalog = _items[index];
+      _items.remove(catalog);
       notifyListeners();
 
       final response = await http.delete(
@@ -114,7 +96,7 @@ class CatalogList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        items_.insert(index, catalog);
+        _items.insert(index, catalog);
         notifyListeners();
         throw HttpException(
           msg: 'Não foi possível excluir esta categoria.',

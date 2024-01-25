@@ -1,9 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:rm/src/models/catalog_model.dart';
+
 class UserModel {
   String id;
   String name;
   String email;
   String password;
   double discount;
+  List<CatalogModel> catalogs;
   int level;
 
   UserModel({
@@ -12,22 +18,60 @@ class UserModel {
     required this.email,
     required this.password,
     required this.discount,
+    required this.catalogs,
     required this.level,
   });
-}
 
-class User {
-  String? email;
-  String? password;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'email': email,
+      'password': password,
+      'discount': discount,
+      'catalogs': catalogs.map((x) => x.toMap()).toList(),
+      'level': level,
+    };
+  }
 
-  User();
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      email: map['email'] as String,
+      password: map['password'] as String,
+      discount: map['discount'] as double,
+      catalogs: List<CatalogModel>.from(
+        (map['catalogs'] as List<dynamic>).map<CatalogModel>(
+          (x) => CatalogModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      level: map['level'] as int,
+    );
+  }
 
-  User.fromJson(Map<String, dynamic> json)
-      : email = json['email'],
-        password = json['password'];
+  String toJson() => json.encode(toMap());
 
-  Map<String, dynamic> toJson() => {
-        'email': email,
-        'password': password,
-      };
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? password,
+    double? discount,
+    List<CatalogModel>? catalogs,
+    int? level,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      discount: discount ?? this.discount,
+      catalogs: catalogs ?? this.catalogs,
+      level: level ?? this.level,
+    );
+  }
 }

@@ -40,7 +40,7 @@ class _ProductPageState extends State<ProductPage> {
     //   isAdmin = user.first.level == 0;
     // }
 
-    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+    UserModel? users = Provider.of<UserList>(context, listen: false).user;
 
     int userLevel = users?.level ?? 1;
     isAdmin = userLevel == 0;

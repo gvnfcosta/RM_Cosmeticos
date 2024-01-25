@@ -35,7 +35,7 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
     //   isAdmin = user.first.level == 0;
     // }
 
-    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+    UserModel? users = Provider.of<UserList>(context, listen: false).user;
 
     String userName = users?.name ?? '';
     int userLevel = users?.level ?? 1;

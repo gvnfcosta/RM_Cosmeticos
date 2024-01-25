@@ -1,9 +1,8 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/data/store.dart';
-import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
+import '../../config/admin_controller.dart';
 import '../../exceptions/auth_exception.dart';
 import '../../models/auth.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/config/admin_controller.dart';
 import 'package:rm/src/config/app_data.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import 'package:rm/src/pages/category/category_page.dart';
@@ -16,9 +17,10 @@ class BaseScreen extends StatefulWidget {
   State<BaseScreen> createState() => _BaseScreenState();
 }
 
-bool _isLoading = true;
+bool _isLoading = false;
 String userName = '';
 bool isAdmin = false;
+AdminController adminController = AdminController();
 
 class _BaseScreenState extends State<BaseScreen> {
   int currentIndex = 0;
@@ -34,7 +36,14 @@ class _BaseScreenState extends State<BaseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int? userLevel = Provider.of<UserList>(context).userLevel;
+    UserList? user = Provider.of<UserList>(context);
+    int? userLevel = user.userLevel;
+
+    if (user.userEmail == 'admin@rm.com' || userLevel == 0) {
+      adminController.toggleAdmin();
+    }
+    isAdmin = adminController.isAdmin;
+
     CustomSize.screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -43,25 +52,22 @@ class _BaseScreenState extends State<BaseScreen> {
           : PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController, //indica qual a tela aberta
-              children: userLevel == 0 ? adminPageViews : userPageViews,
+              children: isAdmin ? adminPageViews : userPageViews,
             ),
-      bottomNavigationBar: userLevel == 2
-          ? null
-          : BottomNavigationBar(
-              currentIndex: currentIndex,
-              onTap: (indice) {
-                setState(() {
-                  currentIndex = indice;
-                  pageController.jumpToPage(indice); //muda a tela pelo indice
-                });
-              },
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: const Color.fromARGB(255, 100, 0, 50),
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white.withAlpha(125),
-              items:
-                  userLevel == 0 ? adminNavigationItens : userNavigationItens,
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (indice) {
+          setState(() {
+            currentIndex = indice;
+            pageController.jumpToPage(indice); //muda a tela pelo indice
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromARGB(255, 100, 0, 50),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white.withAlpha(125),
+        items: isAdmin ? adminNavigationItens : userNavigationItens,
+      ),
     );
   }
 

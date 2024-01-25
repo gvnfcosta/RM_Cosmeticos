@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rm/src/config/admin_controller.dart';
 import 'package:rm/src/models/user_list.dart';
-import 'package:rm/src/models/user_model.dart';
-import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
+import 'package:rm/src/pages/initial/base_screen.dart';
 import '../../models/catalog_list.dart';
 import '../../models/catalog_model.dart';
 import 'catalog_form_page.dart';
@@ -20,7 +20,6 @@ bool _isWeb = adminController.isWeb;
 
 class _CatalogsPageState extends State<CatalogsPage> {
   String userName = '';
-  bool isAdmin = false;
 
   @override
   void initState() {
@@ -31,11 +30,9 @@ class _CatalogsPageState extends State<CatalogsPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+    UserList? user = Provider.of<UserList>(context);
 
-    String userName = users?.name ?? '';
-    int userLevel = users?.level ?? 1;
-    isAdmin = userLevel == 0;
+    String userName = user.userName ?? '';
 
     final List<CatalogModel> allCatalogs =
         Provider.of<CatalogList>(context).items;

@@ -9,7 +9,7 @@ import 'package:rm/src/models/product_model.dart';
 import 'package:rm/src/pages/catalogs/components/filtra_catalogo.dart';
 import 'package:rm/src/pages/home/catalog_app_tab.dart';
 import 'package:rm/src/pages/home/catalog_web_tab.dart';
-import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
+import '../../config/admin_controller.dart';
 
 class CatalogProductsPage extends StatefulWidget {
   const CatalogProductsPage(this.catalog, {super.key});

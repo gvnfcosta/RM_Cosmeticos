@@ -9,7 +9,7 @@ import 'package:rm/src/pages/auth/sign_up_screen.dart';
 import 'package:rm/src/pages/catalogs/catalog_form_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_edit_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_form_page.dart';
-import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
+import 'src/config/admin_controller.dart';
 import 'src/models/catalog_products_list.dart';
 import 'src/models/catalog_list.dart';
 import 'src/models/category_list.dart';
@@ -107,6 +107,11 @@ class MyApp extends StatelessWidget {
             displaySmall: const TextStyle(color: Colors.white60, fontSize: 40),
           ),
           scaffoldBackgroundColor: Colors.white.withAlpha(190),
+          // colorScheme: ColorScheme.fromSwatch(
+          //         accentColor: Colors.black,
+          //         backgroundColor: Colors.white,
+          //         primarySwatch: Colors.pink)
+          //     .copyWith(background: Colors.pink[800]),
         ),
         debugShowCheckedModeBanner: false,
         routes: {

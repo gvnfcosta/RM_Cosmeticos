@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/models/user_list.dart';
 import 'package:rm/src/models/user_model.dart';
+import 'package:rm/src/pages/catalogs/catalogs_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalog_admin_page.dart';
 import 'package:rm/src/utils/app_routes.dart';
@@ -16,12 +17,10 @@ class CatalogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = false;
-    //List<UserModel> user = Provider.of<UserList>(context).user;
-    UserModel? users = Provider.of<UserList>(context, listen: false).firstUser;
+    List<UserModel> users = Provider.of<UserList>(context).items;
+    UserList? user = Provider.of<UserList>(context);
 
-    int userLevel = users?.level ?? 1;
-    isAdmin = userLevel == 0;
+    final bool _isAdmin = adminController.isAdmin;
 
     return Stack(
       children: [
@@ -33,7 +32,7 @@ class CatalogTile extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (c) {
-                    return isAdmin
+                    return _isAdmin
                         ? CatalogAdminPage(catalog: catalog)
                         : CatalogProductsPage(catalog);
                   },
@@ -47,7 +46,7 @@ class CatalogTile extends StatelessWidget {
                     topLeft: Radius.circular(5),
                     topRight: Radius.circular(5),
                   ),
-                  child: isAdmin
+                  child: _isAdmin
                       ? Container(
                           height: 25,
                           color: Colors.grey[100],
@@ -99,7 +98,7 @@ class CatalogTile extends StatelessWidget {
             ),
           ),
         ),
-        isAdmin
+        _isAdmin
             ? Positioned(
                 right: 0,
                 child: IconButton(

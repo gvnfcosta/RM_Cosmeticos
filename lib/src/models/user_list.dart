@@ -3,51 +3,45 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rm/src/models/catalog_model.dart';
 import '../config/app_data.dart';
 import 'user_model.dart';
-
 import 'package:collection/collection.dart';
 
 class UserList with ChangeNotifier {
   final String _token;
   final String _email;
 
-  List<UserModel> items_;
+  List<UserModel> _items;
 
-  List<UserModel> get items => [...items_];
+  List<UserModel> get items => [..._items];
 
-  UserList(this._token, this._email, this.items_);
+  UserList(this._token, this._email, this._items);
 
-  int get itemsCount => items_.length;
+  int get itemsCount => _items.length;
 
-  UserModel? get firstUser =>
-      items_.firstWhereOrNull((element) => element.email == _email);
+  UserModel? get user =>
+      _items.firstWhereOrNull((element) => element.email == _email);
 
-  int? get userLevel => firstUser?.level;
+  int? get userLevel => user?.level;
   bool get isAdmin => userLevel == 0;
-  String? get userName => firstUser?.name;
+  String? get userName => user?.name;
+
+  String? get userEmail => _email;
 
   Future<void> loadData() async {
-    items_.clear();
+    _items.clear();
 
     final response = await http
-        .get(Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'));
+        .get(Uri.parse('${Constants.baseUrl}/user.json?auth=$_token'));
 
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
-    data.forEach((dataId, dataDados) {
-      items_.add(
-        UserModel(
-          id: dataId,
-          name: dataDados['name'],
-          email: dataDados['email'],
-          password: '123456',
-          discount: dataDados['discount'],
-          level: dataDados['level'],
-        ),
-      );
-    });
+    _items = data.entries
+        .map<UserModel>(
+            (entry) => UserModel.fromMap(entry.value as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> saveData(Map<String, Object> dataDados) {
@@ -60,6 +54,7 @@ class UserList with ChangeNotifier {
       email: dataDados['email'] as String,
       password: dataDados['password'] as String,
       discount: dataDados['discount'] as double,
+      catalogs: [], // List<CatalogModel>.from(dataDados['catalogs'] as List),
       level: dataDados['level'] as int,
     );
 
@@ -72,57 +67,36 @@ class UserList with ChangeNotifier {
 
   Future<void> addData(UserModel user) async {
     final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/users.json?auth=$_token'),
-      body: jsonEncode({
-        'id': user.id,
-        'name': user.name,
-        'email': user.email,
-        'password': user.password,
-        'discount': user.discount,
-        'level': user.level,
-      }),
+      Uri.parse('${Constants.baseUrl}/user.json?auth=$_token'),
+      body: jsonEncode(user.toMap()),
     );
 
     final id = jsonDecode(response.body)['name'];
-    items_.add(
-      UserModel(
-        id: id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        discount: user.discount,
-        level: user.level,
-      ),
-    );
+
+    _items.add(user.copyWith(id: id));
+
     notifyListeners();
   }
 
   Future<void> updateData(UserModel user) async {
-    int index = items_.indexWhere((e) => e.id == user.id);
+    int index = _items.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
-        body: jsonEncode({
-          'id': user.id,
-          'name': user.name,
-          'email': user.email,
-          'password': user.password,
-          'discount': user.discount,
-          'level': user.level,
-        }),
+        Uri.parse('${Constants.baseUrl}/user/${user.id}.json?auth=$_token'),
+        body: jsonEncode(user.toMap()),
       );
 
-      items_[index] = user;
+      _items[index] = user;
       notifyListeners();
     }
   }
 
   Future<void> removeData(UserModel user) async {
-    int index = items_.indexWhere((e) => e.id == user.id);
+    int index = _items.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
-      items_.remove(user);
+      _items.remove(user);
       notifyListeners();
 
       final response = await http.delete(
@@ -130,7 +104,7 @@ class UserList with ChangeNotifier {
       );
 
       if (response.statusCode >= 400) {
-        items_.insert(index, user);
+        _items.insert(index, user);
         notifyListeners();
 
         throw HttpException('Não foi possível excluir ${user.name}}.');

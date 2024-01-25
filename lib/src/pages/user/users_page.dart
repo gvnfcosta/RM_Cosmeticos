@@ -26,7 +26,7 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserList>(context);
-    final List<UserModel> users = provider.items.toList();
+    final List<UserModel> users = provider.items;
 
     return Scaffold(
       backgroundColor: Colors.white,

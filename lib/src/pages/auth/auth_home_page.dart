@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rm/src/pages/catalogs/catalogs_page.dart';
-import 'package:rm/src/pages/home/components/controllers/admin_controller.dart';
+import '../../config/admin_controller.dart';
 import '../../models/auth.dart';
 import '../initial/base_screen.dart';
 import 'sign_in_screen.dart';
