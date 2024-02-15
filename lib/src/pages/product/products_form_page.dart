@@ -28,6 +28,9 @@ class ProductFormPage extends StatefulWidget {
   State<ProductFormPage> createState() => _ProductFormPageState();
 }
 
+TextEditingController _productName = TextEditingController();
+TextEditingController _producDescription = TextEditingController();
+
 class _ProductFormPageState extends State<ProductFormPage> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -77,6 +80,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    _productName.text = '';
+    _producDescription.text = '';
+
     if (_formData.isEmpty) {
       final arg = ModalRoute.of(context)?.settings.arguments;
 
@@ -96,6 +102,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
         _formData['show'] = product.show;
         _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
+        _productName.text = product.name;
+        _producDescription.text = product.description;
       }
     }
   }
@@ -144,27 +152,30 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() => _isLoading = true);
 
     try {
-      await Provider.of<ProductList>(context, listen: false)
-          .saveData(_formData);
-      //if (!mounted) return;
+      if (mounted) {
+        await Provider.of<ProductList>(context, listen: false)
+            .saveData(_formData);
+      }
     } catch (error) {
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('ERRO!'),
-          content: const Text('Erro na gravação dos dados'),
-          actions: [
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        await showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('ERRO!'),
+            content: const Text('Erro na gravação dos dados'),
+            actions: [
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
     } finally {
       // if (!mounted) return;
       setState(() => _isLoading = false);
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     }
   }
 
@@ -205,30 +216,28 @@ class _ProductFormPageState extends State<ProductFormPage> {
       appBar:
           AppBar(title: const Text('Editar Produtos'), elevation: 0, actions: [
         IconButton(
-          onPressed: () => _submitForm(),
           icon: const Icon(Icons.check),
+          color: Colors.orange,
+          onPressed: () => _submitForm(),
         ),
         IconButton(
           icon: const Icon(Icons.delete),
           iconSize: 25,
-          color: Colors.white,
+          color: Colors.red[700],
           onPressed: () => dialogExclude(),
         ),
       ]),
       body: SingleChildScrollView(
         child: SizedBox(
           // width: size.width,
-          height: size.height * 0.93,
+          height: isWindows ? size.height * 0.93 : size.height * 0.98,
           child: Column(
             children: [
               Expanded(
                 child: !isWindows
-                    ? Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: ImageUploads(
-                          onImagePick: _handleImagePick,
-                          image: _formData['imageUrl'].toString(),
-                        ),
+                    ? ImageUploads(
+                        onImagePick: _handleImagePick,
+                        image: _formData['imageUrl'].toString(),
                       )
                     : Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -243,7 +252,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       ),
               ),
               SizedBox(
-                height: 355,
+                height: 400,
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -273,7 +282,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 10.0, right: 5.0),
-                                            child: SizedBox(
+                                            child: Container(
                                               height: 40,
                                               width: 100,
                                               child: TextFormField(
@@ -380,30 +389,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                           ),
                                         ),
                                         const SizedBox(width: 20),
-                                        Row(
-                                          children: [
-                                            _visibleIcon
-                                                ? const Icon(
-                                                    Icons.visibility,
-                                                    color: Colors.indigo,
-                                                  )
-                                                : const Icon(
-                                                    Icons.visibility_off,
-                                                    color: Colors.red,
-                                                  ),
-                                            Switch(
-                                                value:
-                                                    _formData['show'] as bool,
-                                                activeColor: Colors.blue,
-                                                onChanged: (bool value) {
-                                                  setState(() {
-                                                    _formData['show'] = value;
-                                                    _visibleIcon =
-                                                        !_visibleIcon;
-                                                  });
-                                                }),
-                                          ],
-                                        ),
+                                        _visibleIcon
+                                            ? const Icon(
+                                                Icons.visibility,
+                                                color: Colors.indigo,
+                                              )
+                                            : const Icon(
+                                                Icons.visibility_off,
+                                                color: Colors.red,
+                                              ),
+                                        Switch(
+                                            value: _formData['show'] as bool,
+                                            activeColor: Colors.blue,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                _formData['show'] = value;
+                                                _visibleIcon = !_visibleIcon;
+                                              });
+                                            }),
                                       ]),
                                   Row(
                                     mainAxisAlignment:
@@ -506,7 +509,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                       BorderRadius.circular(8)),
                                               child:
                                                   DropdownButtonHideUnderline(
-                                                child: SizedBox(
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8),
                                                   child: DropdownButton2(
                                                     focusNode:
                                                         _subCategoryFocus,
@@ -557,7 +562,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: SizedBox(
-                                      height: 40,
+                                      // height: 40,
                                       child: TextFormField(
                                           style: const TextStyle(fontSize: 12),
                                           initialValue:
@@ -576,8 +581,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             FocusScope.of(context).requestFocus(
                                                 _descriptionFocus);
                                           },
-                                          onSaved: (name) => _formData['name'] =
-                                              name!.toUpperCase() ?? '',
+                                          onSaved: (name) {
+                                            _formData['name'] =
+                                                name!.toUpperCase() ?? '';
+                                          },
                                           validator: (nam) {
                                             final name = nam ?? '';
 
@@ -592,7 +599,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: TextFormField(
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         style: const TextStyle(fontSize: 12),
                                         initialValue: _formData['description']
                                             ?.toString(),
@@ -622,12 +629,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                   ),
                                   isWindows
                                       ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 0),
                                           child: TextFormField(
                                             maxLines: 3,
-                                            style:
-                                                const TextStyle(fontSize: 12),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                             initialValue:
                                                 _formData['imgUrl']?.toString(),
                                             decoration: InputDecoration(

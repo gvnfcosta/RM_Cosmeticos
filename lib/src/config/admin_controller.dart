@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class AdminController with ChangeNotifier {
-  final bool _isWeb = kIsWeb;
+  final bool _isWeb = false; // kIsWeb;
   bool get isWeb => _isWeb;
 
   bool _isAdmin = false;

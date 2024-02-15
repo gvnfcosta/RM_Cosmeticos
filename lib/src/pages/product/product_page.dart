@@ -67,7 +67,7 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       //App bar
       appBar: AppBar(
         backgroundColor: Colors.pink.shade200,
@@ -131,10 +131,9 @@ class _ProductPageState extends State<ProductPage> {
             child: RefreshIndicator(
               onRefresh: () => _refreshProduct(context),
               child: GridView.builder(
-                //  padding: const EdgeInsets.all(8),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 100,
-                  childAspectRatio: 0.5,
+                  maxCrossAxisExtent: 120,
+                  childAspectRatio: 0.6,
                 ),
                 itemCount: selectedCategory == "Todos os Produtos"
                     ? products.length
@@ -151,11 +150,10 @@ class _ProductPageState extends State<ProductPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).pushNamed(AppRoutes.productForm),
         child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(AppRoutes.productForm);
-          },
+          onPressed: () =>
+              Navigator.of(context).pushNamed(AppRoutes.productForm),
           icon: const Icon(Icons.add),
         ),
       ),
@@ -163,6 +161,5 @@ class _ProductPageState extends State<ProductPage> {
   }
 }
 
-Future<void> _refreshProduct(BuildContext context) {
-  return Provider.of<ProductList>(context, listen: false).loadData();
-}
+Future<void> _refreshProduct(BuildContext context) =>
+    Provider.of<ProductList>(context, listen: false).loadData();

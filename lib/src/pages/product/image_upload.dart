@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path/path.dart';
 import 'package:rm/src/config/custom_colors.dart';
 
 class ImageUploads extends StatefulWidget {
@@ -16,10 +15,10 @@ class ImageUploads extends StatefulWidget {
     required this.image,
   });
   @override
-  _ImageUploadsState createState() => _ImageUploadsState();
+  ImageUploadsState createState() => ImageUploadsState();
 }
 
-class _ImageUploadsState extends State<ImageUploads> {
+class ImageUploadsState extends State<ImageUploads> {
   File? _photo;
 
   final firebase_storage.FirebaseStorage storage =
@@ -77,7 +76,7 @@ class _ImageUploadsState extends State<ImageUploads> {
 
   @override
   Widget build(BuildContext context) {
-    String _image = widget.image! != null ? widget.image! : '';
+    String image = widget.image!;
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.customSwatchColor,
@@ -88,7 +87,7 @@ class _ImageUploadsState extends State<ImageUploads> {
             child: GestureDetector(
               onTap: () => _showPicker(context),
               child: CircleAvatar(
-                radius: size.height * 0.13,
+                radius: size.height * 0.23,
                 backgroundColor: CustomColors.customSwatchColor,
                 //backgroundColor: Colors.white,
                 child: _photo != null
@@ -107,13 +106,13 @@ class _ImageUploadsState extends State<ImageUploads> {
                             borderRadius: BorderRadius.circular(50)),
                         width: 400,
                         height: 500,
-                        child: _image == ''
+                        child: image == ''
                             ? const Icon(
                                 Icons.camera_alt,
                                 size: 100,
                                 color: Colors.blueGrey,
                               )
-                            : Image.network(_image),
+                            : Image.network(image),
                       ),
               ),
             ),

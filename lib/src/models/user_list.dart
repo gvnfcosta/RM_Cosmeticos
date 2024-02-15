@@ -20,12 +20,12 @@ class UserList with ChangeNotifier {
 
   int get itemsCount => _items.length;
 
-  List<UserModel> get users =>
-      _items.where((element) => element.email == _email).first;
-  UserModel? get user =>
-      _items.where((element) => element.email == _email).first;
+  // List<UserModel> get users =>
+  //     _items.where((element) => element.email == _email).first;
   // UserModel? get user =>
-  //     _items.firstWhereOrNull((element) => element.email == _email);
+  //     _items.where((element) => element.email == _email).first;
+  UserModel? get user =>
+      _items.firstWhereOrNull((element) => element.email == _email);
 
   int? get userLevel => user?.level;
   bool get isAdmin => userLevel == 0;
