@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:rm/src/models/catalog_model.dart';
 import '../config/app_data.dart';
 import 'user_model.dart';
 import 'package:collection/collection.dart';
@@ -42,10 +41,22 @@ class UserList with ChangeNotifier {
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
 
-    _items = data.entries
-        .map<UserModel>(
-            (entry) => UserModel.fromMap(entry.value as Map<String, dynamic>))
-        .toList();
+    data.forEach((dataId, dados) {
+      _items.add(
+        UserModel(
+          id: dataId,
+          name: dados['name'],
+          email: dados['email'],
+          discount: dados['discount'],
+          level: dados['level'],
+        ),
+      );
+    });
+
+    // _items = data.entries
+    //     .map<UserModel>(
+    //         (entry) => UserModel.fromMap(entry.value as Map<String, dynamic>))
+    //     .toList();
   }
 
   Future<void> saveData(Map<String, Object> dataDados) {
@@ -56,7 +67,7 @@ class UserList with ChangeNotifier {
       id: hasId ? dataDados['id'] as String : idAleatorio.toString(),
       name: dataDados['name'] as String,
       email: dataDados['email'] as String,
-      password: dataDados['password'] as String,
+      // password: dataDados['password'] as String,
       discount: dataDados['discount'] as double,
       // catalogs: [], // List<CatalogModel>.from(dataDados['catalogs'] as List),
       level: dataDados['level'] as int,
@@ -100,18 +111,20 @@ class UserList with ChangeNotifier {
     int index = _items.indexWhere((e) => e.id == user.id);
 
     if (index >= 0) {
+      final register = _items[index];
       _items.remove(user);
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.baseUrl}/users/${user.id}.json?auth=$_token'),
+        Uri.parse(
+            '${Constants.baseUrl}/users/${register.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
-        _items.insert(index, user);
+        _items.insert(index, register);
         notifyListeners();
 
-        throw HttpException('Não foi possível excluir ${user.name}}.');
+        throw HttpException('Não foi possível excluir ${register.name}.');
       }
     }
   }

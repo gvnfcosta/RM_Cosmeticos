@@ -74,7 +74,7 @@ class _SubCategoryTabState extends State<SubCategoryTab> {
                       maxCrossAxisExtent: 150,
                       mainAxisSpacing: 1,
                       crossAxisSpacing: 1,
-                      childAspectRatio: 15 / 5,
+                      childAspectRatio: 15 / 7,
                     ),
                     itemCount: subCategories.length,
                     itemBuilder: (_, index) {

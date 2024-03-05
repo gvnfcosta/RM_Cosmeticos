@@ -4,15 +4,14 @@ import '../../../utils/app_routes.dart';
 import '/src/config/custom_colors.dart';
 
 class SubCategoryTile extends StatelessWidget {
-  SubCategoryTile({super.key, required this.subCategory});
+  const SubCategoryTile({super.key, required this.subCategory});
 
   final SubCategory subCategory;
-  bool isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
+      // height: 200,
       child: GestureDetector(
         onTap: () {
           Navigator.of(context)
@@ -21,14 +20,18 @@ class SubCategoryTile extends StatelessWidget {
         child: Card(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          child: Center(
-            child: Text(
-              subCategory.nome,
-              style: TextStyle(
-                color: CustomColors.customContrastColor,
-                fontSize: 16,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                subCategory.nome,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: CustomColors.customContrastColor,
+                  fontSize: 14,
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

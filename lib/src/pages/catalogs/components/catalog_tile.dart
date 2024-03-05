@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rm/src/models/user_list.dart';
-import 'package:rm/src/models/user_model.dart';
-import 'package:rm/src/pages/catalogs/catalogs_page.dart';
+
+import 'package:rm/src/pages/initial/base_screen.dart';
+import '/src/services/utils_services.dart';
+import 'package:rm/src/models/catalog_model.dart';
 import 'package:rm/src/pages/catalogs_products/catalogs_products_page.dart';
 import 'package:rm/src/pages/catalogs_products/catalog_admin_page.dart';
 import 'package:rm/src/utils/app_routes.dart';
-import '../../../models/catalog_model.dart';
-import '/src/services/utils_services.dart';
 
 final UtilsServices utilsServices = UtilsServices();
 
@@ -17,10 +15,7 @@ class CatalogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> users = Provider.of<UserList>(context).items;
-    UserList? user = Provider.of<UserList>(context);
-
-    final bool _isAdmin = adminController.isAdmin;
+    // final bool isAdmin = adminController.isAdmin;
 
     return Stack(
       children: [
@@ -32,7 +27,7 @@ class CatalogTile extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (c) {
-                    return _isAdmin
+                    return isAdmin
                         ? CatalogAdminPage(catalog: catalog)
                         : CatalogProductsPage(catalog);
                   },
@@ -46,10 +41,10 @@ class CatalogTile extends StatelessWidget {
                     topLeft: Radius.circular(5),
                     topRight: Radius.circular(5),
                   ),
-                  child: _isAdmin
+                  child: isAdmin
                       ? Container(
                           height: 25,
-                          color: Colors.grey[100],
+                          color: Colors.white,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -65,9 +60,10 @@ class CatalogTile extends StatelessWidget {
                         )
                       : null,
                 ),
-                const SizedBox(height: 3),
                 Expanded(
-                  child: SizedBox(
+                  child: Container(
+                    width: 120,
+                    color: Colors.white,
                     child: Image.asset('assets/images/CatalogoFace.png'),
                   ),
                 ),
@@ -98,7 +94,7 @@ class CatalogTile extends StatelessWidget {
             ),
           ),
         ),
-        _isAdmin
+        isAdmin
             ? Positioned(
                 right: 0,
                 child: IconButton(

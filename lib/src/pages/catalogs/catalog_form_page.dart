@@ -68,22 +68,24 @@ class _CatalogFormPageState extends State<CatalogFormPage> {
     try {
       await Provider.of<CatalogList>(context, listen: false).saveData(_data);
     } catch (error) {
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('ERRO!'),
-          content: const Text('Erro na gravação dos dados'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        await showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('ERRO!'),
+            content: const Text('Erro na gravação dos dados'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
-      Navigator.of(context).pop();
+      if (context.mounted) Navigator.of(context).pop();
     }
   }
 

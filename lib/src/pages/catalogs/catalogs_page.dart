@@ -17,6 +17,7 @@ class CatalogsPage extends StatefulWidget {
 
 AdminController adminController = AdminController();
 bool _isWeb = adminController.isWeb;
+List<CatalogModel>? catalogs;
 
 class _CatalogsPageState extends State<CatalogsPage> {
   String userName = '';
@@ -36,11 +37,10 @@ class _CatalogsPageState extends State<CatalogsPage> {
 
     final List<CatalogModel> allCatalogs =
         Provider.of<CatalogList>(context).items;
+    catalogs = allCatalogs;
 
-    List<CatalogModel> catalogs = allCatalogs.toList();
-
-    if (isAdmin) {
-      catalogs =
+    if (!isAdmin) {
+      List<CatalogModel> catalogs =
           allCatalogs.where((element) => element.seller == userName).toList();
     }
 
@@ -79,9 +79,9 @@ class _CatalogsPageState extends State<CatalogsPage> {
                     crossAxisSpacing: 10,
                     childAspectRatio: 8 / 12,
                   ),
-                  itemCount: catalogs.length,
+                  itemCount: catalogs!.length,
                   itemBuilder: (_, i) {
-                    return CatalogTile(catalog: catalogs[i]);
+                    return CatalogTile(catalog: catalogs![i]);
                   },
                 ),
               ),
