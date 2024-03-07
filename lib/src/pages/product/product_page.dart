@@ -17,6 +17,7 @@ class ProductPage extends StatefulWidget {
 }
 
 bool isAdmin = false;
+List<Product> products = [];
 
 String selectedCategory = 'Todos os Produtos';
 
@@ -32,6 +33,8 @@ class _ProductPageState extends State<ProductPage> {
 
   List<String> allCategories = ['Todos os Produtos'];
   bool _isSecret = false;
+  bool byCode = false;
+  int productsLenght = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +48,23 @@ class _ProductPageState extends State<ProductPage> {
     int userLevel = users?.level ?? 1;
     isAdmin = userLevel == 0;
 
-    final List<Product> products = Provider.of<ProductList>(context)
+    final List<Product> productsByName = Provider.of<ProductList>(context)
         .items
         .where((element) => element.show == !_isSecret)
         .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
+
+    final List<Product> productsByCode = Provider.of<ProductList>(context)
+        .items
+        .where((element) => element.show == !_isSecret)
+        .toList()
+      ..sort((a, b) => a.code.compareTo(b.code));
+
+    if (byCode) {
+      products = productsByCode;
+    } else {
+      products = productsByName;
+    }
 
     List<Product> productsFiltered = products
         .where((element) => element.category == selectedCategory)
@@ -59,6 +74,12 @@ class _ProductPageState extends State<ProductPage> {
         .items
         .toList()
       ..sort(((a, b) => a.nome.compareTo(b.nome)));
+
+    if (selectedCategory == "Todos os Produtos") {
+      productsLenght = products.length;
+    } else {
+      productsLenght = productsFiltered.length;
+    }
 
     if (allCategories.length == 1) {
       for (final value in categories) {
@@ -112,14 +133,26 @@ class _ProductPageState extends State<ProductPage> {
             height: 40,
             color: Colors.pink[900],
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  selectedCategory,
-                  style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+                Expanded(
+                  child: Text(
+                    '$selectedCategory ($productsLenght)',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                ),
+                IconButton(
+                  color: Colors.white,
+                  icon: const Icon(Icons.code),
+                  onPressed: () => setState(
+                    () {
+                      byCode = !byCode;
+                    },
+                  ),
                 ),
               ],
             ),
@@ -135,9 +168,7 @@ class _ProductPageState extends State<ProductPage> {
                   maxCrossAxisExtent: 120,
                   childAspectRatio: 0.6,
                 ),
-                itemCount: selectedCategory == "Todos os Produtos"
-                    ? products.length
-                    : productsFiltered.length,
+                itemCount: productsLenght,
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (ctx, index) =>
