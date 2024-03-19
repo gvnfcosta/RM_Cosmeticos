@@ -135,9 +135,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   Future<void> _submitForm() async {
-    if (!isWindows && file == null) {
-      _showMessage('Selecione a imagem do produto');
-    }
+    _checkData();
 
     if (_imageUrlController.text == '') {
       _formData['imageUrl'] = await saveImage(file, productCode!);
@@ -195,6 +193,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _handleImagePick(File photo) => file = photo;
+  Iterable<String> codes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +205,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
     final List<SubCategory> subCategorias =
         Provider.of<SubCategoryList>(context).subCategories
           ..sort((a, b) => a.nome.compareTo(b.nome));
+
+    if (codes.isEmpty) {
+      final products = Provider.of<ProductList>(context).items;
+      codes = products.map((e) => e.code);
+    }
+
+    // for (var e in products) {
+    //   codes.add(e.code);
+    // }
 
     selectedUnidade = _formData['unit']?.toString();
     selectedCategoria = _formData['category']?.toString();
@@ -283,9 +291,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                             padding: const EdgeInsets.only(
                                                 bottom: 10.0, right: 5.0),
                                             child: Container(
-                                              height: 40,
+                                              height: 50,
                                               width: 100,
                                               child: TextFormField(
+
+                                                  // autovalidateMode:
+                                                  //     AutovalidateMode
+                                                  //         .onUserInteraction,
                                                   style: const TextStyle(
                                                       fontSize: 14),
                                                   initialValue:
@@ -306,6 +318,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                       TextInputAction.next,
                                                   focusNode: _codeFocus,
                                                   onFieldSubmitted: (_) {
+                                                    _formKey.currentState
+                                                        ?.validate();
                                                     FocusScope.of(context)
                                                         .requestFocus(
                                                             _nameFocus);
@@ -317,6 +331,37 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                                   validator: (cod) {
                                                     final code = cod ?? '';
                                                     productCode = code;
+
+                                                    if (codes.contains(code)) {
+                                                      return 'Produto já Cadastrado';
+                                                      // showDialog<void>(
+                                                      //   context: context,
+                                                      //   builder: (ctx) =>
+                                                      //       AlertDialog(
+                                                      //     title: const Text(
+                                                      //         'ATENÇÃO!'),
+                                                      //     content: const Text(
+                                                      //         'Produto já Cadastrdo.'),
+                                                      //     actions: [
+                                                      //       TextButton(
+                                                      //         onPressed: () =>
+                                                      //             Navigator.of(
+                                                      //                     context)
+                                                      //                 .pop(),
+                                                      //         child: const Text(
+                                                      //             'OK'),
+                                                      //       ),
+                                                      //     ],
+                                                      //   ),
+                                                      // );
+                                                      // return;
+                                                    }
+
+                                                    // if (codes.contains(
+                                                    //     _formData['code'])) {
+                                                    //   _showMessage(
+                                                    //       'Produto já cadastrado');
+                                                    // }
 
                                                     if (code.trim().isEmpty) {
                                                       return 'Código é obrigatório';
@@ -707,4 +752,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
       ),
     );
   }
+
+  _checkData() {
+    if (!isWindows && file == null) {
+      _showMessage('Selecione a imagem do produto');
+      return;
+    }
+
+    if (selectedCategoria == null) {
+      _showMessage('Selecione a Categoria');
+      return;
+    }
+    if (selectedSubCategoria == null) {
+      _showMessage('Selecione a SubCategoria');
+      return;
+    }
+  }
+
+  String? Function(String?)? get validator => (value) {
+        if (codes.contains(value)) return 'Produto já Cadastrado';
+      };
 }
